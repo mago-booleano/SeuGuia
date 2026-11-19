@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de npm, Git e tags HTML</title>
+    <style>
+        :root {
+            --bg: #030704;
+            --bg-2: #050a06;
+            --card: rgba(5, 12, 7, 0.94);
+            --card-strong: rgba(7, 16, 9, 0.98);
+            --text: #e4ffe9;
+            --muted: #a7c7ad;
+            --primary: #7dff5a;
+            --secondary: #39ff14;
+            --accent: #39ff14;
+            --warm: #a3ff6f;
+            --border: rgba(57, 255, 20, 0.22);
+            --code-bg: #020503;
+            --code-text: #c8ffce;
+            --shadow: rgba(0, 0, 0, 0.68);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(ellipse at 50% 0, #102314 0, var(--bg) 42%, #010201 100%);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .black-hole-scene {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            background-image: linear-gradient(rgba(57, 255, 20, 0.045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57, 255, 20, 0.045) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, black, transparent 88%);
+        }
+
+        .black-hole-scene::before {
+            position: absolute;
+            inset: 0;
+            content: "";
+            background: radial-gradient(ellipse at 50% 0, rgba(57, 255, 20, 0.1), transparent 58%);
+        }
+
+        @keyframes content-arrive {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .card,
+            .card>section {
+                animation: none;
+            }
+        }
+
+        .container {
+            max-width: 1120px;
+            margin: 50px auto;
+            padding: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card {
+            background: linear-gradient(145deg, rgba(5, 12, 7, 0.97), rgba(3, 7, 4, 0.96));
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 18px 45px var(--shadow);
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            animation: content-arrive 700ms ease-out both;
+        }
+
+        .card>section {
+            animation: content-arrive 700ms ease-out both;
+        }
+
+        .card>section:nth-of-type(1) {
+            animation-delay: 100ms;
+        }
+
+        .card>section:nth-of-type(2) {
+            animation-delay: 180ms;
+        }
+
+        .card>section:nth-of-type(3) {
+            animation-delay: 260ms;
+        }
+
+        .card>section:nth-of-type(4) {
+            animation-delay: 340ms;
+        }
+
+        .card>section>section {
+            animation: none;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(57, 255, 20, 0.08);
+            color: #a3ff91;
+            border: 1px solid rgba(57, 255, 20, 0.46);
+            box-shadow: 0 0 18px rgba(57, 255, 20, 0.12), inset 0 0 12px rgba(57, 255, 20, 0.06);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .guide-nav {
+            position: relative;
+            z-index: 4;
+            margin: 22px 0 8px;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(2, 5, 3, 0.9);
+        }
+
+        .guide-nav-list {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .guide-nav-item {
+            position: relative;
+            margin: 0;
+        }
+
+        .guide-nav-link,
+        .guide-nav-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 42px;
+            padding: 0 14px;
+            border: 0;
+            border-radius: 999px;
+            background: transparent;
+            color: #b6cbb9;
+            font: inherit;
+            font-size: 0.92rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 180ms ease, background 180ms ease;
+        }
+
+        .guide-nav-link:hover,
+        .guide-nav-link:focus-visible,
+        .guide-nav-trigger:hover,
+        .guide-nav-trigger:focus-visible,
+        .guide-nav-item.is-open .guide-nav-trigger {
+            color: var(--accent);
+            background: rgba(57, 255, 20, 0.1);
+            outline: none;
+        }
+
+        .nav-chevron {
+            width: 8px;
+            height: 8px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: translateY(-2px) rotate(45deg);
+            transition: transform 180ms ease;
+        }
+
+        .guide-nav-item.is-open .nav-chevron {
+            transform: translateY(2px) rotate(225deg);
+        }
+
+        .guide-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            width: min(520px, calc(100vw - 96px));
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(4, 10, 5, 0.99);
+            box-shadow: 0 20px 50px rgba(2, 6, 23, 0.48);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-6px);
+            transition: opacity 180ms ease, visibility 180ms ease, transform 180ms ease;
+        }
+
+        .guide-nav-item.is-open .guide-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .guide-dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .guide-dropdown-group h3 {
+            margin: 0 0 8px;
+            color: #8eaa94;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .guide-dropdown-group ul {
+            display: grid;
+            gap: 4px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .guide-dropdown-group li {
+            margin: 0;
+        }
+
+        .guide-dropdown-link {
+            display: block;
+            padding: 9px 10px;
+            border-radius: 9px;
+            color: #d7eddb;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            text-decoration: none;
+            transition: color 180ms ease, background 180ms ease;
+        }
+
+        .guide-dropdown-link:hover,
+        .guide-dropdown-link:focus-visible {
+            color: var(--accent);
+            background: rgba(57, 255, 20, 0.1);
+            outline: none;
+        }
+
+        .guide-dropdown-link span {
+            display: block;
+            margin-top: 3px;
+            color: #8eaa94;
+            font-size: 0.76rem;
+        }
+
+        h1 {
+            margin: 0 0 18px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #eaffed;
+            text-shadow: 0 0 24px rgba(57, 255, 20, 0.28);
+        }
+
+        h2 {
+            margin-top: 28px;
+            margin-bottom: 12px;
+            color: #d7ffdc;
+            font-size: 1.4rem;
+            text-shadow: 0 0 16px rgba(57, 255, 20, 0.2);
+            letter-spacing: 0.015em;
+        }
+
+        p {
+            margin: 10px 0;
+            color: var(--muted);
+        }
+
+        section {
+            margin-top: 18px;
+            padding: 18px 20px;
+            background: linear-gradient(145deg, rgba(7, 14, 8, 0.94), rgba(3, 7, 4, 0.9));
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 22px 0 26px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            padding: 0 14px;
+            border: 1px solid rgba(57, 255, 20, 0.38);
+            border-radius: 10px;
+            background: rgba(2, 5, 3, 0.92);
+            box-shadow: inset 0 0 16px rgba(57, 255, 20, 0.05);
+            color: var(--accent);
+            transition: border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(57, 255, 20, 0.12), 0 0 24px rgba(57, 255, 20, 0.12);
+        }
+
+        .search-icon {
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        #command-search {
+            width: 100%;
+            min-width: 0;
+            padding: 14px 0;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+        }
+
+        #command-search::placeholder {
+            color: #829b87;
+        }
+
+        .command-count {
+            flex: none;
+            color: #9aff85;
+            font-size: 0.9rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .command-wrap {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .command {
+            display: block;
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-left: 4px solid var(--accent);
+            border-radius: 10px;
+            padding: 14px 104px 14px 16px;
+            white-space: pre-wrap;
+            font-family: Consolas, "Courier New", monospace;
+            box-shadow: inset 0 0 0 1px rgba(57, 255, 20, 0.14);
+            overflow-wrap: anywhere;
+        }
+
+        .command-important {
+            border-left-color: var(--primary);
+            box-shadow: inset 0 0 0 1px rgba(57, 255, 20, 0.24), 0 0 18px rgba(57, 255, 20, 0.1);
+        }
+
+        .tag-preview {
+            margin-top: 10px;
+        }
+
+        .tag-preview-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #9aff85;
+            font-size: 0.78rem;
+        }
+
+        .tag-preview-frame {
+            display: block;
+            width: 100%;
+            height: 112px;
+            border: 1px solid rgba(57, 255, 20, 0.26);
+            border-radius: 8px;
+            background: #fff;
+            pointer-events: none;
+        }
+
+        .tag-preview-note {
+            padding: 10px 12px;
+            border-left: 3px solid var(--warm);
+            border-radius: 4px;
+            background: rgba(57, 255, 20, 0.06);
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 9px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 34px;
+            padding: 0 9px;
+            transform: none;
+            border: 1px solid rgba(57, 255, 20, 0.32);
+            border-radius: 7px;
+            background: rgba(5, 12, 6, 0.98);
+            color: #b9ffad;
+            font: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .copy-button:hover,
+        .copy-button:focus-visible {
+            border-color: var(--accent);
+            color: #eaffed;
+            box-shadow: 0 0 14px rgba(57, 255, 20, 0.25);
+            outline: none;
+        }
+
+        .copy-icon {
+            font-size: 1rem;
+        }
+
+        .copy-button.is-copied {
+            border-color: var(--secondary);
+            color: #86efac;
+            box-shadow: 0 0 14px rgba(34, 197, 94, 0.25);
+        }
+
+        .usage-example {
+            margin: 8px 0 0;
+            color: #8eaa94;
+            font-size: 0.82rem;
+            line-height: 1.45;
+        }
+
+        .usage-example strong {
+            color: #a3ff91;
+        }
+
+        .empty-state {
+            padding: 28px 16px;
+            border: 1px dashed rgba(57, 255, 20, 0.38);
+            border-radius: 10px;
+            color: #b9ffad;
+            text-align: center;
+        }
+
+        .toast {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            z-index: 5;
+            padding: 12px 18px;
+            border: 1px solid rgba(34, 197, 94, 0.65);
+            border-radius: 9px;
+            background: rgba(2, 5, 3, 0.98);
+            color: #bbf7d0;
+            box-shadow: 0 0 24px rgba(34, 197, 94, 0.2);
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 180ms ease, transform 180ms ease;
+            pointer-events: none;
+        }
+
+        .toast.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--muted);
+        }
+
+        li {
+            margin: 14px 0;
+        }
+
+        .card > section > ul > li {
+            padding: 12px 14px;
+            border: 1px solid rgba(57, 255, 20, 0.12);
+            border-left: 2px solid rgba(57, 255, 20, 0.48);
+            border-radius: 10px;
+            background: rgba(2, 7, 3, 0.56);
+        }
+
+        strong {
+            color: #d7ffdc;
+        }
+
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid rgba(57, 255, 20, 0.22);
+            border-radius: 12px;
+            background: rgba(2, 6, 3, 0.74);
+        }
+
+        .command-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .command-table th,
+        .command-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.12);
+            vertical-align: middle;
+        }
+
+        .command-table th {
+            background: rgba(57, 255, 20, 0.08);
+            color: #a3ff91;
+            font-size: 0.78rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+        }
+
+        .command-table td {
+            color: var(--muted);
+        }
+
+        .command-table tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .command-table tbody tr:hover {
+            background: rgba(57, 255, 20, 0.035);
+        }
+
+        .command-table .command-wrap {
+            min-width: 230px;
+            margin-top: 0;
+        }
+
+        .command-table .command {
+            padding: 12px 92px 12px 14px;
+        }
+
+        .command-table .usage-example {
+            margin-right: 0;
+        }
+
+        .command-table .copy-button {
+            right: 7px;
+        }
+
+        /* MDN-style reference shell */
+        :root {
+            --bg: #1b1b1b;
+            --bg-2: #202020;
+            --card: #1b1b1b;
+            --card-strong: #232323;
+            --text: #cdcdcd;
+            --muted: #b8b8b8;
+            --primary: #8cb4ff;
+            --secondary: #5e9eff;
+            --accent: #8cb4ff;
+            --warm: #8cb4ff;
+            --border: #5a5a5a;
+            --code-bg: #272727;
+            --code-text: #f2f2f2;
+            --shadow: rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            background: var(--bg);
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        body::before {
+            content: "MDN  /  WEB DOCS";
+            position: fixed;
+            z-index: 20;
+            inset: 0 0 auto 0;
+            height: 64px;
+            padding: 18px 24px;
+            border-bottom: 1px solid #3b3b3b;
+            background: #1b1b1b;
+            color: #f2f2f2;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0;
+            box-sizing: border-box;
+        }
+
+        .black-hole-scene {
+            display: none;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 64px auto 0;
+            padding: 0;
+        }
+
+        .card {
+            display: grid;
+            grid-template-columns: 260px minmax(0, 760px);
+            column-gap: 48px;
+            justify-content: center;
+            border: 0;
+            border-radius: 0;
+            background: #1b1b1b;
+            box-shadow: none;
+            padding: 32px 24px 80px;
+            backdrop-filter: none;
+        }
+
+        .card > header {
+            grid-column: 2;
+            min-width: 0;
+            padding: 10px 0 18px;
+        }
+
+        .badge {
+            display: none;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            color: #f2f2f2;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: 0;
+            line-height: 1.12;
+            text-shadow: none;
+        }
+
+        .card > header p {
+            max-width: 680px;
+            color: #b8b8b8;
+            font-size: 18px;
+        }
+
+        .guide-nav {
+            grid-column: 1;
+            grid-row: 1 / span 30;
+            position: sticky;
+            top: 88px;
+            align-self: start;
+            height: calc(100vh - 112px);
+            overflow-y: auto;
+            margin: 0;
+            padding: 8px 12px 24px;
+            border: 0;
+            border-right: 1px solid #3b3b3b;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        .guide-nav-list {
+            display: grid;
+            gap: 3px;
+        }
+
+        .guide-nav-item {
+            width: 100%;
+        }
+
+        .guide-nav-link,
+        .guide-nav-trigger {
+            width: 100%;
+            min-height: 38px;
+            justify-content: flex-start;
+            border-radius: 4px;
+            color: #cdcdcd;
+            font-size: 14px;
+        }
+
+        .guide-nav-link:hover,
+        .guide-nav-link:focus-visible,
+        .guide-nav-trigger:hover,
+        .guide-nav-trigger:focus-visible,
+        .guide-nav-item.is-open .guide-nav-trigger {
+            color: #fff;
+            background: #343434;
+        }
+
+        .guide-dropdown {
+            position: static;
+            width: 100%;
+            max-height: 0;
+            padding: 0 4px;
+            border: 0;
+            border-left: 2px solid #5a5a5a;
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+            overflow: hidden;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            transition: max-height 180ms ease, padding 180ms ease;
+        }
+
+        .guide-nav-item.is-open .guide-dropdown {
+            max-height: 540px;
+            padding: 8px 4px 12px;
+        }
+
+        .guide-dropdown-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .guide-dropdown-group h3 {
+            display: none;
+        }
+
+        .guide-dropdown-link {
+            padding: 6px 8px;
+            color: #b8b8b8;
+            font-size: 13px;
+        }
+
+        .guide-dropdown-link span {
+            display: none;
+        }
+
+        .toolbar,
+        .empty-state,
+        .card > section {
+            grid-column: 2;
+            min-width: 0;
+        }
+
+        .toolbar {
+            grid-row: 2;
+            margin: 8px 0 16px;
+        }
+
+        .search-box {
+            height: 44px;
+            border: 1px solid #8b8b8b;
+            border-radius: 4px;
+            background: #1b1b1b;
+            box-shadow: none;
+        }
+
+        .search-box:focus-within {
+            border-color: #8cb4ff;
+            box-shadow: 0 0 0 2px #1b1b1b, 0 0 0 4px #8cb4ff;
+        }
+
+        #command-search {
+            color: #f2f2f2;
+        }
+
+        .command-count {
+            color: #b8b8b8;
+        }
+
+        .card > section {
+            margin: 0 0 24px;
+            padding: 20px 0 4px;
+            border: 0;
+            border-top: 1px solid #3b3b3b;
+            border-radius: 0;
+            background: transparent;
+        }
+
+        h2 {
+            margin: 0 0 14px;
+            color: #f2f2f2;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 28px;
+            line-height: 1.25;
+            text-shadow: none;
+        }
+
+        p,
+        li,
+        td {
+            color: #cdcdcd;
+        }
+
+        strong {
+            color: #f2f2f2;
+        }
+
+        code {
+            color: #ffb4b4;
+        }
+
+        .command {
+            border: 1px solid #3b3b3b;
+            border-left: 3px solid #8cb4ff;
+            border-radius: 4px;
+            background: #272727;
+            color: #f2f2f2;
+            box-shadow: none;
+        }
+
+        .copy-button {
+            border: 1px solid #5a5a5a;
+            border-radius: 4px;
+            background: #1b1b1b;
+            color: #b8b8b8;
+        }
+
+        .copy-button:hover,
+        .copy-button:focus-visible {
+            border-color: #8cb4ff;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .usage-example {
+            color: #a9a9a9;
+        }
+
+        .usage-example strong {
+            color: #8cb4ff;
+        }
+
+        .table-scroll {
+            border: 1px solid #3b3b3b;
+            border-radius: 4px;
+            background: #202020;
+        }
+
+        .command-table th {
+            border-bottom: 1px solid #5a5a5a;
+            background: #272727;
+            color: #f2f2f2;
+        }
+
+        .command-table td {
+            border-bottom: 1px solid #3b3b3b;
+        }
+
+        .card > section > ul > li {
+            padding: 14px 16px;
+            border: 1px solid #3b3b3b;
+            border-left: 3px solid #8cb4ff;
+            border-radius: 4px;
+            background: #202020;
+        }
+
+        .tag-preview-frame {
+            border: 1px solid #5a5a5a;
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .tag-preview-note {
+            border-left: 3px solid #8cb4ff;
+            background: #262626;
+        }
+
+        .empty-state {
+            border: 1px dashed #5a5a5a;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .card {
+                grid-template-columns: 220px minmax(0, 1fr);
+                column-gap: 24px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body::before {
+                height: 52px;
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+
+            .container {
+                margin-top: 52px;
+            }
+
+            .card {
+                display: block;
+                padding: 20px 16px 60px;
+            }
+
+            .guide-nav {
+                position: static;
+                height: auto;
+                overflow: visible;
+                padding: 0;
+                border-right: 0;
+                border-bottom: 1px solid #3b3b3b;
+            }
+
+            .guide-nav-list {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .guide-nav-item {
+                flex: 0 0 auto;
+                width: auto;
+            }
+
+            .guide-nav-link,
+            .guide-nav-trigger {
+                width: auto;
+            }
+
+            .guide-dropdown {
+                position: absolute;
+                z-index: 30;
+                top: 98px;
+                right: 16px;
+                left: 16px;
+                max-height: 0;
+                width: auto;
+                border: 1px solid #5a5a5a;
+                background: #202020;
+            }
+
+            .guide-nav-item.is-open .guide-dropdown {
+                max-height: 460px;
+                padding: 12px;
+            }
+
+            .card > header {
+                padding-top: 20px;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 16px auto;
+                padding: 12px;
+            }
+
+            .card {
+                padding: 20px 16px;
+            }
+
+            .guide-nav {
+                padding: 4px;
+            }
+
+            .guide-nav-list {
+                align-items: stretch;
+                flex-wrap: wrap;
+            }
+
+            .guide-nav-item {
+                flex: 1 1 calc(50% - 4px);
+            }
+
+            .guide-nav-link,
+            .guide-nav-trigger {
+                justify-content: center;
+                width: 100%;
+                padding: 0 8px;
+            }
+
+            .guide-dropdown {
+                position: fixed;
+                top: 140px;
+                right: 16px;
+                left: 16px;
+                width: auto;
+                max-height: calc(100vh - 160px);
+                overflow-y: auto;
+            }
+
+            .guide-dropdown-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .command-count {
+                align-self: flex-end;
+            }
+
+            .command {
+                padding: 52px 12px 12px;
+            }
+
+            .command-table,
+            .command-table tbody,
+            .command-table tr,
+            .command-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .command-table thead {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+            }
+
+            .command-table tbody {
+                padding: 8px;
+            }
+
+            .command-table tbody tr {
+                margin-bottom: 10px;
+                border: 1px solid rgba(57, 255, 20, 0.16);
+                border-radius: 9px;
+                background: rgba(3, 8, 4, 0.82);
+            }
+
+            .command-table tbody tr:last-child {
+                margin-bottom: 0;
+            }
+
+            .command-table td {
+                display: grid;
+                grid-template-columns: minmax(78px, 0.34fr) minmax(0, 1fr);
+                gap: 10px;
+                padding: 10px;
+                border-bottom: 1px solid rgba(57, 255, 20, 0.1);
+            }
+
+            .command-table td::before {
+                content: attr(data-label);
+                color: #a3ff91;
+                font-size: 0.72rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+
+            .command-table td[data-label="Comando"],
+            .command-table td[data-label="Comando copiável"] {
+                display: block;
+            }
+
+            .command-table td[data-label="Comando"]::before,
+            .command-table td[data-label="Comando copiável"]::before {
+                display: block;
+                margin-bottom: 7px;
+            }
+
+            .command-table .command-wrap {
+                min-width: 0;
+            }
+
+            .command-table .command {
+                padding: 52px 12px 12px;
+            }
+
+            .command-table .copy-button {
+                top: 8px;
+                right: 8px;
+                transform: none;
+            }
+
+            .copy-button {
+                top: 8px;
+                right: 8px;
+                transform: none;
+            }
+
+            .usage-example {
+                margin: 8px 0 0;
+            }
+
+            .toast {
+                right: 12px;
+                bottom: 12px;
+                left: 12px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="black-hole-scene" aria-hidden="true">
+    </div>
+    <main class="container">
+        <section class="card">
+            <header>
+                <div class="badge">Node.js, npm, Git &amp; HTML</div>
+                <h1>Guia de npm, Git e tags HTML</h1>
+                <p>Consulte descrições e exemplos, pesquise e copie o conteúdo para seus projetos.</p>
+            </header>
+
+            <nav class="guide-nav" aria-label="Navegação do guia">
+                <ul class="guide-nav-list">
+                    <li class="guide-nav-item">
+                        <a class="guide-nav-link" href="#inicio">Início</a>
+                    </li>
+                    <li class="guide-nav-item">
+                        <button class="guide-nav-trigger" type="button" aria-expanded="false" aria-controls="npm-menu">
+                            npm <span class="nav-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="guide-dropdown" id="npm-menu">
+                            <div class="guide-dropdown-grid">
+                                <div class="guide-dropdown-group">
+                                    <h3>Primeiros passos</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#npm-instalacao">Instalação<span>Permissões no PowerShell</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#npm-versoes">Versões<span>Node.js e npm</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#npm-projetos">Projetos<span>Criar com npm init</span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="guide-dropdown-group">
+                                    <h3>Uso diário</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#npm-pacotes">Pacotes<span>Instalar e remover</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#npx-comandos">npx<span>Executar ferramentas temporárias</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#npm-scripts">Scripts<span>Start, dev, test e build</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#npm-auditoria">Manutenção<span>Auditoria e atualização</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="guide-nav-item">
+                        <button class="guide-nav-trigger" type="button" aria-expanded="false" aria-controls="git-menu">
+                            Git <span class="nav-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="guide-dropdown" id="git-menu">
+                            <div class="guide-dropdown-grid">
+                                <div class="guide-dropdown-group">
+                                    <h3>Repositório</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#git-comandos">Configuração<span>Identidade e init</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#git-comandos">Alterações<span>Add, commit e diff</span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="guide-dropdown-group">
+                                    <h3>Remotos e branches</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#git-comandos">Branches<span>Criar e trocar</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#git-comandos">Sincronização<span>Clone, fetch e push</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="guide-nav-item">
+                        <button class="guide-nav-trigger" type="button" aria-expanded="false" aria-controls="html-menu">
+                            HTML <span class="nav-chevron" aria-hidden="true"></span>
+                        </button>
+                        <div class="guide-dropdown" id="html-menu">
+                            <div class="guide-dropdown-grid">
+                                <div class="guide-dropdown-group">
+                                    <h3>Estrutura</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#tags-html">Documento<span>html, head e body</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#tags-html">Conteúdo<span>main, section e article</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#atributos-html">Atributos<span>href, rel, src e outros</span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="guide-dropdown-group">
+                                    <h3>Interação</h3>
+                                    <ul>
+                                        <li><a class="guide-dropdown-link" href="#tags-html">Links e mídia<span>a, img e link</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="#atributos-html">Formulários<span>type, name, required e mais</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="toolbar">
+                <label class="search-box" for="command-search">
+                    <span class="search-icon" aria-hidden="true">⌕</span>
+                    <input id="command-search" type="search" placeholder="Buscar comando, tag ou descrição..."
+                        autocomplete="off">
+                </label>
+                <output class="command-count" id="command-count" aria-live="polite"></output>
+            </div>
+
+            <p class="empty-state" id="empty-state" hidden>Nenhum comando encontrado. Tente outro termo.</p>
+
+            <section id="inicio">
+                <h2 id="npm-instalacao">Instalação do npm</h2>
+                <p><strong>Para permitir a execução de scripts no PowerShell do VS Code:</strong></p>
+                <code
+                    class="command command-important">Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code>
+            </section>
+
+            <section id="npm-versoes">
+                <h2>Verificando versões</h2>
+                <p><strong>Mostra a versão do Node.js instalada:</strong></p>
+                <code class="command">node -v</code>
+
+                <p><strong>Mostra a versão do npm instalada:</strong></p>
+                <code class="command">npm -v</code>
+
+                <p><strong>Mostra a versão completa do executável do npm:</strong></p>
+                <code class="command">npm --version</code>
+
+                <p><strong>Exibe informações detalhadas sobre o ambiente Node.js e npm:</strong></p>
+                <code class="command">npm config list</code>
+
+                <p><strong>Abre o painel de configuração do npm no navegador:</strong></p>
+                <code class="command">npm config list --json</code>
+            </section>
+
+            <section id="npm-projetos">
+                <h2>Criando projetos</h2>
+                <p>Inicialize a pasta como projeto npm ou use um gerador para criar a estrutura inicial.</p>
+                <div class="table-scroll">
+                    <table class="command-table">
+                        <thead>
+                            <tr><th scope="col">Objetivo</th><th scope="col">Comando</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td data-label="Objetivo">Cria o package.json com perguntas interativas</td><td data-label="Comando"><code class="command">npm init</code></td></tr>
+                            <tr><td data-label="Objetivo">Cria o package.json com valores padrão</td><td data-label="Comando"><code class="command command-important">npm init -y</code></td></tr>
+                            <tr><td data-label="Objetivo">Adiciona TypeScript como dependência de desenvolvimento</td><td data-label="Comando"><code class="command">npm install -D typescript</code></td></tr>
+                            <tr><td data-label="Objetivo">Cria um projeto Vue usando o gerador oficial</td><td data-label="Comando"><code class="command">npm create vue@latest</code></td></tr>
+                            <tr><td data-label="Objetivo">Cria um projeto React com Vite</td><td data-label="Comando"><code class="command">npm create vite@latest meu-projeto -- --template react</code></td></tr>
+                            <tr><td data-label="Objetivo">Cria um projeto Next.js</td><td data-label="Comando"><code class="command">npx create-next-app@latest meu-projeto</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="npx-comandos">
+                <h2>Comandos npx</h2>
+                <p>As tabelas se adaptam a telas pequenas. Use <strong>Copiar</strong> ao lado de cada comando.</p>
+                <div class="table-scroll">
+                    <table class="command-table">
+                        <thead>
+                            <tr><th scope="col">Categoria</th><th scope="col">O que faz</th><th scope="col">Comando copiável</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Exibe a versão do npx</td><td data-label="Comando copiável"><code class="command command-important">npx --version</code></td></tr>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Exibe as opções disponíveis</td><td data-label="Comando copiável"><code class="command">npx --help</code></td></tr>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Executa um pacote pelo nome</td><td data-label="Comando copiável"><code class="command">npx pacote</code></td></tr>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Executa uma versão específica de um pacote</td><td data-label="Comando copiável"><code class="command">npx pacote@versao</code></td></tr>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Usa a versão mais recente de um pacote</td><td data-label="Comando copiável"><code class="command">npx pacote@latest</code></td></tr>
+                            <tr><td data-label="Categoria">Uso básico</td><td data-label="O que faz">Pula a confirmação antes de baixar a ferramenta</td><td data-label="Comando copiável"><code class="command">npx --yes pacote</code></td></tr>
+                            <tr><td data-label="Categoria">Criar projeto</td><td data-label="O que faz">Gera um projeto Vite sem perguntas de confirmação</td><td data-label="Comando copiável"><code class="command">npx --yes create-vite@latest meu-projeto</code></td></tr>
+                            <tr><td data-label="Categoria">Criar projeto</td><td data-label="O que faz">Gera um projeto Next.js</td><td data-label="Comando copiável"><code class="command">npx create-next-app@latest meu-projeto</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Executa o compilador TypeScript temporariamente</td><td data-label="Comando copiável"><code class="command">npx --yes --package typescript -- tsc --version</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Cria um tsconfig.json usando TypeScript temporário</td><td data-label="Comando copiável"><code class="command command-important">npx --yes --package typescript -- tsc --init</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Cria um tsconfig.json com verificações estritas ativadas</td><td data-label="Comando copiável"><code class="command">npx --yes --package typescript -- tsc --init --strict</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Compila o projeto conforme tsconfig.json</td><td data-label="Comando copiável"><code class="command">npx tsc</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Compila um arquivo TypeScript específico</td><td data-label="Comando copiável"><code class="command">npx tsc src/index.ts</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Valida os tipos sem gerar arquivos JavaScript</td><td data-label="Comando copiável"><code class="command">npx tsc --noEmit</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Recompila ao detectar alterações nos arquivos</td><td data-label="Comando copiável"><code class="command">npx tsc --watch</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Compila usando um tsconfig.json específico</td><td data-label="Comando copiável"><code class="command">npx tsc --project tsconfig.json</code></td></tr>
+                            <tr><td data-label="Categoria">TypeScript</td><td data-label="O que faz">Compila um projeto TypeScript em modo build</td><td data-label="Comando copiável"><code class="command">npx tsc --build</code></td></tr>
+                            <tr><td data-label="Categoria">Ferramentas</td><td data-label="O que faz">Executa o TypeScript diretamente com tsx</td><td data-label="Comando copiável"><code class="command">npx tsx src/index.ts</code></td></tr>
+                            <tr><td data-label="Categoria">Ferramentas</td><td data-label="O que faz">Executa o ESLint na configuração interativa</td><td data-label="Comando copiável"><code class="command">npx eslint --init</code></td></tr>
+                            <tr><td data-label="Categoria">Ferramentas</td><td data-label="O que faz">Verifica a formatação com Prettier</td><td data-label="Comando copiável"><code class="command">npx prettier --check .</code></td></tr>
+                            <tr><td data-label="Categoria">Ferramentas</td><td data-label="O que faz">Formata os arquivos do projeto com Prettier</td><td data-label="Comando copiável"><code class="command">npx prettier --write .</code></td></tr>
+                            <tr><td data-label="Categoria">Ferramentas</td><td data-label="O que faz">Executa o Vite localmente no endereço do computador</td><td data-label="Comando copiável"><code class="command">npx vite --host 127.0.0.1</code></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="npm-pacotes">
+                <h2>Gerenciamento de pacotes</h2>
+                <ul>
+                    <li><strong>Instala dependências do projeto:</strong><br><code
+                            class="command command-important">npm install</code>
+                    </li>
+                    <li><strong>Instala um pacote:</strong><br><code class="command">npm install pacote</code></li>
+                    <li><strong>Instala um pacote como dependência de desenvolvimento:</strong><br><code
+                            class="command">npm install -D pacote</code></li>
+                    <li><strong>Remove um pacote:</strong><br><code class="command">npm uninstall pacote</code></li>
+                    <li><strong>Lista os pacotes instalados:</strong><br><code class="command">npm list</code></li>
+                    <li><strong>Mostra os scripts disponíveis do projeto:</strong><br><code
+                            class="command">npm run</code></li>
+                    <li><strong>Executa um pacote temporário sem instalação global:</strong><br><code
+                            class="command">npx</code></li>
+                    <li><strong>Instala um pacote como dependência normal:</strong><br><code
+                            class="command">npm install express --save</code></li>
+                    <li><strong>Instala um pacote como dependência global:</strong><br><code
+                            class="command">npm install -g typescript</code></li>
+                    <li><strong>Instala uma versão específica de um pacote:</strong><br><code
+                            class="command">npm install react@18.3.1</code></li>
+                    <li><strong>Instala a versão mais recente dentro da faixa aceita:</strong><br><code
+                            class="command">npm install react@latest</code></li>
+                    <li><strong>Remove um pacote de todas as dependências:</strong><br><code
+                            class="command">npm uninstall express</code></li>
+                    <li><strong>Pesquisa pacotes disponíveis no registro npm:</strong><br><code
+                            class="command">npm search express</code></li>
+                    <li><strong>Exibe informações sobre um pacote:</strong><br><code
+                            class="command">npm view react description</code></li>
+                    <li><strong>Instala todas as dependências do package.json:</strong><br><code
+                            class="command">npm install --package-lock-only</code></li>
+                    <li><strong>Limpa pacotes não referenciados por dependências:</strong><br><code
+                            class="command">npm prune</code></li>
+                    <li><strong>Reinstala dependências ausentes ou corrompidas:</strong><br><code
+                            class="command command-important">npm rebuild</code></li>
+                    <li><strong>Executa uma versão temporária de uma ferramenta:</strong><br><code
+                            class="command">npx prettier --write .</code></li>
+                    <li><strong>Mostra os pacotes desatualizados em formato detalhado:</strong><br><code
+                            class="command">npm outdated --long</code></li>
+                </ul>
+            </section>
+
+            <section id="npm-scripts">
+                <h2>Scripts do projeto</h2>
+                <ul>
+                    <li><strong>Executa o script de inicialização, se definido no package.json:</strong><br><code
+                            class="command">npm start</code></li>
+                    <li><strong>Executa o script de desenvolvimento, se definido no package.json:</strong><br><code
+                            class="command">npm run dev</code></li>
+                    <li><strong>Executa os testes definidos no projeto:</strong><br><code
+                            class="command">npm test</code></li>
+                    <li><strong>Gera a versão de produção, se houver esse script:</strong><br><code
+                            class="command">npm run build</code></li>
+                    <li><strong>Executa o script com argumentos adicionais:</strong><br><code
+                            class="command">npm run dev -- --host 0.0.0.0</code></li>
+                    <li><strong>Executa um script de forma silenciosa:</strong><br><code
+                            class="command">npm run build --silent</code></li>
+                    <li><strong>Executa todos os scripts cujo nome começa com "test":</strong><br><code
+                            class="command">npm run test:unit</code></li>
+                    <li><strong>Mostra o diretório usado por pacotes executáveis locais:</strong><br><code
+                            class="command">npx which vite</code></li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Instalação e atualização</h2>
+                <ul>
+                    <li><strong>Instala exatamente as versões do package-lock.json:</strong><br><code
+                            class="command command-important">npm ci</code><br><small>Requer um arquivo
+                            package-lock.json ou npm-shrinkwrap.json.</small></li>
+                    <li><strong>Atualiza dependências dentro das versões permitidas no package.json:</strong><br><code
+                            class="command">npm update</code></li>
+                    <li><strong>Mostra dependências com versões mais recentes disponíveis:</strong><br><code
+                            class="command">npm outdated</code></li>
+                    <li><strong>Lista apenas as dependências diretas do projeto:</strong><br><code
+                            class="command">npm list --depth=0</code></li>
+                    <li><strong>Atualiza apenas um pacote específico:</strong><br><code
+                            class="command">npm update react</code></li>
+                    <li><strong>Atualiza todas as dependências de desenvolvimento:</strong><br><code
+                            class="command">npm update --save-dev</code></li>
+                    <li><strong>Corrige vulnerabilidades incluindo mudanças compatíveis:</strong><br><code
+                            class="command">npm audit fix --force</code><br><small>Use com cuidado: pode gerar mudanças incompatíveis.</small></li>
+                    <li><strong>Gera um relatório JSON da auditoria:</strong><br><code
+                            class="command">npm audit --json</code></li>
+                    <li><strong>Limpa o cache global do npm:</strong><br><code
+                            class="command">npm cache clean --force</code></li>
+                    <li><strong>Mostra o tamanho do diretório de cache:</strong><br><code
+                            class="command">npm cache size</code></li>
+                    <li><strong>Lista os usuários publicados no npm:</strong><br><code
+                            class="command">npm whoami</code></li>
+                    <li><strong>Publica o pacote atual no registro configurado:</strong><br><code
+                            class="command">npm publish</code></li>
+                    <li><strong>Remove uma versão publicada do pacote:</strong><br><code
+                            class="command">npm unpublish nome-do-pacote@1.0.0</code></li>
+                    <li><strong>Executa o npm em modo diagnóstico:</strong><br><code
+                            class="command">npm doctor</code></li>
+                </ul>
+            </section>
+
+            <section id="npm-auditoria">
+                <h2>Auditoria e manutenção</h2>
+                <ul>
+                    <li><strong>Verifica vulnerabilidades conhecidas nas dependências:</strong><br><code
+                            class="command">npm audit</code></li>
+                    <li><strong>Tenta corrigir vulnerabilidades sem mudanças incompatíveis:</strong><br><code
+                            class="command command-important">npm audit fix</code><br><small>Pode atualizar o
+                            package-lock.json. Revise as alterações antes de enviar o projeto.</small></li>
+                    <li><strong>Verifica a integridade do cache local do npm:</strong><br><code
+                            class="command">npm cache verify</code></li>
+                </ul>
+            </section>
+
+            <section id="git-comandos">
+                <h2>Comandos Git</h2>
+                <p><small>Execute os comandos no terminal, dentro da pasta do projeto. Troque os valores de exemplo
+                        pelos seus dados.</small></p>
+                <ul>
+                    <li><strong>Confere se o Git está instalado:</strong><br><code class="command">git --version</code>
+                    </li>
+                    <li><strong>Configura seu nome para os commits:</strong><br><code
+                            class="command">git config --global user.name "Seu Nome"</code></li>
+                    <li><strong>Configura seu e-mail para os commits:</strong><br><code
+                            class="command">git config --global user.email "voce@exemplo.com"</code></li>
+                    <li><strong>Inicia um repositório Git na pasta atual:</strong><br><code
+                            class="command command-important">git init</code></li>
+                    <li><strong>Baixa uma cópia de um repositório remoto:</strong><br><code
+                            class="command">git clone URL_DO_REPOSITORIO</code><br><small>Substitua pelo endereço HTTPS
+                            ou SSH do repositório.</small></li>
+                    <li><strong>Mostra arquivos modificados e o estado do repositório:</strong><br><code
+                            class="command command-important">git status</code></li>
+                    <li><strong>Prepara um arquivo para o próximo commit:</strong><br><code
+                            class="command">git add nome-do-arquivo</code></li>
+                    <li><strong>Prepara todas as alterações da pasta:</strong><br><code class="command">git add .</code>
+                    </li>
+                    <li><strong>Registra as alterações preparadas:</strong><br><code
+                            class="command command-important">git commit -m "Descreva a alteracao"</code></li>
+                    <li><strong>Exibe o histórico resumido de commits:</strong><br><code
+                            class="command">git log --oneline</code></li>
+                    <li><strong>Mostra alterações ainda não preparadas para commit:</strong><br><code
+                            class="command">git diff</code></li>
+                    <li><strong>Mostra alterações já preparadas para commit:</strong><br><code
+                            class="command">git diff --staged</code></li>
+                    <li><strong>Lista as branches locais:</strong><br><code class="command">git branch</code></li>
+                    <li><strong>Cria uma branch e muda para ela:</strong><br><code
+                            class="command">git switch -c nome-da-branch</code></li>
+                    <li><strong>Muda para uma branch existente:</strong><br><code
+                            class="command">git switch nome-da-branch</code></li>
+                    <li><strong>Lista os repositórios remotos configurados:</strong><br><code
+                            class="command">git remote -v</code></li>
+                    <li><strong>Conecta o projeto a um repositório remoto:</strong><br><code
+                            class="command">git remote add origin URL_DO_REPOSITORIO</code><br><small>Use quando o
+                            projeto ainda não tem um remoto chamado origin.</small></li>
+                    <li><strong>Envia a branch atual e configura o upstream:</strong><br><code
+                            class="command command-important">git push -u origin main</code><br><small>Troque main pelo
+                            nome da sua branch, se necessário.</small></li>
+                    <li><strong>Envia novos commits para o remoto:</strong><br><code class="command">git push</code>
+                    </li>
+                    <li><strong>Baixa e integra alterações da branch remota:</strong><br><code
+                            class="command">git pull origin main</code><br><small>Confirme o nome da branch antes de
+                            executar.</small></li>
+                    <li><strong>Baixa informações do remoto sem integrar alterações:</strong><br><code
+                            class="command">git fetch</code></li>
+                    <li><strong>Guarda temporariamente alterações ainda não commitadas:</strong><br><code
+                            class="command">git stash</code></li>
+                    <li><strong>Restaura as alterações guardadas mais recentemente:</strong><br><code
+                            class="command">git stash pop</code></li>
+                    <li><strong>Descarta alterações locais de um arquivo:</strong><br><code
+                            class="command command-important">git restore nome-do-arquivo</code><br><small>Atenção:
+                            remove as alterações locais não commitadas desse arquivo.</small></li>
+                    <li><strong>Remove o rastreamento de um arquivo sem apagá-lo do disco:</strong><br><code
+                            class="command">git rm --cached nome-do-arquivo</code></li>
+                    <li><strong>Move ou renomeia um arquivo mantendo o histórico:</strong><br><code
+                            class="command">git mv antigo.txt novo.txt</code></li>
+                    <li><strong>Mostra o histórico completo com ramificações:</strong><br><code
+                            class="command">git log --oneline --graph --decorate --all</code></li>
+                    <li><strong>Mostra os autores e linhas alteradas em um arquivo:</strong><br><code
+                            class="command">git blame nome-do-arquivo</code></li>
+                    <li><strong>Localiza o commit que introduziu uma mudança:</strong><br><code
+                            class="command">git bisect start</code></li>
+                    <li><strong>Marca o commit atual como bom durante a busca:</strong><br><code
+                            class="command">git bisect good</code></li>
+                    <li><strong>Marca o commit atual como ruim durante a busca:</strong><br><code
+                            class="command">git bisect bad</code></li>
+                    <li><strong>Finaliza a busca por regressão:</strong><br><code
+                            class="command">git bisect reset</code></li>
+                    <li><strong>Exclui uma branch local já integrada:</strong><br><code
+                            class="command">git branch -d nome-da-branch</code></li>
+                    <li><strong>Exclui uma branch local mesmo não integrada:</strong><br><code
+                            class="command">git branch -D nome-da-branch</code></li>
+                    <li><strong>Exclui uma branch no repositório remoto:</strong><br><code
+                            class="command">git push origin --delete nome-da-branch</code></li>
+                    <li><strong>Baixa uma branch remota para uma branch local:</strong><br><code
+                            class="command">git switch --track origin/nome-da-branch</code></li>
+                    <li><strong>Mescla uma branch na branch atual:</strong><br><code
+                            class="command">git merge nome-da-branch</code></li>
+                    <li><strong>Envia uma branch específica para o remoto:</strong><br><code
+                            class="command">git push origin nome-da-branch</code></li>
+                    <li><strong>Busca alterações e atualiza branches remotas:</strong><br><code
+                            class="command">git fetch --prune</code></li>
+                    <li><strong>Reaplica commits sobre a branch atual:</strong><br><code
+                            class="command">git rebase main</code></li>
+                    <li><strong>Continua um rebase após resolver conflitos:</strong><br><code
+                            class="command">git rebase --continue</code></li>
+                    <li><strong>Cancela um rebase em andamento:</strong><br><code
+                            class="command">git rebase --abort</code></li>
+                    <li><strong>Copia um commit específico para a branch atual:</strong><br><code
+                            class="command">git cherry-pick HASH_DO_COMMIT</code></li>
+                    <li><strong>Cria uma cópia temporária das alterações locais:</strong><br><code
+                            class="command">git stash push -m "descricao das alterações"</code></li>
+                    <li><strong>Lista todas as cópias temporárias:</strong><br><code
+                            class="command">git stash list</code></li>
+                    <li><strong>Aplica uma stash sem removê-la da lista:</strong><br><code
+                            class="command">git stash apply stash@{0}</code></li>
+                    <li><strong>Apaga uma stash específica:</strong><br><code
+                            class="command">git stash drop stash@{0}</code></li>
+                    <li><strong>Desfaz um commit criando outro commit reverso:</strong><br><code
+                            class="command">git revert HASH_DO_COMMIT</code></li>
+                    <li><strong>Cria uma tag anotada para uma versão:</strong><br><code
+                            class="command">git tag -a v1.0.0 -m "Versão 1.0.0"</code></li>
+                    <li><strong>Lista todas as tags do projeto:</strong><br><code
+                            class="command">git tag --list</code></li>
+                    <li><strong>Envia todas as tags para o repositório remoto:</strong><br><code
+                            class="command">git push origin --tags</code></li>
+                    <li><strong>Desfaz o staging de todos os arquivos:</strong><br><code
+                            class="command">git reset</code></li>
+                    <li><strong>Mostra commits ainda não enviados ao remoto:</strong><br><code
+                            class="command">git log origin/main..HEAD</code></li>
+                    <li><strong>Abre uma interface gráfica de resolução de conflitos:</strong><br><code
+                            class="command">git mergetool</code></li>
+                </ul>
+            </section>
+
+            <section id="atributos-html">
+                <h2>Atributos HTML</h2>
+                <p>Os atributos ficam na <strong>tag de abertura</strong>, dentro dos sinais <code>&lt; &gt;</code>.
+                    Por exemplo, em <code>&lt;a href="..."&gt;</code>, <code>href</code> indica o destino do link.
+                    Copie cada exemplo e substitua os valores de demonstração pelos seus.</p>
+                <div class="table-scroll">
+                    <table class="command-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Elemento / atributo</th>
+                                <th scope="col">Para que serve</th>
+                                <th scope="col">Exemplo para copiar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · href</td>
+                                <td data-label="Para que serve">Define o endereço de destino de um link.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="https://developer.mozilla.org/"&gt;Documentação HTML&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · href interno</td>
+                                <td data-label="Para que serve">Leva a uma seção da mesma página que tenha o id indicado.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="#contato"&gt;Ir para contato&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · target e rel</td>
+                                <td data-label="Para que serve">Abre em outra aba e evita que a página aberta controle a página de origem.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="https://developer.mozilla.org/" target="_blank" rel="noopener noreferrer"&gt;Abrir documentação&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · rel="nofollow"</td>
+                                <td data-label="Para que serve">Indica aos mecanismos de busca que o site não está endossando o destino.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="https://exemplo.com/" rel="nofollow"&gt;Link externo&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · mailto e tel</td>
+                                <td data-label="Para que serve">Cria links para iniciar um e-mail ou uma ligação.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="mailto:contato@exemplo.com"&gt;Enviar e-mail&lt;/a&gt; &lt;a href="tel:+551155555555"&gt;Ligar&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · download</td>
+                                <td data-label="Para que serve">Sugere baixar o arquivo indicado pelo link.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="arquivos/guia.pdf" download&gt;Baixar guia&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">link · rel e href</td>
+                                <td data-label="Para que serve">Carrega um arquivo CSS externo no documento.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;link rel="stylesheet" href="estilos.css"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">img · src e alt</td>
+                                <td data-label="Para que serve">Define o arquivo da imagem e um texto alternativo descritivo.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;img src="foto.jpg" alt="Descrição da imagem"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">img · loading</td>
+                                <td data-label="Para que serve">Adia o carregamento de imagens que estão fora da tela.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;img src="paisagem.jpg" alt="Paisagem" loading="lazy" width="800" height="600"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">script · src e defer</td>
+                                <td data-label="Para que serve">Carrega um arquivo JavaScript externo sem bloquear a leitura do HTML.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;script src="app.js" defer&gt;&lt;/script&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">form · action e method</td>
+                                <td data-label="Para que serve">Define para onde e como os dados do formulário serão enviados.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;form action="/cadastro" method="post"&gt;...&lt;/form&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">label · for e input · id</td>
+                                <td data-label="Para que serve">Associa o rótulo ao campo correspondente.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;label for="email"&gt;E-mail&lt;/label&gt; &lt;input id="email" type="email"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">input · type</td>
+                                <td data-label="Para que serve">Escolhe o tipo de campo e os recursos de entrada apropriados.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="email" name="email"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">input · name e value</td>
+                                <td data-label="Para que serve">Define o nome enviado ao servidor e o valor do campo.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="text" name="cidade" value="São Paulo"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">input · placeholder</td>
+                                <td data-label="Para que serve">Exibe uma dica curta; não substitui o elemento label.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="search" placeholder="Buscar..."&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">required e autocomplete</td>
+                                <td data-label="Para que serve">Exige preenchimento e permite ao navegador sugerir dados salvos.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="email" name="email" autocomplete="email" required&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">button · type</td>
+                                <td data-label="Para que serve">Escolhe se o botão envia o formulário ou executa outra ação.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button type="submit"&gt;Enviar&lt;/button&gt; &lt;button type="button"&gt;Abrir&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · id e class</td>
+                                <td data-label="Para que serve">Identifica um elemento e agrupa elementos para aplicar estilos ou scripts.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;section id="contato" class="secao"&gt;Contato&lt;/section&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · title e lang</td>
+                                <td data-label="Para que serve">Fornece informação adicional e indica o idioma do conteúdo.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;p lang="pt-BR" title="Informação adicional"&gt;Olá!&lt;/p&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributo global · data-*</td>
+                                <td data-label="Para que serve">Guarda dados personalizados no elemento para uso em scripts.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button data-produto-id="42"&gt;Adicionar&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-label</td>
+                                <td data-label="Para que serve">Dá um nome acessível quando o texto visível não descreve o controle.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button type="button" aria-label="Fechar menu"&gt;×&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · style e hidden</td>
+                                <td data-label="Para que serve">Aplica CSS direto ao elemento e pode ocultá-lo da página.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;p style="color: red" hidden&gt;Aviso oculto&lt;/p&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · tabindex</td>
+                                <td data-label="Para que serve">Controla a posição do elemento na navegação por teclado ou permite que ele receba foco.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;div tabindex="0"&gt;Painel focável&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · contenteditable</td>
+                                <td data-label="Para que serve">Permite que o usuário edite o conteúdo do elemento diretamente.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;p contenteditable="true" spellcheck="true"&gt;Edite este texto&lt;/p&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · draggable e dropzone</td>
+                                <td data-label="Para que serve">Permite arrastar o elemento; dropzone está obsoleto e não deve ser usado em código novo.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;div draggable="true"&gt;Item arrastável&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · dir e translate</td>
+                                <td data-label="Para que serve">Define a direção do texto e controla se o conteúdo pode ser traduzido automaticamente.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;p dir="ltr" translate="no"&gt;Texto original&lt;/p&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · inert</td>
+                                <td data-label="Para que serve">Impede interação, foco e navegação pelos elementos dentro da região marcada.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;section inert&gt;&lt;button&gt;Indisponível&lt;/button&gt;&lt;/section&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · popover</td>
+                                <td data-label="Para que serve">Transforma um elemento em uma camada popover controlada pelo navegador.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button popovertarget="aviso"&gt;Abrir aviso&lt;/button&gt;&lt;div id="aviso" popover&gt;Mensagem&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · autocapitalize e enterkeyhint</td>
+                                <td data-label="Para que serve">Sugere capitalização e o rótulo da tecla Enter em teclados móveis.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="text" autocapitalize="words" enterkeyhint="next"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos globais · spellcheck e autocorrect</td>
+                                <td data-label="Para que serve">Ativa a correção ortográfica e, quando suportado, a correção automática.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;textarea spellcheck="true" autocorrect="on"&gt;&lt;/textarea&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributo global · nonce</td>
+                                <td data-label="Para que serve">Autoriza scripts ou estilos específicos em páginas que usam Content Security Policy.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;script nonce="TOKEN-SEGURO"&gt;console.log("Permitido")&lt;/script&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributo global · role</td>
+                                <td data-label="Para que serve">Define um papel ARIA quando a semântica nativa do elemento não representa a interface.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;div role="status" aria-live="polite"&gt;Alteração salva&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-labelledby e aria-describedby</td>
+                                <td data-label="Para que serve">Associa nomes e descrições acessíveis a elementos por meio de outros ids.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;h2 id="titulo"&gt;Preferências&lt;/h2&gt;&lt;p id="ajuda"&gt;Escolha uma opção.&lt;/p&gt;&lt;button aria-labelledby="titulo" aria-describedby="ajuda"&gt;Continuar&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-expanded e aria-controls</td>
+                                <td data-label="Para que serve">Indica se uma região está aberta e qual elemento ela controla.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button aria-expanded="false" aria-controls="menu"&gt;Menu&lt;/button&gt;&lt;div id="menu" hidden&gt;Links&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-current</td>
+                                <td data-label="Para que serve">Marca o item atual em navegação, etapas ou uma lista de opções.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;a href="/guia" aria-current="page"&gt;Guia atual&lt;/a&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-pressed e aria-checked</td>
+                                <td data-label="Para que serve">Comunica estados pressionados ou selecionados em controles personalizados.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button aria-pressed="true"&gt;Favorito&lt;/button&gt;&lt;div role="checkbox" aria-checked="false" tabindex="0"&gt;Aceito&lt;/div&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Acessibilidade · aria-hidden</td>
+                                <td data-label="Para que serve">Remove um elemento decorativo ou redundante da árvore de acessibilidade.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;span aria-hidden="true"&gt;★&lt;/span&gt;Favorito</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos · meta charset e viewport</td>
+                                <td data-label="Para que serve">Define a codificação dos caracteres e a largura adequada em dispositivos móveis.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;meta charset="UTF-8"&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos · meta description e theme-color</td>
+                                <td data-label="Para que serve">Fornece descrição para resultados de busca e cor da interface do navegador.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;meta name="description" content="Guia de desenvolvimento web"&gt;&lt;meta name="theme-color" content="#1b1b1b"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Atributos · meta http-equiv</td>
+                                <td data-label="Para que serve">Configura instruções HTTP diretamente no documento, como charset ou proteção de conteúdo.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;meta http-equiv="Content-Security-Policy" content="default-src 'self'"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · rel variants</td>
+                                <td data-label="Para que serve">Relaciona recursos como ícone, autor, pré-carregamento ou descrição do documento.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;link rel="icon" href="favicon.svg" type="image/svg+xml"&gt;&lt;link rel="preload" href="fonte.woff2" as="font" type="font/woff2" crossorigin&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Link · crossorigin e integrity</td>
+                                <td data-label="Para que serve">Controla o acesso entre origens e verifica a integridade de recursos externos.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;script src="https://cdn.exemplo.com/lib.js" integrity="sha384-HASH" crossorigin="anonymous"&gt;&lt;/script&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Script · async e type="module"</td>
+                                <td data-label="Para que serve">Executa scripts assíncronos ou habilita módulos JavaScript modernos.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;script src="app.js" async&gt;&lt;/script&gt;&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Img · srcset e sizes</td>
+                                <td data-label="Para que serve">Oferece versões da imagem conforme densidade de pixels ou largura disponível.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;img src="foto-600.jpg" srcset="foto-600.jpg 600w, foto-1200.jpg 1200w" sizes="(max-width: 600px) 100vw, 600px" alt="Paisagem"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Img · decoding e fetchpriority</td>
+                                <td data-label="Para que serve">Sugere a estratégia de decodificação e a prioridade de carregamento da imagem.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;img src="capa.jpg" alt="Capa" decoding="async" fetchpriority="high"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Media · controlslist e crossorigin</td>
+                                <td data-label="Para que serve">Personaliza controles visíveis e configura o carregamento de mídia entre origens.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;video src="video.mp4" controls controlslist="nodownload" crossorigin="anonymous"&gt;&lt;/video&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Media · autoplay, loop, muted e preload</td>
+                                <td data-label="Para que serve">Configura reprodução automática, repetição, áudio inicial e estratégia de pré-carregamento.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;video src="apresentacao.mp4" autoplay muted loop playsinline preload="metadata"&gt;&lt;/video&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Media · poster e track attributes</td>
+                                <td data-label="Para que serve">Define uma imagem antes da reprodução e configura legendas em WebVTT.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;video poster="capa.jpg" controls&gt;&lt;track src="legendas.vtt" kind="captions" srclang="pt-BR" label="Português" default&gt;&lt;/video&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Form · enctype e novalidate</td>
+                                <td data-label="Para que serve">Define a codificação dos dados enviados e permite desativar a validação automática.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;form action="/upload" method="post" enctype="multipart/form-data" novalidate&gt;&lt;/form&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Form · accept-charset e target</td>
+                                <td data-label="Para que serve">Sugere codificações aceitas e define onde o resultado do envio será exibido.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;form action="/busca" method="get" accept-charset="UTF-8" target="_blank"&gt;&lt;/form&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · min, max e step</td>
+                                <td data-label="Para que serve">Define limites numéricos ou de data e o intervalo entre valores válidos.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="number" name="quantidade" min="1" max="10" step="1" value="1"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · minlength, maxlength e pattern</td>
+                                <td data-label="Para que serve">Limita o tamanho do texto e exige correspondência com uma expressão regular.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="text" name="codigo" minlength="4" maxlength="8" pattern="[A-Z0-9]+"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · multiple e accept</td>
+                                <td data-label="Para que serve">Permite vários arquivos ou valores e limita os tipos aceitos pelo seletor.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="file" name="arquivos" accept="image/png,image/jpeg" multiple&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · disabled, readonly e checked</td>
+                                <td data-label="Para que serve">Desativa o campo, impede edição ou marca uma opção inicialmente selecionada.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="text" value="Somente leitura" readonly&gt;&lt;input type="checkbox" checked disabled&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · list e datalist</td>
+                                <td data-label="Para que serve">Relaciona o campo de texto a uma lista de sugestões predefinidas.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input list="cores"&gt;&lt;datalist id="cores"&gt;&lt;option value="Azul"&gt;&lt;/datalist&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Input · inputmode e autocapitalize</td>
+                                <td data-label="Para que serve">Sugere um teclado móvel adequado e o comportamento de letras maiúsculas.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;input type="text" inputmode="numeric" pattern="[0-9]*" autocapitalize="off"&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Select · multiple, size e optgroup</td>
+                                <td data-label="Para que serve">Permite várias opções, define quantidade visível e agrupa escolhas relacionadas.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;select name="estado" multiple size="3"&gt;&lt;optgroup label="Sudeste"&gt;&lt;option value="sp"&gt;São Paulo&lt;/option&gt;&lt;/optgroup&gt;&lt;/select&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Textarea · cols, rows e wrap</td>
+                                <td data-label="Para que serve">Define largura, altura e como as quebras de linha são enviadas ao servidor.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;textarea name="mensagem" cols="40" rows="5" wrap="soft"&gt;&lt;/textarea&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Button · form, formaction e formmethod</td>
+                                <td data-label="Para que serve">Permite associar ou enviar o botão por outro formulário e com outro método.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button type="submit" form="cadastro" formaction="/rascunho" formmethod="post"&gt;Salvar rascunho&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Button · formnovalidate e value</td>
+                                <td data-label="Para que serve">Evita a validação neste envio e informa um valor associado ao botão.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;button type="submit" name="acao" value="cancelar" formnovalidate&gt;Cancelar&lt;/button&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Details · open e name</td>
+                                <td data-label="Para que serve">Mantém o conteúdo aberto inicialmente e permite criar um grupo exclusivo de disclosures.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;details name="faq" open&gt;&lt;summary&gt;Pergunta&lt;/summary&gt;&lt;p&gt;Resposta&lt;/p&gt;&lt;/details&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Dialog · open e method="dialog"</td>
+                                <td data-label="Para que serve">Mantém o diálogo visível ou permite que um formulário o feche sem JavaScript.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;dialog open&gt;&lt;form method="dialog"&gt;&lt;button value="ok"&gt;Fechar&lt;/button&gt;&lt;/form&gt;&lt;/dialog&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Table · colspan e rowspan</td>
+                                <td data-label="Para que serve">Faz uma célula ocupar várias colunas ou várias linhas da tabela.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;td colspan="2" rowspan="2"&gt;Conteúdo unido&lt;/td&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Table · scope e headers</td>
+                                <td data-label="Para que serve">Associa cabeçalhos a linhas ou colunas e vincula células a ids específicos.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;th id="nome" scope="col"&gt;Nome&lt;/th&gt;&lt;td headers="nome"&gt;Ana&lt;/td&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Time · datetime</td>
+                                <td data-label="Para que serve">Fornece uma representação legível por máquinas para data, hora ou duração.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;time datetime="2026-11-19T14:30:00-03:00"&gt;19 de novembro às 14:30&lt;/time&gt;</code></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Elemento / atributo">Meter · low, high e optimum</td>
+                                <td data-label="Para que serve">Define faixas de avaliação dentro da medida conhecida.</td>
+                                <td data-label="Exemplo para copiar"><code class="command">&lt;meter min="0" max="100" low="30" high="70" optimum="100" value="80"&gt;80%&lt;/meter&gt;</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tags-html">
+                <h2>Tags HTML: descrições e exemplos</h2>
+                <ul>
+                    <li><strong>&lt;a&gt;:</strong> link para outra página, arquivo ou seção.<br><code
+                            class="command">&lt;a href="https://exemplo.com"&gt;Visitar site&lt;/a&gt;</code></li>
+                    <li><strong>&lt;article&gt;:</strong> conteúdo independente, como uma notícia ou
+                        publicação.<br><code
+                            class="command">&lt;article&gt;&lt;h2&gt;Notícia&lt;/h2&gt;&lt;p&gt;Texto&lt;/p&gt;&lt;/article&gt;</code>
+                    </li>
+                    <li><strong>&lt;aside&gt;:</strong> conteúdo complementar ao conteúdo principal.<br><code
+                            class="command">&lt;aside&gt;Leia também&lt;/aside&gt;</code></li>
+                    <li><strong>&lt;body&gt;:</strong> corpo da página, onde fica o conteúdo visível.<br><code
+                            class="command">&lt;body&gt;&lt;main&gt;Conteúdo&lt;/main&gt;&lt;/body&gt;</code></li>
+                    <li><strong>&lt;button&gt;:</strong> botão que pode ser acionado pelo usuário.<br><code
+                            class="command">&lt;button type="button"&gt;Salvar&lt;/button&gt;</code></li>
+                    <li><strong>&lt;code&gt;:</strong> trecho de código.<br><code
+                            class="command">&lt;code&gt;npm test&lt;/code&gt;</code></li>
+                    <li><strong>&lt;div&gt;:</strong> contêiner genérico para agrupar conteúdo.<br><code
+                            class="command">&lt;div class="grupo"&gt;Conteúdo&lt;/div&gt;</code></li>
+                    <li><strong>&lt;footer&gt;:</strong> rodapé de uma página ou seção.<br><code
+                            class="command">&lt;footer&gt;Fim da página&lt;/footer&gt;</code></li>
+                    <li><strong>&lt;form&gt;:</strong> formulário para envio de informações.<br><code
+                            class="command">&lt;form action="/enviar" method="post"&gt;Campos&lt;/form&gt;</code></li>
+                    <li><strong>&lt;h1&gt;:</strong> título principal de uma seção.<br><code
+                            class="command">&lt;h1&gt;Título principal&lt;/h1&gt;</code></li>
+                    <li><strong>&lt;h2&gt;:</strong> título de segundo nível.<br><code
+                            class="command">&lt;h2&gt;Uma seção&lt;/h2&gt;</code></li>
+                    <li><strong>&lt;h3&gt;:</strong> título de terceiro nível.<br><code
+                            class="command">&lt;h3&gt;Um tópico&lt;/h3&gt;</code></li>
+                    <li><strong>&lt;head&gt;:</strong> metadados e configurações do documento HTML.<br><code
+                            class="command">&lt;head&gt;&lt;title&gt;Minha página&lt;/title&gt;&lt;/head&gt;</code></li>
+                    <li><strong>&lt;header&gt;:</strong> cabeçalho de uma página ou seção.<br><code
+                            class="command">&lt;header&gt;&lt;h1&gt;Meu site&lt;/h1&gt;&lt;/header&gt;</code></li>
+                    <li><strong>&lt;html&gt;:</strong> elemento raiz de um documento HTML.<br><code
+                            class="command">&lt;html lang="pt-BR"&gt;&lt;body&gt;&lt;main&gt;Conteúdo do documento&lt;/main&gt;&lt;/body&gt;&lt;/html&gt;</code>
+                    </li>
+                    <li><strong>&lt;img&gt;:</strong> imagem incorporada ao documento.<br><code
+                            class="command">&lt;img src="foto.jpg" alt="Descrição da foto"&gt;</code></li>
+                    <li><strong>&lt;input&gt;:</strong> campo de entrada de dados.<br><code
+                            class="command">&lt;input type="email" placeholder="Seu e-mail"&gt;</code></li>
+                    <li><strong>&lt;label&gt;:</strong> rótulo associado a um campo de formulário.<br><code
+                            class="command">&lt;label for="email"&gt;E-mail&lt;/label&gt;</code></li>
+                    <li><strong>&lt;li&gt;:</strong> item de uma lista.<br><code
+                            class="command">&lt;li&gt;Item da lista&lt;/li&gt;</code></li>
+                    <li><strong>&lt;link&gt;:</strong> referência a um recurso externo, geralmente uma folha de
+                        estilos.<br><code class="command">&lt;link rel="stylesheet" href="estilos.css"&gt;</code></li>
+                    <li><strong>&lt;main&gt;:</strong> conteúdo principal do documento.<br><code
+                            class="command">&lt;main&gt;Conteúdo principal&lt;/main&gt;</code></li>
+                    <li><strong>&lt;nav&gt;:</strong> grupo de links de navegação.<br><code
+                            class="command">&lt;nav&gt;&lt;a href="/"&gt;Início&lt;/a&gt;&lt;/nav&gt;</code></li>
+                    <li><strong>&lt;ol&gt;:</strong> lista ordenada.<br><code
+                            class="command">&lt;ol&gt;&lt;li&gt;Primeiro passo&lt;/li&gt;&lt;/ol&gt;</code></li>
+                    <li><strong>&lt;option&gt;:</strong> opção disponível em uma lista de seleção.<br><code
+                            class="command">&lt;option value="br"&gt;Brasil&lt;/option&gt;</code></li>
+                    <li><strong>&lt;p&gt;:</strong> parágrafo de texto.<br><code
+                            class="command">&lt;p&gt;Um parágrafo.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;script&gt;:</strong> código JavaScript ou referência a um arquivo de
+                        script.<br><code class="command">&lt;script src="app.js"&gt;&lt;/script&gt;</code></li>
+                    <li><strong>&lt;section&gt;:</strong> seção temática do documento.<br><code
+                            class="command">&lt;section&gt;&lt;h2&gt;Sobre&lt;/h2&gt;&lt;p&gt;Texto&lt;/p&gt;&lt;/section&gt;</code>
+                    </li>
+                    <li><strong>&lt;select&gt;:</strong> lista de opções selecionáveis.<br><code
+                            class="command">&lt;select&gt;&lt;option&gt;Brasil&lt;/option&gt;&lt;/select&gt;</code></li>
+                    <li><strong>&lt;small&gt;:</strong> texto complementar ou apresentado em tamanho menor.<br><code
+                            class="command">&lt;small&gt;Observação&lt;/small&gt;</code></li>
+                    <li><strong>&lt;span&gt;:</strong> contêiner genérico em linha.<br><code
+                            class="command">&lt;span class="destaque"&gt;Texto&lt;/span&gt;</code></li>
+                    <li><strong>&lt;strong&gt;:</strong> texto de grande importância, normalmente exibido em
+                        negrito.<br><code class="command">&lt;strong&gt;Importante&lt;/strong&gt;</code></li>
+                    <li><strong>&lt;style&gt;:</strong> regras CSS incorporadas ao documento.<br><code
+                            class="command">&lt;style&gt;p { color: blue; }&lt;/style&gt;</code></li>
+                    <li><strong>&lt;table&gt;:</strong> tabela de dados.<br><code
+                            class="command">&lt;table&gt;&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;/tr&gt;&lt;/table&gt;</code>
+                    </li>
+                    <li><strong>&lt;td&gt;:</strong> célula de dados de uma tabela.<br><code
+                            class="command">&lt;td&gt;Ana&lt;/td&gt;</code></li>
+                    <li><strong>&lt;textarea&gt;:</strong> campo de texto com várias linhas.<br><code
+                            class="command">&lt;textarea name="mensagem"&gt;&lt;/textarea&gt;</code></li>
+                    <li><strong>&lt;th&gt;:</strong> célula de cabeçalho de uma tabela.<br><code
+                            class="command">&lt;th scope="col"&gt;Nome&lt;/th&gt;</code></li>
+                    <li><strong>&lt;title&gt;:</strong> título do documento exibido na aba do navegador.<br><code
+                            class="command">&lt;title&gt;Minha página&lt;/title&gt;</code></li>
+                    <li><strong>&lt;tr&gt;:</strong> linha de uma tabela.<br><code
+                            class="command">&lt;tr&gt;&lt;td&gt;Ana&lt;/td&gt;&lt;/tr&gt;</code></li>
+                    <li><strong>&lt;ul&gt;:</strong> lista não ordenada.<br><code
+                            class="command">&lt;ul&gt;&lt;li&gt;Item&lt;/li&gt;&lt;/ul&gt;</code></li>
+                    <li><strong>&lt;br&gt;:</strong> quebra de linha dentro do texto.<br><code
+                            class="command">&lt;p&gt;Primeira linha&lt;br&gt;Segunda linha&lt;/p&gt;</code></li>
+                    <li><strong>&lt;hr&gt;:</strong> separador temático ou linha horizontal.<br><code
+                            class="command">&lt;p&gt;Introdução&lt;/p&gt;&lt;hr&gt;&lt;p&gt;Detalhes&lt;/p&gt;</code></li>
+                    <li><strong>&lt;em&gt;:</strong> dá ênfase semântica a uma palavra ou frase.<br><code
+                            class="command">&lt;p&gt;Este recurso é &lt;em&gt;importante&lt;/em&gt;.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;b&gt;:</strong> destaca texto visualmente sem indicar importância semântica.<br><code
+                            class="command">&lt;p&gt;&lt;b&gt;Aviso:&lt;/b&gt; confira os dados.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;i&gt;:</strong> representa texto alternativo, como um termo técnico ou nome.<br><code
+                            class="command">&lt;p&gt;O termo &lt;i&gt;fallback&lt;/i&gt; significa alternativa.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;mark&gt;:</strong> realça parte do texto.<br><code
+                            class="command">&lt;p&gt;A &lt;mark&gt;palavra destacada&lt;/mark&gt; aparece realçada.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;q&gt;:</strong> inclui uma citação curta em linha.<br><code
+                            class="command">&lt;p&gt;Ela disse &lt;q&gt;Vamos começar&lt;/q&gt;.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;blockquote&gt;:</strong> inclui uma citação longa em bloco.<br><code
+                            class="command">&lt;blockquote&gt;Texto citado de outra fonte.&lt;/blockquote&gt;</code></li>
+                    <li><strong>&lt;pre&gt;:</strong> preserva espaços e quebras de linha.<br><code
+                            class="command">&lt;pre&gt;linha 1&#10;linha 2&lt;/pre&gt;</code></li>
+                    <li><strong>&lt;dl&gt;, &lt;dt&gt; e &lt;dd&gt;:</strong> definem uma lista de termos e descrições.<br><code
+                            class="command">&lt;dl&gt;&lt;dt&gt;npm&lt;/dt&gt;&lt;dd&gt;Gerenciador de pacotes&lt;/dd&gt;&lt;/dl&gt;</code></li>
+                    <li><strong>&lt;figure&gt; e &lt;figcaption&gt;:</strong> associam uma mídia a sua legenda.<br><code
+                            class="command">&lt;figure&gt;&lt;img src="foto.jpg" alt="Foto"&gt;&lt;figcaption&gt;Legenda&lt;/figcaption&gt;&lt;/figure&gt;</code></li>
+                    <li><strong>&lt;picture&gt; e &lt;source&gt;:</strong> oferecem versões de imagem por tamanho ou formato.<br><code
+                            class="command">&lt;picture&gt;&lt;source srcset="foto.webp" type="image/webp"&gt;&lt;img src="foto.jpg" alt="Foto"&gt;&lt;/picture&gt;</code></li>
+                    <li><strong>&lt;video&gt;:</strong> incorpora vídeo com controles de reprodução.<br><code
+                            class="command">&lt;video src="video.mp4" controls&gt;Vídeo indisponível.&lt;/video&gt;</code></li>
+                    <li><strong>&lt;audio&gt;:</strong> incorpora áudio com controles de reprodução.<br><code
+                            class="command">&lt;audio src="musica.mp3" controls&gt;Áudio indisponível.&lt;/audio&gt;</code></li>
+                    <li><strong>&lt;source&gt;:</strong> fornece alternativas dentro de picture, video ou audio.<br><code
+                            class="command">&lt;video controls&gt;&lt;source src="video.webm" type="video/webm"&gt;&lt;/video&gt;</code></li>
+                    <li><strong>&lt;iframe&gt;:</strong> incorpora outro documento HTML em uma página.<br><code
+                            class="command">&lt;iframe src="pagina.html" title="Página incorporada"&gt;&lt;/iframe&gt;</code></li>
+                    <li><strong>&lt;canvas&gt;:</strong> área usada por JavaScript para desenhar gráficos.<br><code
+                            class="command">&lt;canvas id="tela" width="300" height="150"&gt;&lt;/canvas&gt;</code></li>
+                    <li><strong>&lt;svg&gt;:</strong> incorpora gráficos vetoriais escaláveis.<br><code
+                            class="command">&lt;svg width="100" height="100"&gt;&lt;circle cx="50" cy="50" r="40" fill="blue"/&gt;&lt;/svg&gt;</code></li>
+                    <li><strong>&lt;details&gt; e &lt;summary&gt;:</strong> criam conteúdo expansível sem JavaScript.<br><code
+                            class="command">&lt;details&gt;&lt;summary&gt;Mostrar detalhes&lt;/summary&gt;&lt;p&gt;Conteúdo oculto&lt;/p&gt;&lt;/details&gt;</code></li>
+                    <li><strong>&lt;dialog&gt;:</strong> representa uma caixa de diálogo modal ou não modal.<br><code
+                            class="command">&lt;dialog open&gt;&lt;p&gt;Mensagem&lt;/p&gt;&lt;/dialog&gt;</code></li>
+                    <li><strong>&lt;meter&gt;:</strong> mostra uma medida dentro de um intervalo conhecido.<br><code
+                            class="command">&lt;meter min="0" max="100" value="75"&gt;75%&lt;/meter&gt;</code></li>
+                    <li><strong>&lt;progress&gt;:</strong> indica progresso de uma tarefa.<br><code
+                            class="command">&lt;progress value="60" max="100"&gt;60%&lt;/progress&gt;</code></li>
+                    <li><strong>&lt;time&gt;:</strong> representa uma data ou hora legível por máquinas.<br><code
+                            class="command">&lt;time datetime="2026-11-18"&gt;18 de novembro de 2026&lt;/time&gt;</code></li>
+                    <li><strong>&lt;address&gt;:</strong> apresenta informações de contato do autor ou organização.<br><code
+                            class="command">&lt;address&gt;Contato: contato@exemplo.com&lt;/address&gt;</code></li>
+                    <li><strong>&lt;fieldset&gt; e &lt;legend&gt;:</strong> agrupam campos relacionados em um formulário.<br><code
+                            class="command">&lt;fieldset&gt;&lt;legend&gt;Contato&lt;/legend&gt;&lt;input name="nome"&gt;&lt;/fieldset&gt;</code></li>
+                    <li><strong>&lt;datalist&gt;:</strong> fornece sugestões para um campo de texto.<br><code
+                            class="command">&lt;input list="cidades"&gt;&lt;datalist id="cidades"&gt;&lt;option value="São Paulo"&gt;&lt;/datalist&gt;</code></li>
+                    <li><strong>&lt;textarea&gt;:</strong> campo com várias linhas e rótulo associado.<br><code
+                            class="command">&lt;label for="msg"&gt;Mensagem&lt;/label&gt;&lt;textarea id="msg" name="mensagem" rows="4"&gt;&lt;/textarea&gt;</code></li>
+                    <li><strong>&lt;button&gt;:</strong> tipos importantes são submit, reset e button.<br><code
+                            class="command">&lt;form&gt;&lt;button type="submit"&gt;Enviar&lt;/button&gt;&lt;button type="reset"&gt;Limpar&lt;/button&gt;&lt;/form&gt;</code></li>
+                    <li><strong>&lt;table&gt;, &lt;thead&gt;, &lt;tbody&gt; e &lt;tfoot&gt;:</strong> organizam uma tabela completa.<br><code
+                            class="command">&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Nome&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Ana&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</code></li>
+                    <li><strong>&lt;abbr&gt;:</strong> indica uma abreviação ou sigla.<br><code
+                            class="command">&lt;abbr title="HyperText Markup Language"&gt;HTML&lt;/abbr&gt;</code></li>
+                    <li><strong>&lt;cite&gt;:</strong> identifica o título de uma obra citada.<br><code
+                            class="command">&lt;p&gt;Leia &lt;cite&gt;Guia HTML&lt;/cite&gt;.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;data&gt;:</strong> associa um valor legível por máquina ao texto exibido.<br><code
+                            class="command">&lt;data value="produto-10"&gt;Produto A&lt;/data&gt;</code></li>
+                    <li><strong>&lt;samp&gt;:</strong> representa uma saída produzida por um programa.<br><code
+                            class="command">&lt;p&gt;Saída: &lt;samp&gt;Arquivo salvo&lt;/samp&gt;&lt;/p&gt;</code></li>
+                    <li><strong>&lt;kbd&gt;:</strong> representa entrada feita pelo teclado.<br><code
+                            class="command">&lt;p&gt;Pressione &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;S&lt;/kbd&gt;.&lt;/p&gt;</code></li>
+                    <li><strong>&lt;map&gt; e &lt;area&gt;:</strong> criam regiões clicáveis em uma imagem.<br><code
+                            class="command">&lt;img src="mapa.jpg" usemap="#mapa"&gt;&lt;map name="mapa"&gt;&lt;area shape="rect" coords="0,0,100,100" href="brasil.html"&gt;&lt;/map&gt;</code></li>
+                    <li><strong>&lt;meta&gt;:</strong> fornece metadados sobre o documento, como codificação e responsividade.<br><code
+                            class="command">&lt;meta charset="UTF-8"&gt;&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code></li>
+                    <li><strong>&lt;base&gt;:</strong> define uma URL base para links e recursos relativos do documento.<br><code
+                            class="command">&lt;base href="https://exemplo.com/docs/" target="_blank"&gt;</code></li>
+                    <li><strong>&lt;noscript&gt;:</strong> mostra conteúdo alternativo quando JavaScript está desativado.<br><code
+                            class="command">&lt;noscript&gt;&lt;p&gt;Ative o JavaScript para usar esta página.&lt;/p&gt;&lt;/noscript&gt;</code></li>
+                    <li><strong>&lt;template&gt;:</strong> mantém HTML inativo para criação posterior por JavaScript.<br><code
+                            class="command">&lt;template id="item"&gt;&lt;li&gt;Novo item&lt;/li&gt;&lt;/template&gt;</code></li>
+                    <li><strong>&lt;slot&gt;:</strong> reserva uma posição onde conteúdo externo pode ser inserido em um Web Component.<br><code
+                            class="command">&lt;slot name="titulo"&gt;Título padrão&lt;/slot&gt;</code></li>
+                    <li><strong>&lt;wbr&gt;:</strong> sugere uma quebra de linha segura em palavras longas.<br><code
+                            class="command">&lt;p&gt;supercalifragilistic&lt;wbr&gt;expialidocious&lt;/p&gt;</code></li>
+                    <li><strong>&lt;ins&gt;:</strong> marca texto inserido em uma revisão.<br><code
+                            class="command">&lt;p&gt;Novo preço: &lt;ins datetime="2026-11-19"&gt;R$ 79,90&lt;/ins&gt;&lt;/p&gt;</code></li>
+                    <li><strong>&lt;del&gt;:</strong> marca texto removido em uma revisão.<br><code
+                            class="command">&lt;p&gt;Preço anterior: &lt;del datetime="2026-11-19"&gt;R$ 99,90&lt;/del&gt;&lt;/p&gt;</code></li>
+                    <li><strong>&lt;bdi&gt;:</strong> isola texto cuja direção pode diferir da direção do documento.<br><code
+                            class="command">&lt;li&gt;Usuário: &lt;bdi&gt;محمد&lt;/bdi&gt;&lt;/li&gt;</code></li>
+                    <li><strong>&lt;bdo&gt;:</strong> substitui explicitamente a direção do texto.<br><code
+                            class="command">&lt;bdo dir="rtl"&gt;texto da direita para a esquerda&lt;/bdo&gt;</code></li>
+                    <li><strong>&lt;ruby&gt;, &lt;rt&gt; e &lt;rp&gt;:</strong> fornecem anotações de pronúncia ou leitura em texto.<br><code
+                            class="command">&lt;ruby&gt;漢 &lt;rp&gt;(&lt;/rp&gt;&lt;rt&gt;kan&lt;/rt&gt;&lt;rp&gt;)&lt;/rp&gt;&lt;/ruby&gt;</code></li>
+                    <li><strong>&lt;track&gt;:</strong> adiciona legendas, descrições ou capítulos a áudio e vídeo.<br><code
+                            class="command">&lt;video controls src="video.mp4"&gt;&lt;track kind="captions" src="legendas.vtt" srclang="pt" label="Português" default&gt;&lt;/video&gt;</code></li>
+                    <li><strong>&lt;caption&gt;, &lt;colgroup&gt; e &lt;col&gt;:</strong> nomeiam e formatam colunas de tabelas.<br><code
+                            class="command">&lt;table&gt;&lt;caption&gt;Vendas&lt;/caption&gt;&lt;colgroup&gt;&lt;col span="1"&gt;&lt;/colgroup&gt;&lt;/table&gt;</code></li>
+                    <li><strong>&lt;object&gt;:</strong> incorpora recursos externos como documentos ou mídias.<br><code
+                            class="command">&lt;object data="catalogo.pdf" type="application/pdf" width="600" height="400"&gt;PDF indisponível.&lt;/object&gt;</code></li>
+                    <li><strong>&lt;embed&gt;:</strong> incorpora um recurso externo no documento.<br><code
+                            class="command">&lt;embed type="image/svg+xml" src="imagem.svg" width="300" height="200"&gt;</code></li>
+                    <li><strong>&lt;param&gt;:</strong> fornece parâmetros para objetos incorporados legados.<br><code
+                            class="command">&lt;object data="arquivo.swf" type="application/x-shockwave-flash"&gt;&lt;param name="autoplay" value="true"&gt;&lt;/object&gt;</code></li>
+                </ul>
+            </section>
+        </section>
+    </main>
+    <div class="toast" id="copy-feedback" role="status" aria-live="polite"></div>
+
+    <script>
+        const searchInput = document.getElementById("command-search");
+        const commandCount = document.getElementById("command-count");
+        const emptyState = document.getElementById("empty-state");
+        const feedback = document.getElementById("copy-feedback");
+        const commands = Array.from(document.querySelectorAll(".command"));
+        let feedbackTimeout;
+
+        const navItems = Array.from(document.querySelectorAll(".guide-nav-item"));
+
+        function createUsageExample(text, description) {
+            const value = text.trim();
+            const normalizedDescription = normalize(description);
+
+            if (value.startsWith("npm ")) {
+                if (value.includes(" init")) {
+                    return "Entre na pasta desejada e execute o comando para criar um novo projeto npm.";
+                }
+                if (value.includes(" install ") || value === "npm install") {
+                    return "Execute na raiz do projeto, onde existe o arquivo package.json; substitua os nomes e versões pelos pacotes desejados.";
+                }
+                if (value.includes(" uninstall ")) {
+                    return "Execute na raiz do projeto para remover o pacote informado e atualizar suas dependências.";
+                }
+                if (value.includes(" run ")) {
+                    return "Execute na raiz do projeto. O script informado precisa estar registrado na seção scripts do package.json.";
+                }
+                if (value.includes(" audit")) {
+                    return "Execute na raiz do projeto para analisar as dependências registradas no package-lock.json.";
+                }
+                if (value.includes(" cache")) {
+                    return "Execute no terminal para consultar ou administrar o cache local do npm.";
+                }
+                if (value.includes(" publish") || value.includes(" unpublish")) {
+                    return "Execute na raiz do pacote publicado. Faça login no npm e revise nome e versão antes de publicar.";
+                }
+                if (value.includes(" update")) {
+                    return "Execute na raiz do projeto para atualizar dependências dentro das versões permitidas pelo package.json.";
+                }
+                if (value.includes(" create")) {
+                    return "Execute na pasta em que deseja criar o projeto e substitua meu-projeto pelo nome escolhido.";
+                }
+                return "Execute no terminal, preferencialmente na raiz do projeto npm.";
+            }
+
+            if (value.startsWith("npx ")) {
+                return "Execute na pasta do projeto. O npx baixa temporariamente a ferramenta quando ela ainda não está instalada.";
+            }
+
+            if (value.startsWith("git ")) {
+                if (value.includes(" clone")) {
+                    return "Execute no diretório pai e substitua URL_DO_REPOSITORIO pelo endereço HTTPS ou SSH.";
+                }
+                if (value.includes(" add") || value.includes(" commit") || value.includes(" status") || value.includes(" diff")) {
+                    return "Execute dentro da pasta do repositório; revise o resultado com git status antes de registrar alterações.";
+                }
+                if (value.includes(" switch") || value.includes(" branch")) {
+                    return "Execute dentro do repositório e substitua nome-da-branch pelo nome real da branch.";
+                }
+                if (value.includes(" remote") || value.includes(" push") || value.includes(" pull") || value.includes(" fetch")) {
+                    return "Execute dentro do repositório. Confirme o nome do remoto e da branch antes de sincronizar.";
+                }
+                if (value.includes(" stash")) {
+                    return "Execute na pasta do repositório para guardar ou recuperar temporariamente alterações não commitadas.";
+                }
+                if (value.includes(" merge") || value.includes(" rebase") || value.includes(" cherry-pick") || value.includes(" revert")) {
+                    return "Execute na branch atual após conferir o estado do repositório e substituir os nomes ou hashes pelos corretos.";
+                }
+                if (value.includes(" tag")) {
+                    return "Execute dentro do repositório para criar ou consultar uma marcação de versão.";
+                }
+                if (value.includes(" restore") || value.includes(" reset")) {
+                    return "Execute dentro do repositório antes de descartar alterações; confirme o arquivo ou o estado que deseja afetar.";
+                }
+                return "Execute no terminal dentro da pasta de um repositório Git.";
+            }
+
+            if (value.startsWith("Set-ExecutionPolicy")) {
+                return "Execute no PowerShell como usuário atual para permitir scripts locais assinados ou locais não assinados.";
+            }
+
+            if (value.startsWith("node ")) {
+                return "Execute no terminal para verificar a instalação e a versão do Node.js.";
+            }
+
+            if (value.startsWith("<")) {
+                if (/^<(head|title|meta|link|style|script)\b|^<html\b/.test(value)) {
+                    return "Use na estrutura do documento HTML, dentro da parte indicada por head ou html.";
+                }
+                if (/^<(body|main|header|footer|section|article|aside|nav|div|table|form|details|dialog)\b/.test(value)) {
+                    return "Cole o exemplo dentro da tag body ou dentro da seção apropriada da sua página HTML.";
+                }
+                if (/^<(a|button|input|label|select|option|textarea|img|video|audio|iframe)\b/.test(value)) {
+                    return "Adapte os atributos e substitua os textos ou arquivos de exemplo pelos dados da sua página.";
+                }
+                return "Copie o trecho e cole dentro do documento HTML no local onde o elemento deve aparecer.";
+            }
+
+            if (normalizedDescription.includes("shell") || normalizedDescription.includes("terminal")) {
+                return "Execute no terminal, dentro da pasta informada pela descrição.";
+            }
+
+            return "Copie o comando ou trecho e execute no local indicado pela descrição.";
+        }
+
+        function closeNavMenus(exceptItem = null) {
+            navItems.forEach((item) => {
+                if (item !== exceptItem) {
+                    item.classList.remove("is-open");
+                    item.querySelector(".guide-nav-trigger")?.setAttribute("aria-expanded", "false");
+                }
+            });
+        }
+
+        navItems.forEach((item) => {
+            const trigger = item.querySelector(".guide-nav-trigger");
+            if (!trigger) return;
+
+            trigger.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const willOpen = !item.classList.contains("is-open");
+                closeNavMenus(item);
+                item.classList.toggle("is-open", willOpen);
+                trigger.setAttribute("aria-expanded", String(willOpen));
+            });
+        });
+
+        document.querySelectorAll(".guide-dropdown-link").forEach((link) => {
+            link.addEventListener("click", () => closeNavMenus());
+        });
+
+        document.addEventListener("click", () => closeNavMenus());
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeNavMenus();
+        });
+
+        function normalize(value) {
+            return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        }
+
+        function showFeedback(message) {
+            feedback.textContent = message;
+            feedback.classList.add("is-visible");
+            clearTimeout(feedbackTimeout);
+            feedbackTimeout = setTimeout(() => feedback.classList.remove("is-visible"), 1800);
+        }
+
+        function fallbackCopy(text) {
+            const temporaryInput = document.createElement("textarea");
+            temporaryInput.value = text;
+            temporaryInput.setAttribute("readonly", "");
+            temporaryInput.style.position = "fixed";
+            temporaryInput.style.opacity = "0";
+            document.body.append(temporaryInput);
+            temporaryInput.select();
+            const copied = document.execCommand("copy");
+            temporaryInput.remove();
+            return copied;
+        }
+
+        async function copyText(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    return true;
+                } catch {
+                    return fallbackCopy(text);
+                }
+            }
+            return fallbackCopy(text);
+        }
+
+        commands.forEach((command) => {
+            const previousElement = command.previousElementSibling;
+            const listItem = command.closest("li");
+            const tableRow = command.closest("tr");
+            const section = command.closest(".card > section");
+            const heading = section?.querySelector("h2")?.textContent || "";
+            const description = listItem?.textContent || tableRow?.textContent || previousElement?.textContent || "";
+            command.dataset.searchText = normalize(`${command.textContent} ${description} ${heading}`);
+            command.dataset.description = normalize(description);
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "command-wrap";
+            if (command.classList.contains("command-important")) wrapper.classList.add("is-important");
+            command.before(wrapper);
+            wrapper.append(command);
+
+            const copyButton = document.createElement("button");
+            copyButton.className = "copy-button";
+            copyButton.type = "button";
+            copyButton.title = "Copiar conteúdo";
+            copyButton.setAttribute("aria-label", `Copiar: ${command.textContent.trim()}`);
+            copyButton.innerHTML = '<span class="copy-icon" aria-hidden="true">⧉</span><span class="copy-label">Copiar</span>';
+            copyButton.addEventListener("click", async () => {
+                const copied = await copyText(command.textContent.trim());
+                const label = copyButton.querySelector(".copy-label");
+                copyButton.classList.toggle("is-copied", copied);
+                label.textContent = copied ? "Copiado!" : "Falhou";
+                showFeedback(copied ? "Conteúdo copiado para a área de transferência." : "Não foi possível copiar o conteúdo.");
+                clearTimeout(copyButton.feedbackTimeout);
+                copyButton.feedbackTimeout = setTimeout(() => {
+                    label.textContent = "Copiar";
+                    copyButton.classList.remove("is-copied");
+                }, 1800);
+            });
+            wrapper.append(copyButton);
+
+            const usage = document.createElement("p");
+            usage.className = "usage-example";
+            usage.innerHTML = `<strong>Como usar:</strong> ${createUsageExample(command.textContent, description)}`;
+            wrapper.append(usage);
+            command.dataset.searchText += normalize(` como usar ${usage.textContent}`);
+        });
+
+        const tagSection = Array.from(document.querySelectorAll(".card > section"))
+            .find((section) => section.querySelector("h2")?.textContent.includes("Tags HTML"));
+        const tagsWithoutBodyPreview = {
+            head: "Define metadados e configurações do documento; esse conteúdo não aparece no corpo da página.",
+            link: "Carrega um recurso externo, como uma folha de estilos. O efeito depende do arquivo indicado em href.",
+            script: "Carrega JavaScript, que pode alterar a página. Scripts não são executados nesta prévia por segurança.",
+            title: "O texto aparece no título da aba do navegador, não no conteúdo da página.",
+            object: "Incorpora um recurso externo. Nesta prévia segura, o arquivo de demonstração não é carregado.",
+            embed: "Incorpora um recurso externo. Nesta prévia segura, o arquivo de demonstração não é carregado.",
+            param: "Fornece parâmetros para recursos incorporados legados e não aparece diretamente na página."
+        };
+        const previewStyles = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
+            <style>
+                body { margin: 0; padding: 12px; color: #18212f; background: #fff; font: 14px/1.5 Arial, sans-serif; overflow-wrap: anywhere; }
+                h1, h2, h3 { margin: 0.15em 0; }
+                p { margin: 0.25em 0; }
+                table { border-collapse: collapse; }
+                th, td { padding: 3px 8px; border: 1px solid #8792a2; }
+                img { max-width: 100%; height: auto; }
+                input, textarea, select, button { font: inherit; }
+                a { color: #0969da; }
+            </style>`;
+
+        tagSection?.querySelectorAll("li").forEach((item) => {
+            const example = item.querySelector(".command");
+            const tag = item.querySelector("strong")?.textContent.match(/<([^>]+)>/)?.[1];
+            if (!example || !tag) return;
+
+            const preview = document.createElement("div");
+            preview.className = "tag-preview";
+            const label = document.createElement("span");
+            label.className = "tag-preview-label";
+            label.textContent = "Prévia na página";
+            preview.append(label);
+
+            if (tagsWithoutBodyPreview[tag]) {
+                const note = document.createElement("div");
+                note.className = "tag-preview-note";
+                note.textContent = tagsWithoutBodyPreview[tag];
+                preview.append(note);
+            } else {
+                const frame = document.createElement("iframe");
+                frame.className = "tag-preview-frame";
+                frame.title = `Prévia visual da tag ${tag}`;
+                frame.setAttribute("sandbox", "");
+                frame.tabIndex = -1;
+                frame.loading = "lazy";
+
+                const markup = example.textContent;
+                if (tag === "html") {
+                    frame.srcdoc = `<!doctype html>${markup}`;
+                } else if (tag === "body") {
+                    frame.srcdoc = `<!doctype html><html lang="pt-BR"><head>${previewStyles}</head>${markup}</html>`;
+                } else if (tag === "style") {
+                    frame.srcdoc = `<!doctype html><html lang="pt-BR"><head>${previewStyles}${markup}</head><body><p>Texto com estilo aplicado</p></body></html>`;
+                } else {
+                    frame.srcdoc = `<!doctype html><html lang="pt-BR"><head>${previewStyles}</head><body>${markup}</body></html>`;
+                }
+                preview.append(frame);
+            }
+
+            item.append(preview);
+        });
+
+        function filterCommands() {
+            const term = normalize(searchInput.value.trim());
+            const matches = commands.filter((command) => {
+                const match = command.dataset.searchText.includes(term);
+                command.closest(".command-wrap").hidden = !match;
+                const tableRow = command.closest("tr");
+                if (tableRow) tableRow.hidden = !match;
+                return match;
+            });
+
+            document.querySelectorAll(".card li").forEach((item) => {
+                const itemCommands = Array.from(item.querySelectorAll(".command"));
+                item.hidden = term.length > 0 && !itemCommands.some((command) => !command.closest(".command-wrap").hidden);
+            });
+
+            document.querySelectorAll(".card > section").forEach((section) => {
+                const sectionCommands = Array.from(section.querySelectorAll(".command"));
+                const visibleCommands = sectionCommands.filter((command) => !command.closest(".command-wrap").hidden);
+                section.hidden = term.length > 0 && visibleCommands.length === 0;
+
+                section.querySelectorAll(":scope > p").forEach((paragraph) => {
+                    paragraph.hidden = term.length > 0 && !visibleCommands.some((command) =>
+                        command.dataset.description.includes(normalize(paragraph.textContent))
+                    );
+                });
+            });
+
+            commandCount.textContent = `${matches.length} ${matches.length === 1 ? "resultado" : "resultados"}`;
+            emptyState.hidden = term.length === 0 || matches.length > 0;
+        }
+
+        searchInput.addEventListener("input", filterCommands);
+        searchInput.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                searchInput.value = "";
+                filterCommands();
+            }
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "/" && !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+                event.preventDefault();
+                searchInput.focus();
+            }
+        });
+        filterCommands();
+    </script>
+    </body>
+
+</html>
