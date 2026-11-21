@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de npm, Git e tags HTML</title>
+    <title>Guia de npm, Git, HTML e CSS</title>
     <style>
         :root {
             --bg: #030704;
@@ -1126,8 +1126,8 @@
     <main class="container">
         <section class="card">
             <header>
-                <div class="badge">Node.js, npm, Git &amp; HTML</div>
-                <h1>Guia de npm, Git e tags HTML</h1>
+                <div class="badge">Node.js, npm, Git, HTML &amp; CSS</div>
+                <h1>Guia de npm, Git, HTML e CSS</h1>
                 <p>Consulte descrições e exemplos, pesquise e copie o conteúdo para seus projetos.</p>
             </header>
 
@@ -1184,6 +1184,9 @@
                                 </div>
                             </div>
                         </div>
+                    </li>
+                    <li class="guide-nav-item">
+                        <a class="guide-nav-link" href="#propriedades-css">CSS</a>
                     </li>
                     <li class="guide-nav-item">
                         <button class="guide-nav-trigger" type="button" aria-expanded="false" aria-controls="html-menu">
@@ -1534,6 +1537,232 @@
                     <li><strong>Abre uma interface gráfica de resolução de conflitos:</strong><br><code
                             class="command">git mergetool</code></li>
                 </ul>
+            </section>
+
+            <section id="propriedades-css">
+                <h2>Propriedades CSS</h2>
+                <p>Propriedades são declaradas dentro de seletores no formato <code>propriedade: valor;</code>. Esta referência reúne os principais recursos modernos de texto, posicionamento, dimensões, flexbox, grid, responsividade, cores, animação e acessibilidade.</p>
+
+                <h3>Seletores, cascata e variáveis</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade / conceito</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade / conceito">Seletor de elemento</td><td data-label="Para que serve">Seleciona todas as tags correspondentes.</td><td data-label="Exemplo para copiar"><code class="command">p { color: #222222; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Seletor de classe</td><td data-label="Para que serve">Seleciona elementos que possuem uma classe.</td><td data-label="Exemplo para copiar"><code class="command">.card { border-radius: 8px; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Seletor de id</td><td data-label="Para que serve">Seleciona um elemento pelo identificador único.</td><td data-label="Exemplo para copiar"><code class="command">#inicio { scroll-margin-top: 24px; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Seletor universal</td><td data-label="Para que serve">Seleciona todos os elementos.</td><td data-label="Exemplo para copiar"><code class="command">* { box-sizing: border-box; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Combinadores</td><td data-label="Para que serve">Seleciona descendentes, filhos, irmãos próximos ou seguintes.</td><td data-label="Exemplo para copiar"><code class="command">nav > a + a { margin-left: 12px; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Pseudoclasses</td><td data-label="Para que serve">Aplica estilos conforme estado ou posição.</td><td data-label="Exemplo para copiar"><code class="command">button:hover, button:focus-visible { outline: 2px solid currentColor; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Pseudoelementos</td><td data-label="Para que serve">Estiliza partes virtuais do elemento.</td><td data-label="Exemplo para copiar"><code class="command">p::first-line { font-weight: bold; }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">Variáveis CSS</td><td data-label="Para que serve">Cria valores reutilizáveis com var().</td><td data-label="Exemplo para copiar"><code class="command">:root { --cor-principal: #2563eb; } .botao { background: var(--cor-principal); }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">@media</td><td data-label="Para que serve">Aplica regras conforme características da tela.</td><td data-label="Exemplo para copiar"><code class="command">@media (max-width: 768px) { .card { padding: 16px; } }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">@supports</td><td data-label="Para que serve">Aplica regras apenas quando o navegador suporta um recurso.</td><td data-label="Exemplo para copiar"><code class="command">@supports (display: grid) { .layout { display: grid; } }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">@container</td><td data-label="Para que serve">Cria estilos responsivos conforme o tamanho de um contêiner.</td><td data-label="Exemplo para copiar"><code class="command">@container (min-width: 600px) { .painel { display: grid; } }</code></td></tr>
+                        <tr><td data-label="Propriedade / conceito">@keyframes</td><td data-label="Para que serve">Define os estados de uma animação.</td><td data-label="Exemplo para copiar"><code class="command">@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Texto e fontes</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">color</td><td data-label="Para que serve">Define a cor do conteúdo.</td><td data-label="Exemplo para copiar"><code class="command">color: #1f2937;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-family</td><td data-label="Para que serve">Define a família tipográfica.</td><td data-label="Exemplo para copiar"><code class="command">font-family: "Segoe UI", Arial, sans-serif;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-size</td><td data-label="Para que serve">Define o tamanho da fonte.</td><td data-label="Exemplo para copiar"><code class="command">font-size: 16px;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-weight</td><td data-label="Para que serve">Define a espessura da fonte.</td><td data-label="Exemplo para copiar"><code class="command">font-weight: 700;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-style</td><td data-label="Para que serve">Define estilo normal ou itálico.</td><td data-label="Exemplo para copiar"><code class="command">font-style: italic;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-stretch</td><td data-label="Para que serve">Seleciona uma variante mais estreita ou larga.</td><td data-label="Exemplo para copiar"><code class="command">font-stretch: condensed;</code></td></tr>
+                        <tr><td data-label="Propriedade">font-variant</td><td data-label="Para que serve">Ativa variantes tipográficas.</td><td data-label="Exemplo para copiar"><code class="command">font-variant: small-caps;</code></td></tr>
+                        <tr><td data-label="Propriedade">font</td><td data-label="Para que serve">Forma abreviada para propriedades de fonte.</td><td data-label="Exemplo para copiar"><code class="command">font: 700 16px/1.5 "Segoe UI", sans-serif;</code></td></tr>
+                        <tr><td data-label="Propriedade">line-height</td><td data-label="Para que serve">Define a altura da linha.</td><td data-label="Exemplo para copiar"><code class="command">line-height: 1.6;</code></td></tr>
+                        <tr><td data-label="Propriedade">letter-spacing</td><td data-label="Para que serve">Define o espaço entre caracteres.</td><td data-label="Exemplo para copiar"><code class="command">letter-spacing: 0.05em;</code></td></tr>
+                        <tr><td data-label="Propriedade">word-spacing</td><td data-label="Para que serve">Define o espaço entre palavras.</td><td data-label="Exemplo para copiar"><code class="command">word-spacing: 0.15em;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-align</td><td data-label="Para que serve">Alinha texto dentro do elemento.</td><td data-label="Exemplo para copiar"><code class="command">text-align: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-decoration</td><td data-label="Para que serve">Adiciona ou remove sublinhados e outros traços.</td><td data-label="Exemplo para copiar"><code class="command">text-decoration: underline;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-decoration-line</td><td data-label="Para que serve">Define a parte decorada do texto.</td><td data-label="Exemplo para copiar"><code class="command">text-decoration-line: underline;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-decoration-color</td><td data-label="Para que serve">Define a cor da decoração textual.</td><td data-label="Exemplo para copiar"><code class="command">text-decoration-color: #2563eb;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-decoration-thickness</td><td data-label="Para que serve">Define a espessura da decoração.</td><td data-label="Exemplo para copiar"><code class="command">text-decoration-thickness: 2px;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-transform</td><td data-label="Para que serve">Converte maiúsculas ou minúsculas.</td><td data-label="Exemplo para copiar"><code class="command">text-transform: uppercase;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-indent</td><td data-label="Para que serve">Recuo da primeira linha de um bloco.</td><td data-label="Exemplo para copiar"><code class="command">text-indent: 2em;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-shadow</td><td data-label="Para que serve">Adiciona sombra ao texto.</td><td data-label="Exemplo para copiar"><code class="command">text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.25);</code></td></tr>
+                        <tr><td data-label="Propriedade">text-overflow</td><td data-label="Para que serve">Define como texto cortado é apresentado.</td><td data-label="Exemplo para copiar"><code class="command">text-overflow: ellipsis;</code></td></tr>
+                        <tr><td data-label="Propriedade">white-space</td><td data-label="Para que serve">Controla quebras e espaços em branco.</td><td data-label="Exemplo para copiar"><code class="command">white-space: nowrap;</code></td></tr>
+                        <tr><td data-label="Propriedade">word-break</td><td data-label="Para que serve">Controla a quebra dentro de palavras.</td><td data-label="Exemplo para copiar"><code class="command">word-break: break-word;</code></td></tr>
+                        <tr><td data-label="Propriedade">overflow-wrap</td><td data-label="Para que serve">Permite quebrar palavras longas.</td><td data-label="Exemplo para copiar"><code class="command">overflow-wrap: anywhere;</code></td></tr>
+                        <tr><td data-label="Propriedade">text-wrap</td><td data-label="Para que serve">Controla o algoritmo moderno de quebra de texto.</td><td data-label="Exemplo para copiar"><code class="command">text-wrap: balance;</code></td></tr>
+                        <tr><td data-label="Propriedade">writing-mode</td><td data-label="Para que serve">Define a direção horizontal ou vertical do texto.</td><td data-label="Exemplo para copiar"><code class="command">writing-mode: vertical-rl;</code></td></tr>
+                        <tr><td data-label="Propriedade">direction</td><td data-label="Para que serve">Define a direção base da escrita.</td><td data-label="Exemplo para copiar"><code class="command">direction: rtl;</code></td></tr>
+                        <tr><td data-label="Propriedade">unicode-bidi</td><td data-label="Para que serve">Controla o tratamento bidirecional de texto.</td><td data-label="Exemplo para copiar"><code class="command">unicode-bidi: isolate;</code></td></tr>
+                        <tr><td data-label="Propriedade">vertical-align</td><td data-label="Para que serve">Alinha elementos inline ou células de tabela verticalmente.</td><td data-label="Exemplo para copiar"><code class="command">vertical-align: middle;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Caixa, dimensões e espaçamento</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">width</td><td data-label="Para que serve">Define a largura do elemento.</td><td data-label="Exemplo para copiar"><code class="command">width: 100%;</code></td></tr>
+                        <tr><td data-label="Propriedade">height</td><td data-label="Para que serve">Define a altura do elemento.</td><td data-label="Exemplo para copiar"><code class="command">height: 200px;</code></td></tr>
+                        <tr><td data-label="Propriedade">min-width</td><td data-label="Para que serve">Impõe uma largura mínima.</td><td data-label="Exemplo para copiar"><code class="command">min-width: 320px;</code></td></tr>
+                        <tr><td data-label="Propriedade">max-width</td><td data-label="Para que serve">Impõe uma largura máxima.</td><td data-label="Exemplo para copiar"><code class="command">max-width: 1120px;</code></td></tr>
+                        <tr><td data-label="Propriedade">min-height</td><td data-label="Para que serve">Impõe uma altura mínima.</td><td data-label="Exemplo para copiar"><code class="command">min-height: 100vh;</code></td></tr>
+                        <tr><td data-label="Propriedade">max-height</td><td data-label="Para que serve">Impõe uma altura máxima.</td><td data-label="Exemplo para copiar"><code class="command">max-height: 400px;</code></td></tr>
+                        <tr><td data-label="Propriedade">box-sizing</td><td data-label="Para que serve">Define como largura e altura incluem bordas e padding.</td><td data-label="Exemplo para copiar"><code class="command">box-sizing: border-box;</code></td></tr>
+                        <tr><td data-label="Propriedade">margin</td><td data-label="Para que serve">Define o espaço externo.</td><td data-label="Exemplo para copiar"><code class="command">margin: 16px auto;</code></td></tr>
+                        <tr><td data-label="Propriedade">margin-top / right / bottom / left</td><td data-label="Para que serve">Define cada margem separadamente.</td><td data-label="Exemplo para copiar"><code class="command">margin-top: 24px; margin-right: 12px;</code></td></tr>
+                        <tr><td data-label="Propriedade">padding</td><td data-label="Para que serve">Define o espaço interno.</td><td data-label="Exemplo para copiar"><code class="command">padding: 24px;</code></td></tr>
+                        <tr><td data-label="Propriedade">padding-inline / block</td><td data-label="Para que serve">Define padding nos eixos lógico horizontal e vertical.</td><td data-label="Exemplo para copiar"><code class="command">padding-inline: 16px; padding-block: 8px;</code></td></tr>
+                        <tr><td data-label="Propriedade">aspect-ratio</td><td data-label="Para que serve">Mantém uma proporção entre largura e altura.</td><td data-label="Exemplo para copiar"><code class="command">aspect-ratio: 16 / 9;</code></td></tr>
+                        <tr><td data-label="Propriedade">object-fit</td><td data-label="Para que serve">Controla como uma imagem ou vídeo cabe no contêiner.</td><td data-label="Exemplo para copiar"><code class="command">object-fit: cover;</code></td></tr>
+                        <tr><td data-label="Propriedade">object-position</td><td data-label="Para que serve">Define o ponto focal da mídia ajustada.</td><td data-label="Exemplo para copiar"><code class="command">object-position: center top;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Cores, fundos e bordas</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">background</td><td data-label="Para que serve">Define a forma abreviada do fundo.</td><td data-label="Exemplo para copiar"><code class="command">background: #ffffff;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-color</td><td data-label="Para que serve">Define apenas a cor de fundo.</td><td data-label="Exemplo para copiar"><code class="command">background-color: #f3f4f6;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-image</td><td data-label="Para que serve">Adiciona imagem ou gradiente.</td><td data-label="Exemplo para copiar"><code class="command">background-image: linear-gradient(135deg, #2563eb, #9333ea);</code></td></tr>
+                        <tr><td data-label="Propriedade">background-size</td><td data-label="Para que serve">Controla o tamanho da imagem de fundo.</td><td data-label="Exemplo para copiar"><code class="command">background-size: cover;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-position</td><td data-label="Para que serve">Posiciona o fundo dentro do elemento.</td><td data-label="Exemplo para copiar"><code class="command">background-position: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-repeat</td><td data-label="Para que serve">Controla a repetição do fundo.</td><td data-label="Exemplo para copiar"><code class="command">background-repeat: no-repeat;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-attachment</td><td data-label="Para que serve">Define o movimento do fundo ao rolar.</td><td data-label="Exemplo para copiar"><code class="command">background-attachment: fixed;</code></td></tr>
+                        <tr><td data-label="Propriedade">background-blend-mode</td><td data-label="Para que serve">Mistura camadas de fundo.</td><td data-label="Exemplo para copiar"><code class="command">background-blend-mode: multiply;</code></td></tr>
+                        <tr><td data-label="Propriedade">border</td><td data-label="Para que serve">Define espessura, estilo e cor da borda.</td><td data-label="Exemplo para copiar"><code class="command">border: 1px solid #d1d5db;</code></td></tr>
+                        <tr><td data-label="Propriedade">border-width / style / color</td><td data-label="Para que serve">Controla partes individuais da borda.</td><td data-label="Exemplo para copiar"><code class="command">border-width: 2px; border-style: dashed; border-color: #2563eb;</code></td></tr>
+                        <tr><td data-label="Propriedade">border-radius</td><td data-label="Para que serve">Arredonda os cantos.</td><td data-label="Exemplo para copiar"><code class="command">border-radius: 12px;</code></td></tr>
+                        <tr><td data-label="Propriedade">border-inline / block</td><td data-label="Para que serve">Define bordas nos eixos lógicos.</td><td data-label="Exemplo para copiar"><code class="command">border-inline: 2px solid #2563eb;</code></td></tr>
+                        <tr><td data-label="Propriedade">outline</td><td data-label="Para que serve">Desenha contorno fora da borda.</td><td data-label="Exemplo para copiar"><code class="command">outline: 3px solid #2563eb;</code></td></tr>
+                        <tr><td data-label="Propriedade">outline-offset</td><td data-label="Para que serve">Afasta o contorno da borda.</td><td data-label="Exemplo para copiar"><code class="command">outline-offset: 3px;</code></td></tr>
+                        <tr><td data-label="Propriedade">box-shadow</td><td data-label="Para que serve">Cria uma sombra externa ou interna.</td><td data-label="Exemplo para copiar"><code class="command">box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);</code></td></tr>
+                        <tr><td data-label="Propriedade">opacity</td><td data-label="Para que serve">Define transparência de todo o elemento.</td><td data-label="Exemplo para copiar"><code class="command">opacity: 0.8;</code></td></tr>
+                        <tr><td data-label="Propriedade">accent-color</td><td data-label="Para que serve">Personaliza controles nativos como checkbox e radio.</td><td data-label="Exemplo para copiar"><code class="command">accent-color: #2563eb;</code></td></tr>
+                        <tr><td data-label="Propriedade">caret-color</td><td data-label="Para que serve">Define a cor do cursor em campos editáveis.</td><td data-label="Exemplo para copiar"><code class="command">caret-color: #2563eb;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Layout, flexbox e grid</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">display</td><td data-label="Para que serve">Define o tipo de caixa e o contexto de layout.</td><td data-label="Exemplo para copiar"><code class="command">display: grid;</code></td></tr>
+                        <tr><td data-label="Propriedade">position</td><td data-label="Para que serve">Controla o método de posicionamento.</td><td data-label="Exemplo para copiar"><code class="command">position: relative;</code></td></tr>
+                        <tr><td data-label="Propriedade">top / right / bottom / left</td><td data-label="Para que serve">Define deslocamento em layouts posicionados.</td><td data-label="Exemplo para copiar"><code class="command">top: 0; right: 0;</code></td></tr>
+                        <tr><td data-label="Propriedade">inset</td><td data-label="Para que serve">Forma abreviada para top, right, bottom e left.</td><td data-label="Exemplo para copiar"><code class="command">inset: 0;</code></td></tr>
+                        <tr><td data-label="Propriedade">z-index</td><td data-label="Para que serve">Define a ordem de empilhamento.</td><td data-label="Exemplo para copiar"><code class="command">z-index: 10;</code></td></tr>
+                        <tr><td data-label="Propriedade">float</td><td data-label="Para que serve">Posiciona um elemento à esquerda ou direita.</td><td data-label="Exemplo para copiar"><code class="command">float: left;</code></td></tr>
+                        <tr><td data-label="Propriedade">clear</td><td data-label="Para que serve">Impede que o elemento fique ao lado de floats.</td><td data-label="Exemplo para copiar"><code class="command">clear: both;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-direction</td><td data-label="Para que serve">Define a direção dos itens flex.</td><td data-label="Exemplo para copiar"><code class="command">flex-direction: row;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-wrap</td><td data-label="Para que serve">Permite que itens flex quebrem linhas.</td><td data-label="Exemplo para copiar"><code class="command">flex-wrap: wrap;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-flow</td><td data-label="Para que serve">Forma abreviada de flex-direction e flex-wrap.</td><td data-label="Exemplo para copiar"><code class="command">flex-flow: row wrap;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex</td><td data-label="Para que serve">Controla crescimento, redução e tamanho base.</td><td data-label="Exemplo para copiar"><code class="command">flex: 1 1 240px;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-grow</td><td data-label="Para que serve">Permite o item crescer.</td><td data-label="Exemplo para copiar"><code class="command">flex-grow: 1;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-shrink</td><td data-label="Para que serve">Permite o item reduzir.</td><td data-label="Exemplo para copiar"><code class="command">flex-shrink: 0;</code></td></tr>
+                        <tr><td data-label="Propriedade">flex-basis</td><td data-label="Para que serve">Define o tamanho inicial do item.</td><td data-label="Exemplo para copiar"><code class="command">flex-basis: 240px;</code></td></tr>
+                        <tr><td data-label="Propriedade">justify-content</td><td data-label="Para que serve">Distribui itens no eixo principal.</td><td data-label="Exemplo para copiar"><code class="command">justify-content: space-between;</code></td></tr>
+                        <tr><td data-label="Propriedade">align-items</td><td data-label="Para que serve">Alinha itens no eixo transversal.</td><td data-label="Exemplo para copiar"><code class="command">align-items: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">align-content</td><td data-label="Para que serve">Distribui linhas em containers com várias linhas.</td><td data-label="Exemplo para copiar"><code class="command">align-content: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">align-self</td><td data-label="Para que serve">Alinha um item flex ou grid individualmente.</td><td data-label="Exemplo para copiar"><code class="command">align-self: flex-end;</code></td></tr>
+                        <tr><td data-label="Propriedade">gap</td><td data-label="Para que serve">Define o espaço entre itens.</td><td data-label="Exemplo para copiar"><code class="command">gap: 16px;</code></td></tr>
+                        <tr><td data-label="Propriedade">row-gap / column-gap</td><td data-label="Para que serve">Define espaçamento por linha ou coluna.</td><td data-label="Exemplo para copiar"><code class="command">row-gap: 12px; column-gap: 20px;</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-template-columns</td><td data-label="Para que serve">Cria as colunas da grade.</td><td data-label="Exemplo para copiar"><code class="command">grid-template-columns: repeat(3, minmax(0, 1fr));</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-template-rows</td><td data-label="Para que serve">Cria as linhas da grade.</td><td data-label="Exemplo para copiar"><code class="command">grid-template-rows: auto 1fr auto;</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-template-areas</td><td data-label="Para que serve">Nomeia áreas do layout.</td><td data-label="Exemplo para copiar"><code class="command">grid-template-areas: "header header" "main aside";</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-area</td><td data-label="Para que serve">Posiciona um item em uma área ou posição de grade.</td><td data-label="Exemplo para copiar"><code class="command">grid-area: header;</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-column / row</td><td data-label="Para que serve">Define início e fim de colunas ou linhas.</td><td data-label="Exemplo para copiar"><code class="command">grid-column: 1 / -1; grid-row: 2;</code></td></tr>
+                        <tr><td data-label="Propriedade">grid-auto-flow</td><td data-label="Para que serve">Controla a posição automática dos itens.</td><td data-label="Exemplo para copiar"><code class="command">grid-auto-flow: dense;</code></td></tr>
+                        <tr><td data-label="Propriedade">place-items</td><td data-label="Para que serve">Forma abreviada de align-items e justify-items.</td><td data-label="Exemplo para copiar"><code class="command">place-items: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">place-content</td><td data-label="Para que serve">Forma abreviada de align-content e justify-content.</td><td data-label="Exemplo para copiar"><code class="command">place-content: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">order</td><td data-label="Para que serve">Altera a ordem visual de itens flex ou grid.</td><td data-label="Exemplo para copiar"><code class="command">order: 2;</code></td></tr>
+                        <tr><td data-label="Propriedade">overflow</td><td data-label="Para que serve">Controla conteúdo que ultrapassa o elemento.</td><td data-label="Exemplo para copiar"><code class="command">overflow: auto;</code></td></tr>
+                        <tr><td data-label="Propriedade">overflow-x / y</td><td data-label="Para que serve">Controla cada eixo separadamente.</td><td data-label="Exemplo para copiar"><code class="command">overflow-x: hidden; overflow-y: auto;</code></td></tr>
+                        <tr><td data-label="Propriedade">visibility</td><td data-label="Para que serve">Mostra ou oculta o elemento sem alterar o fluxo.</td><td data-label="Exemplo para copiar"><code class="command">visibility: hidden;</code></td></tr>
+                        <tr><td data-label="Propriedade">clip / clip-path</td><td data-label="Para que serve">Recorta a área exibida do elemento.</td><td data-label="Exemplo para copiar"><code class="command">clip-path: circle(50%);</code></td></tr>
+                        <tr><td data-label="Propriedade">isolation</td><td data-label="Para que serve">Cria um contexto de empilhamento independente.</td><td data-label="Exemplo para copiar"><code class="command">isolation: isolate;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Listas, tabelas e conteúdo gerado</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">list-style</td><td data-label="Para que serve">Forma abreviada do marcador de lista.</td><td data-label="Exemplo para copiar"><code class="command">list-style: none;</code></td></tr>
+                        <tr><td data-label="Propriedade">list-style-type</td><td data-label="Para que serve">Define o tipo de marcador.</td><td data-label="Exemplo para copiar"><code class="command">list-style-type: square;</code></td></tr>
+                        <tr><td data-label="Propriedade">list-style-position</td><td data-label="Para que serve">Coloca o marcador dentro ou fora do item.</td><td data-label="Exemplo para copiar"><code class="command">list-style-position: inside;</code></td></tr>
+                        <tr><td data-label="Propriedade">list-style-image</td><td data-label="Para que serve">Usa uma imagem como marcador.</td><td data-label="Exemplo para copiar"><code class="command">list-style-image: url("marcador.svg");</code></td></tr>
+                        <tr><td data-label="Propriedade">table-layout</td><td data-label="Para que serve">Define como larguras da tabela são calculadas.</td><td data-label="Exemplo para copiar"><code class="command">table-layout: fixed;</code></td></tr>
+                        <tr><td data-label="Propriedade">border-collapse</td><td data-label="Para que serve">Une ou separa bordas de células.</td><td data-label="Exemplo para copiar"><code class="command">border-collapse: collapse;</code></td></tr>
+                        <tr><td data-label="Propriedade">border-spacing</td><td data-label="Para que serve">Define o espaço entre células separadas.</td><td data-label="Exemplo para copiar"><code class="command">border-spacing: 8px;</code></td></tr>
+                        <tr><td data-label="Propriedade">caption-side</td><td data-label="Para que serve">Posiciona a legenda da tabela.</td><td data-label="Exemplo para copiar"><code class="command">caption-side: top;</code></td></tr>
+                        <tr><td data-label="Propriedade">content</td><td data-label="Para que serve">Insere conteúdo gerado em pseudoelementos.</td><td data-label="Exemplo para copiar"><code class="command">li::before { content: "→ "; }</code></td></tr>
+                        <tr><td data-label="Propriedade">counter-reset / increment</td><td data-label="Para que serve">Cria contadores CSS personalizados.</td><td data-label="Exemplo para copiar"><code class="command">ol { counter-reset: item; } li::before { counter-increment: item; content: counter(item) ". "; }</code></td></tr>
+                        <tr><td data-label="Propriedade">quotes</td><td data-label="Para que serve">Define aspas usadas pelo conteúdo aberto.</td><td data-label="Exemplo para copiar"><code class="command">quotes: "“" "”";</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Transformações, transições e animações</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">transform</td><td data-label="Para que serve">Move, gira, escala ou inclina o elemento.</td><td data-label="Exemplo para copiar"><code class="command">transform: translateY(-4px) scale(1.02);</code></td></tr>
+                        <tr><td data-label="Propriedade">transform-origin</td><td data-label="Para que serve">Define o ponto central da transformação.</td><td data-label="Exemplo para copiar"><code class="command">transform-origin: center;</code></td></tr>
+                        <tr><td data-label="Propriedade">transform-style</td><td data-label="Para que serve">Preserva efeitos 3D entre elementos filhos.</td><td data-label="Exemplo para copiar"><code class="command">transform-style: preserve-3d;</code></td></tr>
+                        <tr><td data-label="Propriedade">perspective</td><td data-label="Para que serve">Define a profundidade de uma cena 3D.</td><td data-label="Exemplo para copiar"><code class="command">perspective: 800px;</code></td></tr>
+                        <tr><td data-label="Propriedade">perspective-origin</td><td data-label="Para que serve">Define o ponto de vista da perspectiva.</td><td data-label="Exemplo para copiar"><code class="command">perspective-origin: center top;</code></td></tr>
+                        <tr><td data-label="Propriedade">backface-visibility</td><td data-label="Para que serve">Controla se a face traseira fica visível.</td><td data-label="Exemplo para copiar"><code class="command">backface-visibility: hidden;</code></td></tr>
+                        <tr><td data-label="Propriedade">transition</td><td data-label="Para que serve">Anima mudanças entre estados.</td><td data-label="Exemplo para copiar"><code class="command">transition: transform 180ms ease, opacity 180ms ease;</code></td></tr>
+                        <tr><td data-label="Propriedade">transition-property</td><td data-label="Para que serve">Indica quais propriedades serão animadas.</td><td data-label="Exemplo para copiar"><code class="command">transition-property: color, background-color;</code></td></tr>
+                        <tr><td data-label="Propriedade">transition-duration</td><td data-label="Para que serve">Define a duração da transição.</td><td data-label="Exemplo para copiar"><code class="command">transition-duration: 200ms;</code></td></tr>
+                        <tr><td data-label="Propriedade">transition-timing-function</td><td data-label="Para que serve">Define a curva de aceleração.</td><td data-label="Exemplo para copiar"><code class="command">transition-timing-function: ease-in-out;</code></td></tr>
+                        <tr><td data-label="Propriedade">transition-delay</td><td data-label="Para que serve">Atrasa o início da transição.</td><td data-label="Exemplo para copiar"><code class="command">transition-delay: 50ms;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation</td><td data-label="Para que serve">Aplica uma animação baseada em keyframes.</td><td data-label="Exemplo para copiar"><code class="command">animation: aparecer 700ms ease-out both;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-name / duration</td><td data-label="Para que serve">Seleciona keyframes e define o tempo.</td><td data-label="Exemplo para copiar"><code class="command">animation-name: aparecer; animation-duration: 700ms;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-timing-function</td><td data-label="Para que serve">Controla a aceleração da animação.</td><td data-label="Exemplo para copiar"><code class="command">animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-delay</td><td data-label="Para que serve">Atrasa o início da animação.</td><td data-label="Exemplo para copiar"><code class="command">animation-delay: 100ms;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-direction</td><td data-label="Para que serve">Define a direção dos ciclos.</td><td data-label="Exemplo para copiar"><code class="command">animation-direction: alternate;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-iteration-count</td><td data-label="Para que serve">Define quantas vezes a animação executa.</td><td data-label="Exemplo para copiar"><code class="command">animation-iteration-count: infinite;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-fill-mode</td><td data-label="Para que serve">Mantém ou remove estilos antes ou depois da animação.</td><td data-label="Exemplo para copiar"><code class="command">animation-fill-mode: both;</code></td></tr>
+                        <tr><td data-label="Propriedade">animation-play-state</td><td data-label="Para que serve">Pausa ou executa uma animação.</td><td data-label="Exemplo para copiar"><code class="command">animation-play-state: paused;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Filtro, mistura, máscara e efeitos</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">filter</td><td data-label="Para que serve">Aplica efeitos gráficos ao elemento inteiro.</td><td data-label="Exemplo para copiar"><code class="command">filter: blur(4px) brightness(1.1);</code></td></tr>
+                        <tr><td data-label="Propriedade">backdrop-filter</td><td data-label="Para que serve">Aplica efeito ao que aparece atrás do elemento.</td><td data-label="Exemplo para copiar"><code class="command">backdrop-filter: blur(12px);</code></td></tr>
+                        <tr><td data-label="Propriedade">mix-blend-mode</td><td data-label="Para que serve">Mistura o elemento com o conteúdo atrás dele.</td><td data-label="Exemplo para copiar"><code class="command">mix-blend-mode: multiply;</code></td></tr>
+                        <tr><td data-label="Propriedade">mask-image</td><td data-label="Para que serve">Oculta partes do elemento usando uma máscara.</td><td data-label="Exemplo para copiar"><code class="command">mask-image: linear-gradient(to bottom, black, transparent);</code></td></tr>
+                        <tr><td data-label="Propriedade">mask-size</td><td data-label="Para que serve">Define o tamanho da máscara.</td><td data-label="Exemplo para copiar"><code class="command">mask-size: cover;</code></td></tr>
+                        <tr><td data-label="Propriedade">mask-repeat</td><td data-label="Para que serve">Controla a repetição da máscara.</td><td data-label="Exemplo para copiar"><code class="command">mask-repeat: no-repeat;</code></td></tr>
+                        <tr><td data-label="Propriedade">box-decoration-break</td><td data-label="Para que serve">Controla bordas e fundos em elementos fragmentados.</td><td data-label="Exemplo para copiar"><code class="command">box-decoration-break: clone;</code></td></tr>
+                    </tbody>
+                </table></div>
+
+                <h3>Interação, rolagem e acessibilidade</h3>
+                <div class="table-scroll"><table class="command-table">
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Para que serve</th><th scope="col">Exemplo para copiar</th></tr></thead>
+                    <tbody>
+                        <tr><td data-label="Propriedade">cursor</td><td data-label="Para que serve">Altera o cursor ao passar sobre o elemento.</td><td data-label="Exemplo para copiar"><code class="command">cursor: pointer;</code></td></tr>
+                        <tr><td data-label="Propriedade">pointer-events</td><td data-label="Para que serve">Controla se o elemento recebe eventos do ponteiro.</td><td data-label="Exemplo para copiar"><code class="command">pointer-events: none;</code></td></tr>
+                        <tr><td data-label="Propriedade">user-select</td><td data-label="Para que serve">Permite ou impede seleção de texto.</td><td data-label="Exemplo para copiar"><code class="command">user-select: none;</code></td></tr>
+                        <tr><td data-label="Propriedade">scroll-behavior</td><td data-label="Para que serve">Define rolagem suave ou imediata.</td><td data-label="Exemplo para copiar"><code class="command">html { scroll-behavior: smooth; }</code></td></tr>
+                        <tr><td data-label="Propriedade">scroll-padding-top</td><td data-label="Para que serve">Reserva espaço acima ao navegar por âncoras.</td><td data-label="Exemplo para copiar"><code class="command">html { scroll-padding-top: 24px; }</code></td></tr>
+                        <tr><td data-label="Propriedade">scroll-margin-top</td><td data-label="Para que serve">Reserva espaço acima de um elemento específico.</td><td data-label="Exemplo para copiar"><code class="command">section { scroll-margin-top: 24px; }</code></td></tr>
+                        <tr><td data-label="Propriedade">scroll-snap-type</td><td data-label="Para que serve">Ativa encaixe ao rolar.</td><td data-label="Exemplo para copiar"><code class="command">scroll-snap-type: y mandatory;</code></td></tr>
+                        <tr><td data-label="Propriedade">scroll-snap-align</td><td data-label="Para que serve">Define o ponto de encaixe de um elemento filho.</td><td data-label="Exemplo para copiar"><code class="command">section { scroll-snap-align: start; }</code></td></tr>
+                        <tr><td data-label="Propriedade">overscroll-behavior</td><td data-label="Para que serve">Impede propagação da rolagem além da área.</td><td data-label="Exemplo para copiar"><code class="command">overscroll-behavior: contain;</code></td></tr>
+                        <tr><td data-label="Propriedade">scrollbar-gutter</td><td data-label="Para que serve">Reserva espaço para a barra de rolagem.</td><td data-label="Exemplo para copiar"><code class="command">scrollbar-gutter: stable;</code></td></tr>
+                        <tr><td data-label="Propriedade">resize</td><td data-label="Para que serve">Controla o redimensionamento manual de elementos.</td><td data-label="Exemplo para copiar"><code class="command">resize: vertical;</code></td></tr>
+                        <tr><td data-label="Propriedade">touch-action</td><td data-label="Para que serve">Controla gestos tratados pelo navegador em telas sensíveis ao toque.</td><td data-label="Exemplo para copiar"><code class="command">touch-action: manipulation;</code></td></tr>
+                        <tr><td data-label="Propriedade">appearance</td><td data-label="Para que serve">Remove ou usa a aparência nativa do controle.</td><td data-label="Exemplo para copiar"><code class="command">appearance: none;</code></td></tr>
+                        <tr><td data-label="Propriedade">forced-color-adjust</td><td data-label="Para que serve">Controla ajustes em modos de alto contraste.</td><td data-label="Exemplo para copiar"><code class="command">forced-color-adjust: none;</code></td></tr>
+                        <tr><td data-label="Propriedade">@media prefers-reduced-motion</td><td data-label="Para que serve">Desativa ou reduz animações para necessidades de acessibilidade.</td><td data-label="Exemplo para copiar"><code class="command">@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none; } }</code></td></tr>
+                    </tbody>
+                </table></div>
             </section>
 
             <section id="atributos-html">
