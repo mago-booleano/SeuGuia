@@ -27,6 +27,16 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 24px;
+            scrollbar-gutter: stable;
+        }
+
+        body {
+            overscroll-behavior-y: contain;
+        }
+
         [hidden] {
             display: none !important;
         }
@@ -72,6 +82,9 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
 
             .card,
             .card>section {
