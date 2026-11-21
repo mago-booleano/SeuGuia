@@ -637,6 +637,24 @@
             padding: 10px 0 18px;
         }
 
+        .guide-vortex {
+            position: relative;
+            height: 180px;
+            margin-bottom: 18px;
+            overflow: hidden;
+            border: 1px solid #3f3f3f;
+            border-radius: 8px;
+            background: #1b1b1b;
+        }
+
+        #vortex-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
         .badge {
             display: none;
         }
@@ -1109,11 +1127,13 @@
 </head>
 
 <body>
-    <div class="black-hole-scene" aria-hidden="true">
-    </div>
+    <div class="black-hole-scene" aria-hidden="true"></div>
     <main class="container">
         <section class="card">
             <header>
+                <div class="guide-vortex" aria-hidden="true">
+                    <canvas id="vortex-canvas"></canvas>
+                </div>
                 <div class="badge">Node.js, npm, Git &amp; HTML</div>
                 <h1>Guia de npm, Git e tags HTML</h1>
                 <p>Consulte descrições e exemplos, pesquise e copie o conteúdo para seus projetos.</p>
@@ -2069,6 +2089,223 @@
     <div class="toast" id="copy-feedback" role="status" aria-live="polite"></div>
 
     <script>
+        function initGravitationalVortex() {
+            const canvas = document.getElementById("vortex-canvas");
+            const gl = canvas?.getContext("webgl", {
+                alpha: true,
+                antialias: true,
+                premultipliedAlpha: true,
+                depth: false,
+                powerPreference: "high-performance"
+            });
+            if (!gl) return;
+
+            const vertexSource = `
+                precision highp float;
+                attribute vec3 aSeed;
+                attribute vec2 aCorner;
+                uniform float uPhase;
+                uniform float uSpin;
+                uniform vec2 uResolution;
+                varying float vAlpha;
+                varying vec2 vCorner;
+
+                #define TAU 6.28318530718
+
+                mat3 rotX(float t) {
+                    float c = cos(t), s = sin(t);
+                    return mat3(1.0,0.0,0.0, 0.0,c,s, 0.0,-s,c);
+                }
+                mat3 rotY(float t) {
+                    float c = cos(t), s = sin(t);
+                    return mat3(c,0.0,-s, 0.0,1.0,0.0, s,0.0,c);
+                }
+                mat3 rotZ(float t) {
+                    float c = cos(t), s = sin(t);
+                    return mat3(c,s,0.0, -s,c,0.0, 0.0,0.0,1.0);
+                }
+
+                void main() {
+                    vCorner = aCorner;
+                    float u = fract(aSeed.x - uPhase);
+                    float armSlot = floor(aSeed.y * 5.0);
+                    float armOffset = (fract(aSeed.y * 5.0) - 0.5) * 0.17;
+                    float r = mix(0.15, 4.2, u);
+                    float twist = 2.8 * log((4.55) / (r + 0.35));
+                    float angle = armSlot * TAU / 5.0 + armOffset * TAU + twist + uSpin;
+                    float well = 1.728 / (r + 0.12);
+                    float z = 2.5 * (1.0 - exp(-well / 2.5)) - 0.6;
+                    vec3 p = vec3(r * cos(angle), r * sin(angle), z);
+
+                    float tilt = radians(35.0);
+                    mat3 cam = rotX(1.5707963 - tilt) * rotY(radians(0.0)) * rotZ(-0.25);
+                    vec3 pivot = vec3(0.0, 0.15, 0.0);
+                    vec3 e = cam * (p - pivot);
+                    float zd = e.z + 7.84;
+                    if (zd < 0.6) {
+                        vAlpha = 0.0;
+                        gl_Position = vec4(2.0, 2.0, 0.0, 1.0);
+                        return;
+                    }
+
+                    float focal = 1.0 / tan(radians(22.5));
+                    vec2 sp = e.xy * focal / zd;
+                    float aspect = uResolution.x / max(1.0, uResolution.y);
+                    vec2 ndc = vec2(sp.x / aspect, sp.y);
+
+                    float radialU = max(0.0, u - 0.006);
+                    float rNext = mix(0.15, 4.2, radialU);
+                    float nextWell = 1.728 / (rNext + 0.12);
+                    float zNext = 2.5 * (1.0 - exp(-nextWell / 2.5)) - 0.6;
+                    float nextTwist = 2.8 * log(4.55 / (rNext + 0.35));
+                    float nextAngle = armSlot * TAU / 5.0 + armOffset * TAU + nextTwist + uSpin - 0.002;
+                    vec3 pNext = vec3(rNext * cos(nextAngle), rNext * sin(nextAngle), zNext);
+                    vec3 eNext = cam * (pNext - pivot);
+                    float zdNext = eNext.z + 7.84;
+                    vec2 spNext = eNext.xy * focal / zdNext;
+                    vec2 delta = vec2(spNext.x / aspect, spNext.y) - ndc;
+                    float lengthPx = max(length(delta), 0.004);
+                    vec2 tangent = delta / max(length(delta), 0.0001);
+                    vec2 normal = vec2(-tangent.y, tangent.x);
+                    float dotRadius = 0.0006;
+                    vec2 quad = tangent * (aCorner.y * lengthPx) + normal * (aCorner.x * dotRadius);
+                    ndc += quad;
+
+                    float edge = smoothstep(0.0, 0.20, u) * (1.0 - smoothstep(0.62, 1.0, u));
+                    float depthAtt = pow(clamp(7.84 / zd, 0.0, 1.0), 3.0);
+                    vAlpha = edge * mix(0.35, 1.0, aSeed.z) * mix(0.05, 1.0, depthAtt);
+                    gl_Position = vec4(ndc, 0.0, 1.0);
+                }
+            `;
+
+            const fragmentSource = `
+                precision highp float;
+                varying float vAlpha;
+                varying vec2 vCorner;
+                void main() {
+                    float glow = exp(-8.0 * pow(abs(vCorner.x * 2.0), 2.0));
+                    float taper = smoothstep(0.0, 0.25, vCorner.y);
+                    float alpha = vAlpha * glow * taper;
+                    if (alpha < 0.004) discard;
+                    vec3 green = vec3(0.016, 1.0, 0.12);
+                    vec3 gold = vec3(1.0, 0.79, 0.22);
+                    vec3 color = mix(green, gold, 0.04);
+                    gl_FragColor = vec4(color * alpha, alpha);
+                }
+            `;
+
+            function compile(type, source) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.warn("Vortex shader:", gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            const vertexShader = compile(gl.VERTEX_SHADER, vertexSource);
+            const fragmentShader = compile(gl.FRAGMENT_SHADER, fragmentSource);
+            if (!vertexShader || !fragmentShader) return;
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.deleteShader(vertexShader);
+            gl.deleteShader(fragmentShader);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.warn("Vortex link:", gl.getProgramInfoLog(program));
+                return;
+            }
+            gl.useProgram(program);
+
+            const particleCount = 20000;
+            const verticesPerParticle = 6;
+            const seeds = new Float32Array(particleCount * verticesPerParticle * 3);
+            const corners = new Float32Array(particleCount * verticesPerParticle * 2);
+            const quad = [[-0.5,0], [0.5,0], [-0.5,1], [0.5,0], [0.5,1], [-0.5,1]];
+            let seed = 1337;
+            const random = () => {
+                seed = (seed * 16807) % 2147483647;
+                return (seed - 1) / 2147483646;
+            };
+            for (let i = 0; i < particleCount; i++) {
+                const u = random();
+                const armSeed = random();
+                const brightness = random();
+                for (let k = 0; k < verticesPerParticle; k++) {
+                    const seedIndex = (i * verticesPerParticle + k) * 3;
+                    seeds[seedIndex] = u;
+                    seeds[seedIndex + 1] = armSeed;
+                    seeds[seedIndex + 2] = brightness;
+                    const cornerIndex = (i * verticesPerParticle + k) * 2;
+                    corners[cornerIndex] = quad[k][0];
+                    corners[cornerIndex + 1] = quad[k][1];
+                }
+            }
+
+            const seedBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, seeds, gl.STATIC_DRAW);
+            const cornerBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, corners, gl.STATIC_DRAW);
+
+            const seedLocation = gl.getAttribLocation(program, "aSeed");
+            const cornerLocation = gl.getAttribLocation(program, "aCorner");
+            const phaseLocation = gl.getUniformLocation(program, "uPhase");
+            const spinLocation = gl.getUniformLocation(program, "uSpin");
+            const resolutionLocation = gl.getUniformLocation(program, "uResolution");
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.ONE, gl.ONE);
+            gl.clearColor(0, 0, 0, 0);
+
+            let phase = 0;
+            let spin = 0;
+            let previousTime = performance.now();
+            let animationFrame = 0;
+            const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            function render(now) {
+                animationFrame = requestAnimationFrame(render);
+                const dt = Math.min(0.05, (now - previousTime) / 1000);
+                previousTime = now;
+                if (!reducedMotion) {
+                    phase = (phase + dt * 0.016) % 1;
+                    spin = (spin + dt * 0.024) % (Math.PI * 2);
+                }
+
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                const width = Math.max(1, Math.floor(canvas.clientWidth * dpr));
+                const height = Math.max(1, Math.floor(canvas.clientHeight * dpr));
+                if (canvas.width !== width || canvas.height !== height) {
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+                gl.viewport(0, 0, width, height);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.useProgram(program);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, seedBuffer);
+                gl.enableVertexAttribArray(seedLocation);
+                gl.vertexAttribPointer(seedLocation, 3, gl.FLOAT, false, 0, 0);
+                gl.bindBuffer(gl.ARRAY_BUFFER, cornerBuffer);
+                gl.enableVertexAttribArray(cornerLocation);
+                gl.vertexAttribPointer(cornerLocation, 2, gl.FLOAT, false, 0, 0);
+                gl.uniform1f(phaseLocation, phase);
+                gl.uniform1f(spinLocation, spin);
+                gl.uniform2f(resolutionLocation, width, height);
+                gl.drawArrays(gl.TRIANGLES, 0, particleCount * verticesPerParticle);
+            }
+            animationFrame = requestAnimationFrame(render);
+
+            window.addEventListener("pagehide", () => cancelAnimationFrame(animationFrame), { once: true });
+        }
+
+        initGravitationalVortex();
         const searchInput = document.getElementById("command-search");
         const commandCount = document.getElementById("command-count");
         const emptyState = document.getElementById("empty-state");
