@@ -211,6 +211,49 @@
             display: none !important;
         }
 
+        .copy-target-wrap {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .copy-target-wrap > pre,
+        .copy-target-wrap > .propriedade,
+        .copy-target-wrap > .aviso {
+            padding-top: 52px;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 1;
+            min-height: 32px;
+            padding: 0 10px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: #102015;
+            color: var(--verde-claro);
+            font: inherit;
+            font-size: 0.78rem;
+            cursor: pointer;
+        }
+
+        .copy-button:hover,
+        .copy-button:focus-visible {
+            border-color: var(--verde);
+            color: var(--texto);
+        }
+
+        code {
+            cursor: copy;
+            border-radius: 4px;
+        }
+
+        code:focus-visible {
+            outline: 2px solid var(--verde);
+            outline-offset: 2px;
+        }
+
         @media (max-width: 700px) {
             .topo {
                 align-items: flex-start;
@@ -259,6 +302,8 @@
             <a href="#animacao">Transição e animação</a>
             <a href="#responsivo">Responsividade</a>
             <a href="#mais-propriedades">Mais propriedades</a>
+            <a href="#seletores">Seletores</a>
+            <a href="#propriedades-detalhadas">Propriedades e valores</a>
         </nav>
 
         <aside class="aviso">
@@ -752,6 +797,764 @@ button:hover { color: green; }  /* botão apontado */
 input:focus { outline: 2px solid green; }</pre>
             </div>
         </section>
+
+        <section id="seletores" data-pesquisavel>
+            <h2>10. Seletores CSS: como escolher os elementos</h2>
+            <p>O seletor fica antes das chaves e responde à pergunta: <strong>“quais elementos devem receber estas regras?”</strong>
+                Combine seletores para atingir exatamente o elemento pretendido, sem depender de estilos repetidos.</p>
+
+            <h3>Seletores básicos e agrupamento</h3>
+            <div class="propriedade">
+                <strong><code>*</code></strong>
+                <div><strong>Seletor universal:</strong> corresponde a todos os elementos. É comum para normalizar cálculos,
+                    mas usar muitas regras globais pode dificultar a manutenção.
+                    <pre>* {
+    box-sizing: border-box;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>p</code></strong>
+                <div><strong>Seletor de elemento:</strong> seleciona todas as tags com aquele nome. É bom para estilos
+                    gerais de elementos HTML.
+                    <pre>p {
+    line-height: 1.6;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>.aviso</code></strong>
+                <div><strong>Seletor de classe:</strong> o ponto procura um valor do atributo <code>class</code>.
+                    Classes podem ser reutilizadas em vários elementos.
+                    <pre>.aviso {
+    border-left: 4px solid orange;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>#principal</code></strong>
+                <div><strong>Seletor de id:</strong> o jogo da velha procura o atributo <code>id</code>. Use id único
+                    para âncoras ou uma região singular; para estilos reutilizáveis, prefira classes.
+                    <pre>#principal {
+    max-width: 70rem;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>A, B</code></strong>
+                <div><strong>Lista de seletores:</strong> a vírgula aplica a mesma regra a vários seletores
+                    independentes.
+                    <pre>h1, h2, h3 {
+    font-family: system-ui, sans-serif;
+}</pre>
+                </div>
+            </div>
+
+            <h3>Combinadores: relação entre elementos</h3>
+            <div class="propriedade">
+                <strong><code>A B</code></strong>
+                <div><strong>Descendente:</strong> seleciona B em qualquer profundidade dentro de A.
+                    <pre>article a {
+    color: seagreen;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>A &gt; B</code></strong>
+                <div><strong>Filho direto:</strong> seleciona B somente quando o pai imediato é A.
+                    <pre>nav &gt; ul {
+    display: flex;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>A + B</code></strong>
+                <div><strong>Irmão adjacente:</strong> seleciona o primeiro B que aparece imediatamente depois de A,
+                    compartilhando o mesmo pai.
+                    <pre>h2 + p {
+    margin-top: 0;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>A ~ B</code></strong>
+                <div><strong>Irmãos seguintes:</strong> seleciona todos os B que vêm depois de A e têm o mesmo pai;
+                    não precisam estar colados.
+                    <pre>h2 ~ p {
+    color: #64748b;
+}</pre>
+                </div>
+            </div>
+
+            <h3>Seletores de atributos</h3>
+            <div class="propriedade">
+                <strong><code>[disabled]</code></strong>
+                <div>Seleciona qualquer elemento que tenha o atributo, independentemente do valor.
+                    <pre>button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[type="email"]</code></strong>
+                <div><code>=</code> pede igualdade exata com o valor completo.
+                    <pre>input[type="email"] {
+    border-color: royalblue;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[href^="https"]</code></strong>
+                <div><code>^=</code> seleciona valores que começam com o texto informado, útil para distinguir links
+                    externos.
+                    <pre>a[href^="https"] {
+    text-decoration-style: dotted;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[src$=".svg"]</code></strong>
+                <div><code>$=</code> seleciona valores que terminam com o texto informado.
+                    <pre>img[src$=".svg"] {
+    width: 2rem;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[class*="card"]</code></strong>
+                <div><code>*=</code> seleciona valores que contêm a sequência informada. Use com cautela: pode
+                    coincidir com nomes não pretendidos.
+                    <pre>[class*="card"] {
+    border-radius: 1rem;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[class~="ativo"]</code></strong>
+                <div><code>~=</code> procura uma palavra inteira separada por espaços dentro do atributo.
+                    <pre>[class~="ativo"] {
+    font-weight: 700;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>[lang|="pt"]</code></strong>
+                <div><code>|=</code> seleciona o valor exato ou um valor que começa com ele seguido por hífen,
+                    por exemplo <code>pt</code> e <code>pt-BR</code>.
+                    <pre>[lang|="pt"] {
+    quotes: "“" "”";
+}</pre>
+                </div>
+            </div>
+
+            <h3>Pseudo-classes: estado ou posição</h3>
+            <div class="propriedade">
+                <strong><code>:hover</code>, <code>:active</code></strong>
+                <div><code>:hover</code> vale enquanto o ponteiro está sobre o elemento. <code>:active</code> vale
+                    enquanto ele está sendo pressionado. Não use hover como única forma de mostrar informação.
+                    <pre>button:hover {
+    background: #d1fae5;
+}
+
+button:active {
+    transform: translateY(1px);
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:focus</code>, <code>:focus-visible</code></strong>
+                <div><code>:focus</code> seleciona o elemento que recebeu foco. <code>:focus-visible</code> destaca o
+                    foco quando o navegador considera útil, especialmente na navegação por teclado. Não remova o foco
+                    sem oferecer outro indicador.
+                    <pre>button:focus-visible {
+    outline: 3px solid #65a30d;
+    outline-offset: 3px;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:focus-within</code></strong>
+                <div>Seleciona um contêiner quando ele ou qualquer descendente está com foco.
+                    <pre>.campo:focus-within {
+    border-color: seagreen;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:link</code>, <code>:visited</code></strong>
+                <div><code>:link</code> aponta para links ainda não visitados; <code>:visited</code> estiliza links já
+                    visitados. Navegadores limitam algumas propriedades por privacidade.
+                    <pre>a:link { color: royalblue; }
+a:visited { color: rebeccapurple; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:checked</code></strong>
+                <div>Seleciona caixas de seleção ou botões de opção marcados.
+                    <pre>input[type="checkbox"]:checked + label {
+    color: seagreen;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:disabled</code>, <code>:enabled</code></strong>
+                <div>Selecionam controles de formulário desativados ou habilitados.
+                    <pre>input:disabled { opacity: 0.5; }
+input:enabled { cursor: text; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:required</code>, <code>:optional</code></strong>
+                <div>Identificam campos obrigatórios ou não obrigatórios segundo os atributos do formulário.
+                    <pre>input:required { border-left: 3px solid orange; }
+input:optional { border-left: 3px solid #94a3b8; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:valid</code>, <code>:invalid</code></strong>
+                <div>Selecionam campos cuja validação HTML passou ou falhou. Use junto de mensagens de erro claras,
+                    não dependa apenas da cor.
+                    <pre>input:invalid { border-color: #dc2626; }
+input:valid { border-color: #16a34a; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:first-child</code>, <code>:last-child</code></strong>
+                <div>Selecionam o primeiro ou o último filho de seu elemento pai. A posição é relativa aos irmãos
+                    dentro do mesmo pai.
+                    <pre>li:first-child { margin-top: 0; }
+li:last-child { margin-bottom: 0; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:nth-child()</code></strong>
+                <div>Seleciona filhos por posição. Aceita números, <code>odd</code>, <code>even</code> e expressões
+                    como <code>3n + 1</code>.
+                    <pre>tr:nth-child(even) { background: #f1f5f9; }
+li:nth-child(3n + 1) { font-weight: 700; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:not()</code></strong>
+                <div>Seleciona elementos que não correspondem ao seletor dentro dos parênteses.
+                    <pre>button:not([disabled]) {
+    cursor: pointer;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:is()</code>, <code>:where()</code></strong>
+                <div>Agrupam alternativas dentro de um seletor. <code>:is()</code> assume a especificidade da
+                    alternativa mais específica; <code>:where()</code> tem especificidade zero e facilita sobrescrever
+                    o estilo depois.
+                    <pre>:is(h1, h2, h3) { line-height: 1.2; }
+:where(article, section) p { max-width: 70ch; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:has()</code></strong>
+                <div>Seleciona um elemento com base no que existe dentro dele ou ao lado dele. É útil para reagir a um
+                    campo inválido ou a um item selecionado.
+                    <pre>.formulario:has(input:invalid) {
+    border-color: #dc2626;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:root</code>, <code>:empty</code>, <code>:target</code></strong>
+                <div><code>:root</code> seleciona a raiz do documento e é comum para variáveis. <code>:empty</code>
+                    seleciona elemento sem filhos. <code>:target</code> seleciona o elemento apontado pela âncora da URL.
+                    <pre>:root { --cor: seagreen; }
+.painel:empty { display: none; }
+:target { scroll-margin-top: 2rem; }</pre>
+                </div>
+            </div>
+
+            <h3>Pseudo-elementos: parte visual do elemento</h3>
+            <div class="propriedade">
+                <strong><code>::before</code>, <code>::after</code></strong>
+                <div>Criam uma caixa decorativa antes ou depois do conteúdo. Normalmente precisam de
+                    <code>content</code>. Não use para conteúdo essencial, pois tecnologias assistivas podem não
+                    anunciá-lo como texto normal.
+                    <pre>.externo::after {
+    content: " ↗";
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>::placeholder</code></strong>
+                <div>Estiliza o texto de exemplo dentro de um campo vazio. Placeholder não substitui um rótulo
+                    persistente.
+                    <pre>input::placeholder {
+    color: #64748b;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>::selection</code>, <code>::marker</code></strong>
+                <div><code>::selection</code> define as cores do texto selecionado pelo usuário. <code>::marker</code>
+                    estiliza o marcador de listas.
+                    <pre>::selection { background: #bbf7d0; color: #14532d; }
+li::marker { color: seagreen; }</pre>
+                </div>
+            </div>
+
+            <h3>Especificidade: qual regra vence?</h3>
+            <p>Quando várias regras alteram a mesma propriedade do mesmo elemento, o navegador considera origem,
+                importância, camadas, especificidade e ordem. Como aproximação, pense em três contadores:
+                <strong>IDs</strong>, <strong>classes/atributos/pseudo-classes</strong> e <strong>elementos/pseudo-elementos</strong>.
+                Um seletor com mais peso vence; em empate, normalmente vence a regra posterior. Evite resolver tudo com
+                <code>!important</code>.</p>
+            <pre>p { color: blue; }                 /* 0 IDs, 0 classes, 1 elemento */
+.aviso { color: orange; }          /* 0 IDs, 1 classe, 0 elementos */
+#principal .aviso { color: green; } /* 1 ID, 1 classe, 0 elementos */</pre>
+            <aside class="aviso">Uma classe pode ser reutilizada. Um ID deve ser único por documento. Seletores mais simples
+                costumam deixar o CSS mais fácil de manter.</aside>
+        </section>
+
+        <section id="propriedades-detalhadas" data-pesquisavel>
+            <h2>11. Propriedades e valores: referência detalhada</h2>
+            <p>O CSS tem centenas de propriedades, e algumas aceitam listas extensas de valores. Abaixo estão
+                propriedades muito usadas, o papel de cada uma e os valores mais comuns. Uma propriedade abreviada
+                como <code>margin</code> altera várias propriedades relacionadas de uma só vez.</p>
+
+            <h3>Caixa, tamanho e espaçamento</h3>
+            <div class="propriedade">
+                <strong><code>width</code>, <code>height</code></strong>
+                <div>Definem largura e altura. <code>auto</code> deixa o navegador calcular o tamanho. Também aceitam
+                    comprimentos, porcentagens e funções. Em imagens, defina só uma dimensão ou use
+                    <code>aspect-ratio</code> para evitar deformação.
+                    <pre>.painel { width: 100%; max-width: 60rem; }
+.avatar { width: 4rem; height: 4rem; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>min-width</code>, <code>max-width</code>, <code>min-height</code>, <code>max-height</code></strong>
+                <div>Impõem limites mínimos e máximos. <code>none</code> é comum para remover um limite máximo.
+                    Servem para que um elemento cresça ou encolha sem ultrapassar o tamanho desejado.
+                    <pre>.conteudo {
+    width: 100%;
+    min-width: 0;
+    max-width: 72rem;
+}
+.janela { max-height: 80vh; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>margin</code>, <code>padding</code></strong>
+                <div><code>margin</code> cria espaço do lado de fora; <code>padding</code>, do lado de dentro.
+                    Aceitam comprimento, porcentagem e <code>auto</code> (principalmente para margin). Com quatro
+                    valores, a ordem é topo, direita, baixo, esquerda.
+                    <pre>.caixa {
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+.quatro-lados { padding: 1rem 2rem 3rem 4rem; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>box-sizing</code></strong>
+                <div><code>content-box</code> soma padding e borda além da largura declarada. <code>border-box</code>
+                    inclui conteúdo, padding e borda no tamanho declarado; costuma tornar layouts mais previsíveis.
+                    <pre>* { box-sizing: border-box; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>border-width</code>, <code>border-style</code>, <code>border-color</code></strong>
+                <div>Controlam espessura, aparência e cor separadamente. Estilos comuns: <code>none</code>,
+                    <code>solid</code>, <code>dashed</code>, <code>dotted</code> e <code>double</code>. Sem um estilo
+                    diferente de <code>none</code>, a borda não aparece.
+                    <pre>.cartao {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #94a3b8;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>border-radius</code></strong>
+                <div>Arredonda os cantos. Aceita comprimentos ou porcentagens; <code>50%</code> cria um círculo quando
+                    largura e altura são iguais. Pode receber um, dois, três ou quatro valores.
+                    <pre>.botao { border-radius: 999px; }
+.circulo { width: 4rem; aspect-ratio: 1; border-radius: 50%; }</pre>
+                </div>
+            </div>
+
+            <h3>Display e alinhamento</h3>
+            <div class="propriedade">
+                <strong><code>display</code></strong>
+                <div><code>block</code> cria uma caixa de bloco; <code>inline</code> participa da linha do texto;
+                    <code>inline-block</code> fica na linha mas aceita dimensões; <code>flex</code> e
+                    <code>grid</code> ativam esses layouts; <code>none</code> remove a caixa da página. Use
+                    <code>contents</code> com cuidado: remove a caixa do elemento, não seu conteúdo.
+                    <pre>.menu { display: flex; }
+.grade { display: grid; }
+.oculto { display: none; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>flex-direction</code>, <code>flex-wrap</code></strong>
+                <div><code>flex-direction</code> escolhe a direção: <code>row</code>, <code>row-reverse</code>,
+                    <code>column</code> ou <code>column-reverse</code>. <code>flex-wrap</code> escolhe se os itens
+                    quebram linha: <code>nowrap</code>, <code>wrap</code> ou <code>wrap-reverse</code>.
+                    <pre>.menu {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>justify-content</code></strong>
+                <div>Distribui itens no eixo principal do flexbox ou no eixo de linhas do grid. Valores comuns:
+                    <code>start</code>, <code>end</code>, <code>center</code>, <code>space-between</code>,
+                    <code>space-around</code>, <code>space-evenly</code>. Espaços só são distribuídos se houver espaço
+                    livre.
+                    <pre>.menu {
+    display: flex;
+    justify-content: space-between;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>align-items</code>, <code>align-self</code></strong>
+                <div><code>align-items</code> alinha todos os filhos no eixo cruzado; <code>align-self</code> altera
+                    um filho individual. Valores mais comuns: <code>stretch</code>, <code>start</code>,
+                    <code>end</code>, <code>center</code> e <code>baseline</code>.
+                    <pre>.linha { display: flex; align-items: center; }
+.item-especial { align-self: flex-start; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>flex</code>, <code>flex-grow</code>, <code>flex-shrink</code>, <code>flex-basis</code></strong>
+                <div><code>flex</code> é abreviação de crescimento, redução e tamanho inicial. Exemplo
+                    <code>1 1 220px</code>: pode crescer, pode encolher e começa com base de 220 px.
+                    <code>flex: 1</code> normalmente divide o espaço disponível entre os itens.
+                    <pre>.item { flex: 1 1 220px; }
+.item-fixo { flex: 0 0 12rem; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>grid-template-columns</code>, <code>grid-template-rows</code></strong>
+                <div>Desenham colunas e linhas do grid. Use comprimentos fixos, porcentagens, <code>auto</code>,
+                    <code>fr</code>, <code>repeat()</code> e <code>minmax()</code>. <code>fr</code> divide o espaço
+                    que sobrou.
+                    <pre>.grade {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>grid-auto-flow</code></strong>
+                <div>Controla como itens que não têm posição explícita são colocados: <code>row</code> preenche linhas,
+                    <code>column</code> preenche colunas e <code>dense</code> tenta preencher espaços vazios.
+                    <pre>.grade { grid-auto-flow: row; }
+.compacta { grid-auto-flow: row dense; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>gap</code>, <code>row-gap</code>, <code>column-gap</code></strong>
+                <div>Definem o espaço entre itens de flexbox, grid ou colunas de texto. Um valor aplica o mesmo espaço;
+                    dois valores são linha e coluna. Não adicionam espaço nas bordas externas do contêiner.
+                    <pre>.grade { gap: 1rem; }
+.grade { row-gap: 1rem; column-gap: 2rem; }</pre>
+                </div>
+            </div>
+
+            <h3>Posicionamento e rolagem</h3>
+            <div class="propriedade">
+                <strong><code>position</code></strong>
+                <div><code>static</code> é o fluxo normal; <code>relative</code> permite deslocamento e serve de
+                    referência para filhos; <code>absolute</code> sai do fluxo; <code>fixed</code> fica preso à janela;
+                    <code>sticky</code> acompanha a rolagem até um limite. Para <code>sticky</code>, indique um limite,
+                    como <code>top: 0</code>.
+                    <pre>.pai { position: relative; }
+.dica { position: absolute; top: 100%; left: 0; }
+.cabecalho { position: sticky; top: 0; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>top</code>, <code>right</code>, <code>bottom</code>, <code>left</code>, <code>inset</code></strong>
+                <div>Definem distância a partir das bordas do bloco de referência quando o posicionamento permite
+                    deslocamento. <code>inset</code> é a abreviação; <code>inset: 0</code> encosta nos quatro lados.
+                    <pre>.overlay {
+    position: absolute;
+    inset: 0;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>z-index</code></strong>
+                <div>Controla a ordem de sobreposição dentro de um contexto de empilhamento. Valores maiores tendem a
+                    ficar à frente, mas contextos diferentes não são comparados como uma lista única.
+                    <pre>.menu { position: relative; z-index: 2; }
+.fundo { position: relative; z-index: 1; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>overflow</code>, <code>overflow-x</code>, <code>overflow-y</code></strong>
+                <div><code>visible</code> deixa conteúdo sair; <code>hidden</code> corta; <code>clip</code> corta sem
+                    criar rolagem; <code>scroll</code> sempre cria área rolável; <code>auto</code> só mostra rolagem
+                    quando necessária. Use os eixos para controlar horizontal e vertical separadamente.
+                    <pre>.lista { max-height: 20rem; overflow-y: auto; }
+.tabela { overflow-x: auto; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>scroll-margin</code>, <code>scroll-padding</code></strong>
+                <div><code>scroll-margin</code> reserva distância ao redor do elemento que será alcançado.
+                    <code>scroll-padding</code> reserva espaço dentro do contêiner de rolagem, útil quando há uma barra
+                    fixa no topo.
+                    <pre>html { scroll-padding-top: 5rem; }
+h2 { scroll-margin-top: 1rem; }</pre>
+                </div>
+            </div>
+
+            <h3>Texto e fonte</h3>
+            <div class="propriedade">
+                <strong><code>font-family</code></strong>
+                <div>Define a família da fonte. Escreva alternativas em ordem: se a primeira não existir, o navegador
+                    tenta a próxima. Nomes com espaços precisam de aspas; termine com uma família genérica como
+                    <code>sans-serif</code>, <code>serif</code> ou <code>monospace</code>.
+                    <pre>body {
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+code { font-family: Consolas, monospace; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>font-size</code></strong>
+                <div>Define o tamanho das letras. Pode usar comprimentos como <code>px</code>, <code>rem</code>,
+                    <code>em</code>, porcentagem ou palavras como <code>small</code>, <code>large</code>,
+                    <code>smaller</code> e <code>larger</code>. <code>rem</code> costuma escalar de forma previsível
+                    conforme a fonte raiz.
+                    <pre>body { font-size: 1rem; }
+h1 { font-size: clamp(2rem, 5vw, 4rem); }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>font-weight</code>, <code>font-style</code></strong>
+                <div><code>font-weight</code> controla o peso: <code>normal</code>, <code>bold</code> ou números de
+                    1 a 1000 se a fonte suportar. <code>font-style</code> usa <code>normal</code>, <code>italic</code>
+                    ou <code>oblique</code>.
+                    <pre>.normal { font-weight: 400; font-style: normal; }
+.destaque { font-weight: 700; font-style: italic; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>text-align</code></strong>
+                <div>Alinha texto em linha: <code>start</code> segue o idioma, <code>end</code> é o lado oposto,
+                    <code>left</code>/<code>right</code> são físicos, <code>center</code> centraliza e
+                    <code>justify</code> ajusta os espaços para alinhar as duas margens.
+                    <pre>p { text-align: start; }
+.legenda { text-align: center; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>text-decoration</code></strong>
+                <div>Adiciona linha e seus detalhes. Pode combinar tipo, estilo, cor e espessura:
+                    <code>underline</code>, <code>overline</code>, <code>line-through</code>,
+                    <code>solid</code>, <code>dotted</code>, <code>wavy</code> ou <code>none</code>.
+                    <pre>a { text-decoration: underline; }
+a:hover { text-decoration: underline wavy currentColor; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>text-transform</code></strong>
+                <div>Altera a aparência das letras sem mudar o texto original: <code>uppercase</code>,
+                    <code>lowercase</code>, <code>capitalize</code> ou <code>none</code>.
+                    <pre>.rotulo { text-transform: uppercase; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>white-space</code></strong>
+                <div>Controla espaços e quebras de linha. <code>normal</code> quebra normalmente; <code>nowrap</code>
+                    mantém uma linha; <code>pre</code> preserva espaços e quebras; <code>pre-wrap</code> preserva mas
+                    permite quebra; <code>pre-line</code> preserva quebras, colapsando espaços repetidos.
+                    <pre>.codigo { white-space: pre-wrap; }
+.uma-linha { white-space: nowrap; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>overflow-wrap</code>, <code>word-break</code></strong>
+                <div><code>overflow-wrap: anywhere</code> permite quebrar palavras longas para evitar rolagem
+                    horizontal. <code>word-break</code> controla a quebra dentro das palavras; use valores adequados ao
+                    idioma para não prejudicar a leitura.
+                    <pre>.texto {
+    overflow-wrap: anywhere;
+    word-break: normal;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>letter-spacing</code>, <code>word-spacing</code></strong>
+                <div>Aumentam ou diminuem espaços entre letras ou palavras. Aceitam comprimentos e podem receber valor
+                    negativo; excessos tornam o texto difícil de ler.
+                    <pre>.selo { letter-spacing: 0.08em; }
+.paragrafo { word-spacing: 0.1em; }</pre>
+                </div>
+            </div>
+
+            <h3>Cores, fundo e efeitos visuais</h3>
+            <div class="propriedade">
+                <strong><code>color</code></strong>
+                <div>Define a cor do texto e também o valor herdado por <code>currentColor</code>. Formatos comuns:
+                    nomes, hexadecimal curto/longo, <code>rgb()</code>, <code>hsl()</code> e
+                    <code>oklch()</code>; alfa controla transparência.
+                    <pre>color: #14532d;
+color: rgb(20 83 45 / 90%);
+color: hsl(140 60% 25%);</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>background</code></strong>
+                <div>É uma abreviação para cor, imagem/gradiente, posição, repetição, tamanho e outras opções do
+                    fundo. Várias imagens podem ser separadas por vírgula; a primeira fica na camada de cima.
+                    <pre>background: #f8fafc;
+background: linear-gradient(135deg, #ecfccb, #dcfce7);</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>background-size</code></strong>
+                <div><code>cover</code> cobre a caixa, cortando o excesso; <code>contain</code> mostra a imagem
+                    inteira, podendo sobrar espaço; <code>auto</code> mantém seu tamanho natural; também aceita
+                    largura e altura explícitas.
+                    <pre>.banner { background-size: cover; }
+.icone { background-size: 2rem 2rem; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>background-position</code>, <code>background-repeat</code></strong>
+                <div>Posicionam a imagem usando palavras como <code>center</code>, <code>top</code>,
+                    <code>left</code> ou comprimentos. Repetição aceita <code>repeat</code>,
+                    <code>no-repeat</code>, <code>repeat-x</code>, <code>repeat-y</code>, <code>space</code> e
+                    <code>round</code>.
+                    <pre>.banner {
+    background-position: center top;
+    background-repeat: no-repeat;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>opacity</code>, <code>visibility</code></strong>
+                <div><code>opacity</code> varia de <code>0</code> (transparente) a <code>1</code> (opaco), mas o
+                    elemento continua ocupando espaço e pode receber clique. <code>visibility</code> aceita
+                    <code>visible</code>, <code>hidden</code> e <code>collapse</code>; hidden mantém o espaço.
+                    <pre>.fantasma { opacity: 0; }
+.hidden { visibility: hidden; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>box-shadow</code>, <code>text-shadow</code></strong>
+                <div>Desenham sombras sem alterar o tamanho do layout. A ordem comum é deslocamento horizontal,
+                    vertical, desfoque, expansão (só para caixa) e cor. <code>inset</code> cria sombra interna na caixa;
+                    várias sombras são separadas por vírgula.
+                    <pre>.cartao { box-shadow: 0 8px 24px rgb(0 0 0 / 18%); }
+.texto { text-shadow: 0 1px 2px rgb(0 0 0 / 30%); }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>filter</code>, <code>backdrop-filter</code></strong>
+                <div><code>filter</code> modifica o elemento; <code>backdrop-filter</code> modifica o que aparece
+                    atrás dele. Funções comuns: <code>blur()</code>, <code>brightness()</code>, <code>contrast()</code>,
+                    <code>grayscale()</code>, <code>sepia()</code> e <code>drop-shadow()</code>. Pode haver impacto
+                    de desempenho com blur grande.
+                    <pre>.imagem { filter: grayscale(1); }
+.vidro { backdrop-filter: blur(12px); }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>object-fit</code>, <code>object-position</code></strong>
+                <div>Controlam mídia dentro da caixa. <code>fill</code> pode distorcer; <code>contain</code> mostra
+                    tudo; <code>cover</code> preenche cortando; <code>none</code> preserva tamanho natural;
+                    <code>scale-down</code> escolhe entre none e contain. <code>object-position</code> move o ponto
+                    visível.
+                    <pre>img {
+    width: 100%;
+    height: 14rem;
+    object-fit: cover;
+    object-position: center 30%;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>transform</code></strong>
+                <div>Move, gira, inclina ou redimensiona visualmente sem reorganizar o espaço ao redor. Aceita
+                    <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>, <code>skew()</code> e
+                    transformações 3D. <code>none</code> remove transformação.
+                    <pre>.cartao:hover { transform: translateY(-4px) scale(1.02); }</pre>
+                </div>
+            </div>
+
+            <h3>Interação, estado e movimento</h3>
+            <div class="propriedade">
+                <strong><code>outline</code>, <code>outline-offset</code></strong>
+                <div>Desenham um contorno fora da caixa sem alterar o espaço ocupado. <code>outline</code> aceita
+                    largura, estilo e cor; estilos incluem <code>solid</code>, <code>dotted</code> e
+                    <code>dashed</code>. Não remova o contorno de foco sem substituí-lo.
+                    <pre>button:focus-visible {
+    outline: 3px solid #65a30d;
+    outline-offset: 3px;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>cursor</code></strong>
+                <div>Escolhe o ponteiro: <code>auto</code>, <code>default</code>, <code>pointer</code>,
+                    <code>text</code>, <code>wait</code>, <code>move</code>, <code>grab</code>,
+                    <code>grabbing</code>, <code>not-allowed</code>, entre outros. O cursor não substitui um botão
+                    real nem informa sozinho que a ação está indisponível.
+                    <pre>button { cursor: pointer; }
+.arrastavel { cursor: grab; }
+.desativado { cursor: not-allowed; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>pointer-events</code></strong>
+                <div><code>auto</code> mantém o comportamento normal; <code>none</code> faz o ponteiro atravessar o
+                    elemento, permitindo atingir o que está atrás. Útil em decoração sobreposta, mas inadequado para
+                    botões e links que precisam ser clicáveis.
+                    <pre>.decoracao { pointer-events: none; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>transition</code></strong>
+                <div>Suaviza uma mudança entre valores. Cada item pode indicar propriedade, duração, curva e atraso.
+                    Curvas comuns: <code>ease</code>, <code>linear</code>, <code>ease-in</code>,
+                    <code>ease-out</code>, <code>ease-in-out</code>. Prefira animar <code>transform</code> e
+                    <code>opacity</code> a dimensões pesadas.
+                    <pre>button {
+    transition: background-color 180ms ease,
+                transform 180ms ease;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>animation</code></strong>
+                <div>Executa etapas definidas em <code>@keyframes</code>. Abrevia nome, duração, curva, atraso,
+                    repetições, direção, preenchimento e estado. Repetições podem ser número ou <code>infinite</code>;
+                    use movimento com moderação e respeite preferências de acessibilidade.
+                    <pre>@keyframes aparecer {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.painel { animation: aparecer 300ms ease-out both; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>accent-color</code></strong>
+                <div>Define a cor de destaque nativa de controles como checkbox, radio, range e progress. O navegador
+                    mantém o controle e sua interação padrão.
+                    <pre>input[type="checkbox"] {
+    accent-color: seagreen;
+}</pre>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script>
@@ -766,6 +1569,78 @@ input:focus { outline: 2px solid green; }</pre>
                 grupo.classList.toggle("oculto", !corresponde);
             });
         });
+    </script>
+    <script>
+        (() => {
+            async function copyText(text) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        return true;
+                    } catch {}
+                }
+                const area = document.createElement("textarea");
+                area.value = text;
+                area.setAttribute("readonly", "");
+                area.style.position = "fixed";
+                area.style.opacity = "0";
+                document.body.append(area);
+                area.select();
+                const copied = document.execCommand("copy");
+                area.remove();
+                return copied;
+            }
+
+            const targets = [
+                ...document.querySelectorAll("pre"),
+                ...document.querySelectorAll(".propriedade, .aviso")
+            ].filter((target) => target.tagName === "PRE" || !target.querySelector("pre"));
+
+            targets.forEach((target) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "copy-target-wrap";
+                target.before(wrapper);
+                wrapper.append(target);
+
+                const button = document.createElement("button");
+                button.className = "copy-button";
+                button.type = "button";
+                button.textContent = target.tagName === "PRE" ? "Copiar bloco" : "Copiar texto";
+                button.setAttribute("aria-label", button.textContent);
+                button.setAttribute("aria-live", "polite");
+                button.addEventListener("click", async () => {
+                    const text = (target.tagName === "PRE" ? target.textContent : target.innerText).trim();
+                    const copied = await copyText(text);
+                    button.textContent = copied ? "Copiado!" : "Falhou";
+                    button.setAttribute("aria-label", copied ? "Copiado para a área de transferência" : "Falha ao copiar");
+                    setTimeout(() => {
+                        button.textContent = target.tagName === "PRE" ? "Copiar bloco" : "Copiar texto";
+                        button.setAttribute("aria-label", button.textContent);
+                    }, 1800);
+                });
+                wrapper.append(button);
+            });
+
+            document.querySelectorAll("code").forEach((snippet) => {
+                if (snippet.closest("pre, a, button")) return;
+                const isLabel = snippet.parentElement.matches(".propriedade > strong");
+                if (isLabel) {
+                    snippet.tabIndex = 0;
+                    snippet.setAttribute("aria-label", `Copiar propriedade: ${snippet.textContent.trim()}`);
+                }
+                snippet.title = isLabel ? "Clique ou pressione Enter para copiar" : "Clique para copiar; ou selecione e use Ctrl+C";
+                const copy = () => copyText(snippet.textContent.trim()).then((copied) => {
+                    snippet.title = copied ? "Copiado!" : "Não foi possível copiar";
+                });
+                snippet.addEventListener("click", copy);
+                if (isLabel) snippet.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        copy();
+                    }
+                });
+            });
+        })();
     </script>
 </body>
 

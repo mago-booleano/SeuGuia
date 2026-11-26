@@ -172,6 +172,49 @@
                         display: none !important
                 }
 
+                .copy-target-wrap {
+                        position: relative;
+                        margin: 12px 0
+                }
+
+                .copy-target-wrap > pre,
+                .copy-target-wrap > .linha,
+                .copy-target-wrap > .aviso {
+                        padding-top: 52px
+                }
+
+                .copy-button {
+                        position: absolute;
+                        top: 8px;
+                        right: 8px;
+                        z-index: 1;
+                        min-height: 32px;
+                        padding: 0 10px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        background: #102015;
+                        color: #a3ff91;
+                        font: inherit;
+                        font-size: .78rem;
+                        cursor: pointer
+                }
+
+                .copy-button:hover,
+                .copy-button:focus-visible {
+                        border-color: var(--green);
+                        color: var(--text)
+                }
+
+                code {
+                        cursor: copy;
+                        border-radius: 4px
+                }
+
+                code:focus-visible {
+                        outline: 2px solid var(--green);
+                        outline-offset: 2px
+                }
+
                 @media(max-width:700px) {
                         .topo {
                                 align-items: flex-start;
@@ -491,6 +534,47 @@ git bisect reset</pre>
         </main>
         <script>
                 const pesquisa = document.getElementById("pesquisa"); pesquisa.addEventListener("input", () => { const termo = pesquisa.value.trim().toLowerCase(); document.querySelectorAll("[data-pesquisavel]").forEach(section => section.classList.toggle("oculto", Boolean(termo) && !section.textContent.toLowerCase().includes(termo))); });
+        </script>
+        <script>
+                (() => {
+                        async function copyText(text) {
+                                if (navigator.clipboard && window.isSecureContext) {
+                                        try { await navigator.clipboard.writeText(text); return true; } catch { }
+                                }
+                                const area = document.createElement("textarea");
+                                area.value = text; area.setAttribute("readonly", ""); area.style.position = "fixed"; area.style.opacity = "0";
+                                document.body.append(area); area.select();
+                                const copied = document.execCommand("copy"); area.remove(); return copied;
+                        }
+                        const targets = [...document.querySelectorAll("pre"), ...document.querySelectorAll(".linha, .aviso")]
+                                .filter(target => target.tagName === "PRE" || !target.querySelector("pre"));
+                        targets.forEach(target => {
+                                const wrapper = document.createElement("div"); wrapper.className = "copy-target-wrap";
+                                target.before(wrapper); wrapper.append(target);
+                                const button = document.createElement("button"); button.className = "copy-button"; button.type = "button";
+                                button.textContent = target.tagName === "PRE" ? "Copiar bloco" : "Copiar texto";
+                                button.setAttribute("aria-label", button.textContent); button.setAttribute("aria-live", "polite");
+                                button.addEventListener("click", async () => {
+                                        const text = (target.tagName === "PRE" ? target.textContent : target.innerText).trim();
+                                        const copied = await copyText(text); button.textContent = copied ? "Copiado!" : "Falhou";
+                                        button.setAttribute("aria-label", copied ? "Copiado para a área de transferência" : "Falha ao copiar");
+                                        setTimeout(() => { button.textContent = target.tagName === "PRE" ? "Copiar bloco" : "Copiar texto"; button.setAttribute("aria-label", button.textContent); }, 1800);
+                                });
+                                wrapper.append(button);
+                        });
+                        document.querySelectorAll("code").forEach(snippet => {
+                                if (snippet.closest("pre, a, button")) return;
+                                const isLabel = snippet.parentElement.matches(".linha > strong");
+                                if (isLabel) {
+                                        snippet.tabIndex = 0;
+                                        snippet.setAttribute("aria-label", `Copiar comando: ${snippet.textContent.trim()}`);
+                                }
+                                snippet.title = isLabel ? "Clique ou pressione Enter para copiar" : "Clique para copiar; ou selecione e use Ctrl+C";
+                                const copy = () => copyText(snippet.textContent.trim()).then(copied => { snippet.title = copied ? "Copiado!" : "Não foi possível copiar"; });
+                                snippet.addEventListener("click", copy);
+                                if (isLabel) snippet.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); copy(); } });
+                        });
+                })();
         </script>
 </body>
 

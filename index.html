@@ -1458,6 +1458,33 @@
             box-shadow: 0 0 18px rgba(154, 247, 107, 0.14);
         }
 
+        .copy-target-wrap {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .copy-target-wrap > pre {
+            padding-top: 52px;
+        }
+
+        .copy-target-wrap > .copy-button {
+            z-index: 1;
+        }
+
+        code:not(.command) {
+            cursor: copy;
+            border-radius: 4px;
+        }
+
+        pre code {
+            cursor: text;
+        }
+
+        code:not(.command):focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
         .usage-example {
             color: #93aa97;
         }
@@ -5412,6 +5439,50 @@
             wrapper.append(usage);
             command.dataset.searchText += normalize(` como usar ${usage.textContent}`);
         });
+
+        (() => {
+            const targets = [
+                ...document.querySelectorAll("pre"),
+                ...document.querySelectorAll(".css-value-guide, .empty-state")
+            ].filter((target) => target.tagName === "PRE" || !target.querySelector("pre"));
+
+            targets.forEach((target) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "copy-target-wrap";
+                target.before(wrapper);
+                wrapper.append(target);
+
+                const button = document.createElement("button");
+                button.className = "copy-button";
+                button.type = "button";
+                button.innerHTML = '<span class="copy-icon" aria-hidden="true">⧉</span><span class="copy-label">Copiar bloco</span>';
+                button.setAttribute("aria-label", "Copiar bloco de código ou mensagem");
+                button.setAttribute("aria-live", "polite");
+                button.addEventListener("click", async () => {
+                    const text = (target.tagName === "PRE" ? target.textContent : target.innerText).trim();
+                    const copied = await copyText(text);
+                    button.querySelector(".copy-label").textContent = copied ? "Copiado!" : "Falhou";
+                    showFeedback(copied ? "Bloco copiado para a área de transferência." : "Não foi possível copiar o bloco.");
+                    clearTimeout(button.feedbackTimeout);
+                    button.feedbackTimeout = setTimeout(() => {
+                        button.querySelector(".copy-label").textContent = "Copiar bloco";
+                    }, 1800);
+                });
+                wrapper.append(button);
+            });
+
+            [...document.querySelectorAll("code")]
+                .filter((snippet) => !snippet.classList.contains("command") && !snippet.closest("pre"))
+                .forEach((snippet) => {
+                if (snippet.closest("a, button")) return;
+                snippet.title = "Clique para copiar; ou selecione e use Ctrl+C";
+                const copy = async () => {
+                    const copied = await copyText(snippet.textContent.trim());
+                    showFeedback(copied ? "Trecho copiado para a área de transferência." : "Não foi possível copiar o trecho.");
+                };
+                snippet.addEventListener("click", copy);
+            });
+        })();
 
         const tagSection = Array.from(document.querySelectorAll(".card > section"))
             .find((section) => section.querySelector("h2")?.textContent.includes("Tags HTML"));
