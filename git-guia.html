@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Guia Completo de Git</title>
+        <style>
+                :root {
+                        --bg: #030704;
+                        --panel: #071009;
+                        --border: rgba(57, 255, 20, .28);
+                        --text: #e4ffe9;
+                        --muted: #a7c7ad;
+                        --green: #39ff14
+                }
+
+                * {
+                        box-sizing: border-box
+                }
+
+                html {
+                        scroll-behavior: smooth;
+                        scroll-padding-top: 20px
+                }
+
+                body {
+                        margin: 0;
+                        background: radial-gradient(circle at 50% 0, rgba(57, 255, 20, .12), transparent 35rem), var(--bg);
+                        color: var(--text);
+                        font-family: "Segoe UI", Arial, sans-serif;
+                        line-height: 1.65
+                }
+
+                .container {
+                        max-width: 1180px;
+                        margin: auto;
+                        padding: 24px
+                }
+
+                .topo {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 16px
+                }
+
+                h1 {
+                        margin: 0;
+                        font-size: clamp(2.2rem, 7vw, 4.5rem);
+                        line-height: 1.1
+                }
+
+                h2 {
+                        margin-top: 48px
+                }
+
+                h3 {
+                        color: #a3ff91
+                }
+
+                a {
+                        color: #a3ff91
+                }
+
+                code {
+                        color: #c8ffce
+                }
+
+                pre {
+                        overflow-x: auto;
+                        padding: 14px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        background: #020503;
+                        color: #c8ffce
+                }
+
+                .voltar {
+                        padding: 10px 14px;
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        background: var(--panel);
+                        text-decoration: none
+                }
+
+                .intro,
+                .aviso,
+                .card {
+                        border: 1px solid var(--border);
+                        border-radius: 14px;
+                        background: rgba(7, 16, 9, .94)
+                }
+
+                .intro {
+                        margin-top: 24px;
+                        padding: 22px
+                }
+
+                .aviso {
+                        padding: 14px 18px;
+                        color: var(--muted)
+                }
+
+                .busca {
+                        position: sticky;
+                        top: 12px;
+                        z-index: 10;
+                        display: flex;
+                        margin: 24px 0;
+                        padding: 10px;
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        background: rgba(3, 7, 4, .96)
+                }
+
+                .busca input {
+                        width: 100%;
+                        border: 0;
+                        outline: 0;
+                        background: transparent;
+                        color: var(--text);
+                        font: inherit;
+                        padding: 8px
+                }
+
+                .indice {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                        gap: 10px;
+                        margin-bottom: 24px
+                }
+
+                .indice a {
+                        padding: 10px 12px;
+                        border: 1px solid var(--border);
+                        border-radius: 9px;
+                        background: rgba(57, 255, 20, .05);
+                        text-decoration: none
+                }
+
+                .grade {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                        gap: 16px
+                }
+
+                .card {
+                        padding: 18px
+                }
+
+                .card h3 {
+                        margin-top: 0
+                }
+
+                .linha {
+                        display: grid;
+                        grid-template-columns: minmax(150px, .35fr) 1fr;
+                        gap: 16px;
+                        margin: 12px 0;
+                        padding: 16px;
+                        border-left: 3px solid var(--green);
+                        border-radius: 8px;
+                        background: rgba(57, 255, 20, .04)
+                }
+
+                .linha strong {
+                        color: #a3ff91
+                }
+
+                .oculto {
+                        display: none !important
+                }
+
+                @media(max-width:700px) {
+                        .topo {
+                                align-items: flex-start;
+                                flex-direction: column
+                        }
+
+                        .linha {
+                                grid-template-columns: 1fr
+                        }
+                }
+        </style>
+</head>
+
+<body>
+        <main class="container">
+                <div class="topo">
+                        <div>
+                                <h1>Guia de Git</h1>
+                                <p>Histórico, branches, remotos e recuperação.</p>
+                        </div><a class="voltar" href="index.html">← Voltar ao guia principal</a>
+                </div>
+                <section class="intro">
+                        <h2>Como o Git funciona</h2>
+                        <p>Git registra snapshots das alterações em um repositório local. O fluxo básico passa por
+                                <strong>working tree</strong>, <strong>stage</strong> e <strong>commit</strong>.</p>
+                        <pre>git status
+git add .
+git commit -m "Adiciona nova funcionalidade"</pre>
+                </section>
+                <label class="busca"><span aria-hidden="true">⌕</span><input id="pesquisa" type="search"
+                                placeholder="Pesquisar: add, commit, branch, merge, rebase, remote..."></label>
+                <nav class="indice"><a href="#configuracao">Configuração</a><a href="#alteracoes">Alterações</a><a
+                                href="#branches">Branches</a><a href="#remotos">Remotos</a><a
+                                href="#historico">Histórico</a><a href="#recuperacao">Recuperação</a></nav>
+
+                <section id="configuracao" data-pesquisavel>
+                        <h2>1. Configuração</h2>
+                        <div class="linha"><strong><code>git init</code></strong>
+                                <div>Inicializa um repositório no diretório atual.
+                                        <pre>git init</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git config</code></strong>
+                                <div>Define nome e email usados nos commits.
+                                        <pre>git config --global user.name "Seu Nome"
+git config --global user.email "seu@email.com"
+git config --global core.editor code</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git config --list</code></strong>
+                                <div>Lista configurações efetivas.
+                                        <pre>git config --global --list
+git config --list</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>.gitignore</code></strong>
+                                <div>Define arquivos que não devem ser rastreados.
+                                        <pre>node_modules/
+.env
+dist/
+*.log</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="alteracoes" data-pesquisavel>
+                        <h2>2. Alterações e commits</h2>
+                        <div class="linha"><strong><code>git status</code></strong>
+                                <div>Mostra arquivos alterados, preparados e não rastreados.
+                                        <pre>git status
+git status -s</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git diff</code></strong>
+                                <div>Mostra alterações ainda não adicionadas ao stage.
+                                        <pre>git diff
+git diff --staged</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git add</code></strong>
+                                <div>Move alterações para o stage.
+                                        <pre>git add index.html
+git add .
+git add -A</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git commit</code></strong>
+                                <div>Cria um snapshot permanente e identificável.
+                                        <pre>git commit -m "Descrição objetiva"
+git commit -am "Altera arquivos rastreados"</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git rm</code></strong>
+                                <div>Remove um arquivo do diretório e do rastreamento.
+                                        <pre>git rm arquivo.txt
+git rm --cached .env</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="branches" data-pesquisavel>
+                        <h2>3. Branches</h2>
+                        <div class="linha"><strong><code>git branch</code></strong>
+                                <div>Lista, cria ou remove branches locais.
+                                        <pre>git branch
+git branch feature/login
+git branch -d feature/login
+git branch -m novo-nome</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git switch</code></strong>
+                                <div>Troca de branch; <code>-c</code> cria e troca.
+                                        <pre>git switch main
+git switch -c feature/login</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git merge</code></strong>
+                                <div>Integra outro branch ao branch atual.
+                                        <pre>git switch main
+git merge feature/login</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git rebase</code></strong>
+                                <div>Move ou reaplica commits sobre outra base. Evite rebase em branches compartilhados
+                                        já enviados.
+                                        <pre>git switch feature/login
+git rebase main</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="remotos" data-pesquisavel>
+                        <h2>4. Repositórios remotos</h2>
+                        <div class="linha"><strong><code>git remote</code></strong>
+                                <div>Registra e consulta servidores remotos.
+                                        <pre>git remote -v
+git remote add origin URL_DO_REPOSITORIO
+git remote set-url origin NOVA_URL</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git clone</code></strong>
+                                <div>Copia um repositório remoto para sua máquina.
+                                        <pre>git clone URL
+git clone URL minha-pasta</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git fetch</code></strong>
+                                <div>Busca referências remotas sem mesclá-las automaticamente.
+                                        <pre>git fetch
+git fetch origin</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git pull</code></strong>
+                                <div>Busca e integra as alterações remotas.
+                                        <pre>git pull
+git pull --rebase origin main</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git push</code></strong>
+                                <div>Envia commits para o remoto.
+                                        <pre>git push
+git push -u origin main
+git push origin feature/login</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="historico" data-pesquisavel>
+                        <h2>5. Consultar histórico</h2>
+                        <div class="linha"><strong><code>git log</code></strong>
+                                <div>Exibe commits recentes.
+                                        <pre>git log
+git log --oneline --decorate --graph
+git log --stat
+git log -p arquivo.html</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git show</code></strong>
+                                <div>Mostra os detalhes de um commit ou objeto.
+                                        <pre>git show
+git show HASH_DO_COMMIT</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git blame</code></strong>
+                                <div>Mostra quem alterou cada linha de um arquivo.
+                                        <pre>git blame index.html</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="recuperacao" data-pesquisavel>
+                        <h2>6. Recuperação e desfazer</h2>
+                        <div class="linha"><strong><code>git restore</code></strong>
+                                <div>Desfaz alterações em arquivos, com opções para a área staged.
+                                        <pre>git restore index.html
+git restore --staged index.html</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git revert</code></strong>
+                                <div>Cria um novo commit que desfaz outro sem apagar histórico.
+                                        <pre>git revert HASH_DO_COMMIT</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git reset</code></strong>
+                                <div><code>--soft</code> preserva staged; <code>--mixed</code> preserva arquivos;
+                                        <code>--hard</code> remove alterações. Use com cuidado.
+                                        <pre>git reset --soft HEAD~1
+git reset HEAD~1
+git reset --hard HEAD~1</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git stash</code></strong>
+                                <div>Guarda alterações temporariamente sem commit.
+                                        <pre>git stash
+git stash push -m "Trabalho em andamento"
+git stash list
+git stash pop
+git stash apply stash@{0}</pre>
+                                </div>
+                        </div>
+                        <aside class="aviso">Antes de <code>reset --hard</code>, confirme o conteúdo não salvo e prefira
+                                <code>stash</code> ou <code>revert</code>.</aside>
+                </section>
+
+                <section id="extras" data-pesquisavel>
+                        <h2>7. Outros comandos úteis</h2>
+                        <div class="linha"><strong><code>git tag</code></strong>
+                                <div>Marca um ponto importante no histórico, geralmente uma versão pronta para publicar.
+                                        <pre>git tag
+git tag v1.0.0
+git tag -a v1.0.0 -m "Primeira versão"
+git push origin v1.0.0
+git push origin --tags</pre>
+                                        <p>A tag anotada (<code>-a</code>) guarda autor e mensagem. Tags não são
+                                                enviadas junto com <code>git push</code> normal, então envie-as
+                                                explicitamente.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git reflog</code></strong>
+                                <div>Mostra movimentos recentes do HEAD. Pode ajudar a localizar um commit após uma
+                                        troca de branch ou reset acidental.
+                                        <pre>git reflog
+git show HEAD@{1}</pre>
+                                        <p>Use primeiro para localizar o commit; antes de restaurar, confira se ele
+                                                contém o trabalho desejado.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git cherry-pick</code></strong>
+                                <div>Copia um commit específico para o branch atual, sem mesclar o branch inteiro.
+                                        <pre>git switch main
+git cherry-pick HASH_DO_COMMIT</pre>
+                                        <p>Útil para trazer uma correção isolada. Se aparecer conflito, resolva os
+                                                arquivos e finalize com <code>git cherry-pick --continue</code>.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git clean</code></strong>
+                                <div>Apaga arquivos não rastreados. Primeiro veja o que seria removido; a opção
+                                        <code>-f</code> realmente executa.
+                                        <pre>git clean -n
+git clean -nd
+git clean -fd</pre>
+                                        <p><strong>Cuidado:</strong> arquivos não rastreados removidos não fazem parte
+                                                do histórico normal do Git e podem não ser recuperáveis.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git diff</code> entre branches</strong>
+                                <div>Compara o conteúdo de dois branches ou commits antes de integrar mudanças.
+                                        <pre>git diff main..feature/login
+git diff --name-only main..feature/login
+git diff HEAD~1</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git log</code> filtrado</strong>
+                                <div>Encontra commits por autor, data ou mensagem.
+                                        <pre>git log --author="Ana"
+git log --since="2 weeks ago"
+git log --grep="login" --oneline</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git ls-files</code></strong>
+                                <div>Lista os arquivos que o Git já está rastreando.
+                                        <pre>git ls-files
+git ls-files "*.html"</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git mv</code></strong>
+                                <div>Renomeia ou move um arquivo e prepara a alteração para o próximo commit.
+                                        <pre>git mv antigo.txt novo.txt
+git status</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git remote prune</code></strong>
+                                <div>Remove referências locais a branches remotos que já foram apagados no servidor. Não
+                                        apaga seus arquivos locais.
+                                        <pre>git fetch --prune
+git remote prune origin</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git bisect</code></strong>
+                                <div>Ajuda a descobrir qual commit introduziu um problema, comparando versões boas e
+                                        ruins.
+                                        <pre>git bisect start
+git bisect bad
+git bisect good HASH_DE_UMA_VERSAO_BOA
+git bisect reset</pre>
+                                        <p>Entre os comandos, teste o projeto e marque cada versão com
+                                                <code>git bisect good</code> ou <code>git bisect bad</code>.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>git archive</code></strong>
+                                <div>Gera um arquivo compactado do conteúdo de um commit ou branch, sem a pasta interna
+                                        <code>.git</code>.
+                                        <pre>git archive --format=zip --output=projeto.zip HEAD</pre>
+                                </div>
+                        </div>
+                </section>
+        </main>
+        <script>
+                const pesquisa = document.getElementById("pesquisa"); pesquisa.addEventListener("input", () => { const termo = pesquisa.value.trim().toLowerCase(); document.querySelectorAll("[data-pesquisavel]").forEach(section => section.classList.toggle("oculto", Boolean(termo) && !section.textContent.toLowerCase().includes(termo))); });
+        </script>
+</body>
+
+</html>

@@ -1134,6 +1134,485 @@
                 text-align: center;
             }
         }
+
+        :root {
+            --bg: #07100b;
+            --bg-2: #0c1710;
+            --card: rgba(11, 23, 15, 0.94);
+            --card-strong: #101f14;
+            --text: #e8f5eb;
+            --muted: #a9bdad;
+            --primary: #b6ff78;
+            --secondary: #60e7b0;
+            --accent: #9af76b;
+            --warm: #60e7b0;
+            --border: rgba(163, 247, 126, 0.2);
+            --code-bg: #07110b;
+            --code-text: #d7ffd2;
+            --shadow: rgba(0, 0, 0, 0.42);
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(ellipse at 50% -18%, rgba(80, 207, 123, 0.22), transparent 46rem),
+                radial-gradient(ellipse at 100% 42%, rgba(24, 110, 82, 0.12), transparent 38rem),
+                linear-gradient(180deg, #07100b, #050a07 68%, #080f0a);
+            color: var(--text);
+        }
+
+        body::before {
+            display: none;
+        }
+
+        .black-hole-scene {
+            display: block;
+            opacity: 0.36;
+            background-image:
+                linear-gradient(rgba(141, 242, 128, 0.055) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(141, 242, 128, 0.055) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: linear-gradient(to bottom, black, transparent 78%);
+        }
+
+        .black-hole-scene::before {
+            background:
+                radial-gradient(ellipse at 50% 0, rgba(114, 255, 139, 0.17), transparent 55%),
+                radial-gradient(ellipse at 50% 0, transparent 20%, rgba(7, 16, 11, 0.1) 65%);
+        }
+
+        .container {
+            max-width: 1260px;
+            margin: 0 auto;
+            padding: 36px 28px 64px;
+        }
+
+        .card {
+            display: block;
+            max-width: 1160px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 48px);
+            border: 1px solid rgba(164, 246, 145, 0.18);
+            border-radius: 28px;
+            background:
+                linear-gradient(145deg, rgba(14, 27, 18, 0.97), rgba(7, 15, 10, 0.98));
+            box-shadow: 0 32px 90px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(230, 255, 226, 0.04) inset;
+            backdrop-filter: blur(18px);
+        }
+
+        .card > header {
+            min-width: 0;
+            padding: clamp(24px, 5vw, 54px);
+            border: 1px solid rgba(163, 247, 126, 0.18);
+            border-radius: 24px;
+            background:
+                radial-gradient(ellipse at 90% 0, rgba(88, 229, 151, 0.16), transparent 28rem),
+                linear-gradient(135deg, rgba(18, 39, 25, 0.94), rgba(9, 20, 13, 0.86));
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.035);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 7px 12px;
+            border: 1px solid rgba(158, 247, 126, 0.32);
+            border-radius: 999px;
+            background: rgba(121, 232, 111, 0.08);
+            color: #c8ffae;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.11em;
+        }
+
+        .badge::before {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 12px rgba(154, 247, 107, 0.9);
+            content: "";
+        }
+
+        h1 {
+            max-width: 850px;
+            margin: 0 0 16px;
+            color: #f0fff1;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: clamp(2.4rem, 6vw, 4.7rem);
+            font-weight: 750;
+            letter-spacing: -0.055em;
+            line-height: 1.02;
+            text-shadow: 0 8px 40px rgba(87, 231, 126, 0.14);
+        }
+
+        .card > header p {
+            max-width: 660px;
+            margin: 0;
+            color: #b4cbb8;
+            font-size: clamp(1rem, 1.7vw, 1.18rem);
+            line-height: 1.7;
+        }
+
+        .guide-nav {
+            position: sticky;
+            top: 12px;
+            z-index: 20;
+            height: auto;
+            margin: 18px 0 24px;
+            padding: 7px;
+            overflow: visible;
+            border: 1px solid rgba(161, 226, 150, 0.17);
+            border-radius: 16px;
+            background: rgba(9, 19, 12, 0.87);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(18px);
+        }
+
+        .guide-nav-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .guide-nav-item {
+            width: auto;
+        }
+
+        .guide-nav-link,
+        .guide-nav-trigger {
+            width: auto;
+            min-height: 40px;
+            justify-content: center;
+            padding: 0 14px;
+            border-radius: 11px;
+            color: #c2d4c5;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .guide-nav-link:hover,
+        .guide-nav-link:focus-visible,
+        .guide-nav-trigger:hover,
+        .guide-nav-trigger:focus-visible,
+        .guide-nav-item.is-open .guide-nav-trigger {
+            color: #e4ffdc;
+            background: rgba(146, 242, 114, 0.11);
+            outline: 1px solid rgba(154, 247, 107, 0.16);
+        }
+
+        .guide-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            width: min(560px, calc(100vw - 56px));
+            max-height: min(70vh, 560px);
+            padding: 18px;
+            overflow-y: auto;
+            border: 1px solid rgba(161, 226, 150, 0.2);
+            border-radius: 16px;
+            background: rgba(9, 19, 12, 0.98);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.52);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-5px);
+            transition: opacity 160ms ease, visibility 160ms ease, transform 160ms ease;
+        }
+
+        .guide-nav-item.is-open .guide-dropdown {
+            max-height: min(70vh, 560px);
+            padding: 18px;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .guide-dropdown-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .guide-dropdown-group h3 {
+            display: block;
+            margin: 0 0 9px;
+            color: #8ea993;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+        }
+
+        .guide-dropdown-link {
+            padding: 9px 10px;
+            border-radius: 9px;
+            color: #d5e5d7;
+            font-size: 0.88rem;
+        }
+
+        .guide-dropdown-link span {
+            display: block;
+            color: #8da793;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 24px 0 28px;
+        }
+
+        .search-box {
+            min-height: 56px;
+            border: 1px solid rgba(151, 224, 139, 0.26);
+            border-radius: 14px;
+            background: rgba(5, 13, 8, 0.82);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+        }
+
+        .search-box:focus-within {
+            border-color: rgba(154, 247, 107, 0.72);
+            box-shadow: 0 0 0 4px rgba(154, 247, 107, 0.09), 0 0 28px rgba(93, 219, 129, 0.09);
+        }
+
+        #command-search {
+            color: #e8f5eb;
+        }
+
+        #command-search::placeholder {
+            color: #829a86;
+        }
+
+        .command-count {
+            color: #b8d7b4;
+            font-size: 0.86rem;
+        }
+
+        .card > section {
+            min-width: 0;
+            margin: 16px 0 0;
+            padding: clamp(20px, 3vw, 32px);
+            border: 1px solid rgba(153, 213, 144, 0.14);
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(14, 27, 18, 0.88), rgba(9, 18, 12, 0.88));
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.12);
+            transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .card > section:hover {
+            border-color: rgba(154, 247, 107, 0.24);
+            background: linear-gradient(145deg, rgba(16, 32, 21, 0.94), rgba(9, 19, 12, 0.94));
+        }
+
+        h2 {
+            margin: 0 0 18px;
+            color: #e7f8e9;
+            font-family: "Segoe UI", Arial, sans-serif;
+            font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            text-shadow: none;
+        }
+
+        h3 {
+            color: #c6f5b5;
+        }
+
+        p,
+        li,
+        td {
+            color: var(--muted);
+        }
+
+        strong {
+            color: #dff4e0;
+        }
+
+        code {
+            color: #c2f6b2;
+        }
+
+        .command {
+            border: 1px solid rgba(147, 204, 139, 0.13);
+            border-left: 3px solid var(--accent);
+            border-radius: 11px;
+            background: #08120b;
+            color: #e3f7de;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+        }
+
+        .command-important {
+            border-left-color: #69e5b3;
+            background: linear-gradient(90deg, rgba(105, 229, 179, 0.08), #08120b 36%);
+        }
+
+        .copy-button {
+            border: 1px solid rgba(147, 204, 139, 0.24);
+            border-radius: 8px;
+            background: #122016;
+            color: #c4e6bd;
+        }
+
+        .copy-button:hover,
+        .copy-button:focus-visible {
+            border-color: var(--accent);
+            color: #f0ffe9;
+            box-shadow: 0 0 18px rgba(154, 247, 107, 0.14);
+        }
+
+        .usage-example {
+            color: #93aa97;
+        }
+
+        .usage-example strong {
+            color: #b5ef9e;
+        }
+
+        .table-scroll {
+            border: 1px solid rgba(153, 213, 144, 0.18);
+            border-radius: 14px;
+            background: rgba(6, 14, 9, 0.76);
+        }
+
+        .command-table th {
+            border-bottom: 1px solid rgba(153, 213, 144, 0.2);
+            background: rgba(125, 205, 109, 0.09);
+            color: #c9efbc;
+        }
+
+        .command-table td {
+            border-bottom-color: rgba(153, 213, 144, 0.1);
+        }
+
+        .command-table tbody tr:hover {
+            background: rgba(135, 223, 118, 0.055);
+        }
+
+        .card > section > ul > li {
+            border: 1px solid rgba(153, 213, 144, 0.12);
+            border-left: 3px solid rgba(154, 247, 107, 0.55);
+            border-radius: 11px;
+            background: rgba(5, 13, 8, 0.6);
+        }
+
+        .tag-preview-frame {
+            border: 1px solid rgba(153, 213, 144, 0.24);
+            border-radius: 10px;
+        }
+
+        .tag-preview-note {
+            border-left-color: var(--secondary);
+            border-radius: 8px;
+            background: rgba(96, 231, 176, 0.07);
+        }
+
+        .empty-state {
+            border: 1px dashed rgba(154, 247, 107, 0.36);
+            border-radius: 14px;
+            background: rgba(154, 247, 107, 0.04);
+            color: #d5f4c9;
+        }
+
+        .toast {
+            border: 1px solid rgba(96, 231, 176, 0.42);
+            border-radius: 12px;
+            background: rgba(8, 20, 13, 0.97);
+            color: #c7f7d8;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        a {
+            color: #b8efaa;
+        }
+
+        :focus-visible {
+            outline: 2px solid #a9f77c;
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                margin: 0 auto;
+                padding: 18px 12px 36px;
+            }
+
+            .card {
+                padding: 14px;
+                border-radius: 22px;
+            }
+
+            .card > header {
+                padding: 28px 22px;
+                border-radius: 18px;
+            }
+
+            .guide-nav {
+                top: 8px;
+                padding: 6px;
+            }
+
+            .guide-nav-list {
+                justify-content: center;
+                gap: 3px;
+            }
+
+            .guide-nav-item {
+                flex: 0 1 auto;
+            }
+
+            .guide-nav-link,
+            .guide-nav-trigger {
+                min-height: 38px;
+                padding: 0 10px;
+                font-size: 0.84rem;
+            }
+
+            .guide-dropdown,
+            .guide-nav-item.is-open .guide-dropdown {
+                position: fixed;
+                top: 128px;
+                right: 12px;
+                left: 12px;
+                width: auto;
+                max-height: 0;
+                padding: 0 14px;
+                border: 1px solid rgba(161, 226, 150, 0.2);
+                background: rgba(9, 19, 12, 0.98);
+            }
+
+            .guide-nav-item.is-open .guide-dropdown {
+                max-height: calc(100vh - 148px);
+                padding: 14px;
+            }
+
+            .toolbar {
+                align-items: stretch;
+                flex-direction: column;
+                gap: 8px;
+                margin: 18px 0;
+            }
+
+            .command-count {
+                align-self: flex-end;
+            }
+
+            .card > section {
+                padding: 20px 16px;
+                border-radius: 14px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 
@@ -1162,25 +1641,25 @@
                                     <h3>Primeiros passos</h3>
                                     <ul>
                                         <li><a class="guide-dropdown-link"
-                                                href="#npm-instalacao">Instalação<span>Permissões no
+                                                href="npm-guia.html#instalacao">Instalação<span>Permissões no
                                                     PowerShell</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#npm-versoes">Versões<span>Node.js e
+                                        <li><a class="guide-dropdown-link" href="npm-guia.html#versoes">Versões<span>Node.js e
                                                     npm</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#npm-projetos">Projetos<span>Criar com
+                                        <li><a class="guide-dropdown-link" href="npm-guia.html#projetos">Projetos<span>Criar com
                                                     npm init</span></a></li>
                                     </ul>
                                 </div>
                                 <div class="guide-dropdown-group">
                                     <h3>Uso diário</h3>
                                     <ul>
-                                        <li><a class="guide-dropdown-link" href="#npm-pacotes">Pacotes<span>Instalar e
+                                        <li><a class="guide-dropdown-link" href="npm-guia.html#pacotes">Pacotes<span>Instalar e
                                                     remover</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#npx-comandos">npx<span>Executar
+                                        <li><a class="guide-dropdown-link" href="npm-guia.html#npx">npx<span>Executar
                                                     ferramentas temporárias</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#npm-scripts">Scripts<span>Start, dev,
+                                        <li><a class="guide-dropdown-link" href="npm-guia.html#scripts">Scripts<span>Start, dev,
                                                     test e build</span></a></li>
                                         <li><a class="guide-dropdown-link"
-                                                href="#npm-auditoria">Manutenção<span>Auditoria e atualização</span></a>
+                                                href="npm-guia.html#auditoria">Manutenção<span>Auditoria e atualização</span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1197,18 +1676,18 @@
                                     <h3>Repositório</h3>
                                     <ul>
                                         <li><a class="guide-dropdown-link"
-                                                href="#git-comandos">Configuração<span>Identidade e init</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#git-comandos">Alterações<span>Add,
+                                                href="git-guia.html#configuracao">Configuração<span>Identidade e init</span></a></li>
+                                        <li><a class="guide-dropdown-link" href="git-guia.html#alteracoes">Alterações<span>Add,
                                                     commit e diff</span></a></li>
                                     </ul>
                                 </div>
                                 <div class="guide-dropdown-group">
                                     <h3>Remotos e branches</h3>
                                     <ul>
-                                        <li><a class="guide-dropdown-link" href="#git-comandos">Branches<span>Criar e
+                                        <li><a class="guide-dropdown-link" href="git-guia.html#branches">Branches<span>Criar e
                                                     trocar</span></a></li>
                                         <li><a class="guide-dropdown-link"
-                                                href="#git-comandos">Sincronização<span>Clone, fetch e push</span></a>
+                                                href="git-guia.html#remotos">Sincronização<span>Clone, fetch e push</span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1216,7 +1695,7 @@
                         </div>
                     </li>
                     <li class="guide-nav-item">
-                        <a class="guide-nav-link" href="#propriedades-css">CSS</a>
+                        <a class="guide-nav-link" href="css-guia.html">CSS</a>
                     </li>
                     <li class="guide-nav-item">
                         <button class="guide-nav-trigger" type="button" aria-expanded="false" aria-controls="html-menu">
@@ -1227,9 +1706,9 @@
                                 <div class="guide-dropdown-group">
                                     <h3>Estrutura</h3>
                                     <ul>
-                                        <li><a class="guide-dropdown-link" href="#tags-html">Documento<span>html, head e
+                                        <li><a class="guide-dropdown-link" href="html-guia.html#documento">Documento<span>html, head e
                                                     body</span></a></li>
-                                        <li><a class="guide-dropdown-link" href="#tags-html">Conteúdo<span>main, section
+                                        <li><a class="guide-dropdown-link" href="html-guia.html#conteudo">Conteúdo<span>main, section
                                                     e article</span></a></li>
                                         <li><a class="guide-dropdown-link" href="#atributos-html">Atributos<span>href,
                                                     rel, src e outros</span></a></li>
@@ -1238,7 +1717,7 @@
                                 <div class="guide-dropdown-group">
                                     <h3>Interação</h3>
                                     <ul>
-                                        <li><a class="guide-dropdown-link" href="#tags-html">Links e mídia<span>a, img e
+                                        <li><a class="guide-dropdown-link" href="html-guia.html#midia">Links e mídia<span>a, img e
                                                     link</span></a></li>
                                         <li><a class="guide-dropdown-link" href="#atributos-html">Formulários<span>type,
                                                     name, required e mais</span></a></li>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Guia Completo de HTML</title>
+    <style>
+        :root {
+            --bg: #030704;
+            --panel: #071009;
+            --border: rgba(57, 255, 20, .28);
+            --text: #e4ffe9;
+            --muted: #a7c7ad;
+            --green: #39ff14
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at 50% 0, rgba(57, 255, 20, .12), transparent 35rem), var(--bg);
+            color: var(--text);
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: auto;
+            padding: 24px
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+            line-height: 1.1
+        }
+
+        h2 {
+            margin-top: 48px
+        }
+
+        h3 {
+            color: #a3ff91
+        }
+
+        a {
+            color: #a3ff91
+        }
+
+        code {
+            color: #c8ffce
+        }
+
+        pre {
+            overflow-x: auto;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #020503;
+            color: #c8ffce
+        }
+
+        .voltar {
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            text-decoration: none
+        }
+
+        .intro,
+        .aviso,
+        .card {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: rgba(7, 16, 9, .94)
+        }
+
+        .intro {
+            margin-top: 24px;
+            padding: 22px
+        }
+
+        .aviso {
+            padding: 14px 18px;
+            color: var(--muted)
+        }
+
+        .busca {
+            position: sticky;
+            top: 12px;
+            z-index: 10;
+            display: flex;
+            margin: 24px 0;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(3, 7, 4, .96)
+        }
+
+        .busca input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--text);
+            font: inherit;
+            padding: 8px
+        }
+
+        .indice {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 24px
+        }
+
+        .indice a {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: rgba(57, 255, 20, .05);
+            text-decoration: none
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px
+        }
+
+        .card {
+            padding: 18px
+        }
+
+        .card h3 {
+            margin-top: 0
+        }
+
+        .linha {
+            display: grid;
+            grid-template-columns: minmax(150px, .35fr) 1fr;
+            gap: 16px;
+            margin: 12px 0;
+            padding: 16px;
+            border-left: 3px solid var(--green);
+            border-radius: 8px;
+            background: rgba(57, 255, 20, .04)
+        }
+
+        .linha strong {
+            color: #a3ff91
+        }
+
+        .oculto {
+            display: none !important
+        }
+
+        @media(max-width:700px) {
+            .topo {
+                align-items: flex-start;
+                flex-direction: column
+            }
+
+            .linha {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <div class="topo">
+            <div>
+                <h1>Guia de HTML</h1>
+                <p>Tags, atributos, semântica, formulários e acessibilidade.</p>
+            </div><a class="voltar" href="index.html">← Voltar ao guia principal</a>
+        </div>
+        <section class="intro">
+            <h2>Estrutura básica</h2>
+            <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;title&gt;Título da página&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;main&gt;Conteúdo principal&lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </section>
+        <label class="busca"><span aria-hidden="true">⌕</span><input id="pesquisa" type="search"
+                placeholder="Pesquisar: div, section, a, img, form, aria, atributos..."></label>
+        <nav class="indice"><a href="#documento">Documento</a><a href="#conteudo">Conteúdo</a><a href="#midia">Links e
+                mídia</a><a href="#tabelas">Tabelas</a><a href="#formularios">Formulários</a><a
+                href="#atributos">Atributos</a><a href="#acessibilidade">Acessibilidade</a></nav>
+
+        <section id="documento" data-pesquisavel>
+            <h2>1. Estrutura do documento</h2>
+            <div class="linha"><strong><code>&lt;html&gt;</code></strong>
+                <div>Elemento raiz. <code>lang</code> define o idioma do documento.
+                    <pre>&lt;html lang="pt-BR"&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;head&gt;</code></strong>
+                <div>Contém metadados e recursos não exibidos diretamente na página.
+                    <pre>&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Minha página&lt;/title&gt;
+  &lt;link rel="stylesheet" href="style.css"&gt;
+&lt;/head&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;meta&gt;</code></strong>
+                <div>Define charset, viewport, descrição, tema e outros metadados. É uma tag sem fechamento.
+                    <pre>&lt;meta name="description" content="Descrição da página"&gt;
+&lt;meta name="theme-color" content="#071009"&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;body&gt;</code></strong>
+                <div>Contém todo o conteúdo visual do documento.</div>
+            </div>
+        </section>
+
+        <section id="conteudo" data-pesquisavel>
+            <h2>2. Texto e conteúdo semântico</h2>
+            <div class="grade">
+                <article class="card">
+                    <h3>Títulos</h3>
+                    <pre>&lt;h1&gt;Título principal&lt;/h1&gt;
+&lt;h2&gt;Subtítulo&lt;/h2&gt;
+&lt;h3&gt;Seção menor&lt;/h3&gt;</pre>
+                    <p>Use apenas um <code>h1</code> principal e mantenha hierarquia.</p>
+                </article>
+                <article class="card">
+                    <h3>Texto</h3>
+                    <pre>&lt;p&gt;Parágrafo.&lt;/p&gt;
+&lt;strong&gt;Importante&lt;/strong&gt;
+&lt;em&gt;Ênfase&lt;/em&gt;
+&lt;small&gt;Observação&lt;/small&gt;
+&lt;br&gt;</pre>
+                </article>
+                <article class="card">
+                    <h3>Listas</h3>
+                    <pre>&lt;ul&gt;&lt;li&gt;Não ordenado&lt;/li&gt;&lt;/ul&gt;
+&lt;ol&gt;&lt;li&gt;Ordenado&lt;/li&gt;&lt;/ol&gt;
+&lt;dl&gt;&lt;dt&gt;Termo&lt;/dt&gt;&lt;dd&gt;Descrição&lt;/dd&gt;&lt;/dl&gt;</pre>
+                </article>
+                <article class="card">
+                    <h3>Citações e código</h3>
+                    <pre>&lt;blockquote&gt;Citação&lt;/blockquote&gt;
+&lt;q&gt;Citação curta&lt;/q&gt;
+&lt;code&gt;const x = 1;&lt;/code&gt;
+&lt;pre&gt;Texto preservado&lt;/pre&gt;</pre>
+                </article>
+            </div>
+            <div class="linha"><strong><code>&lt;header&gt;</code></strong>
+                <div>Introdução ou cabeçalho de uma seção.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;nav&gt;</code></strong>
+                <div>Contém links de navegação principal ou secundária.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;main&gt;</code></strong>
+                <div>Conteúdo principal e único da página.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;section&gt;</code></strong>
+                <div>Agrupa conteúdo temático com título apropriado.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;article&gt;</code></strong>
+                <div>Representa conteúdo independente, como notícia ou postagem.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;aside&gt;</code></strong>
+                <div>Conteúdo relacionado, complementar ou lateral.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;footer&gt;</code></strong>
+                <div>Rodapé de página ou seção.</div>
+            </div>
+            <div class="linha"><strong><code>&lt;div&gt;</code> e <code>&lt;span&gt;</code></strong>
+                <div><code>div</code> agrupa elementos em bloco. <code>span</code> agrupa conteúdo em linha. Use
+                    semântica específica sempre que existir.
+                    <pre>&lt;div class="cartao"&gt;...&lt;/div&gt;
+&lt;span class="destaque"&gt;Texto&lt;/span&gt;</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="midia" data-pesquisavel>
+            <h2>3. Links e mídia</h2>
+            <div class="linha"><strong><code>&lt;a&gt;</code></strong>
+                <div>Cria links. <code>href</code> pode apontar para página, âncora, email ou telefone.
+                    <pre>&lt;a href="pagina.html"&gt;Página&lt;/a&gt;
+&lt;a href="#contato"&gt;Contato&lt;/a&gt;
+&lt;a href="mailto:teste@email.com"&gt;Email&lt;/a&gt;
+&lt;a href="pagina.html" target="_blank" rel="noopener"&gt;Nova aba&lt;/a&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;img&gt;</code></strong>
+                <div>Insere uma imagem. <code>alt</code> descreve o conteúdo para acessibilidade e falhas de
+                    carregamento.
+                    <pre>&lt;img src="foto.jpg" alt="Descrição da foto" width="800" height="400"&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;picture&gt;</code></strong>
+                <div>Permite escolher uma imagem conforme tamanho ou formato.
+                    <pre>&lt;picture&gt;
+  &lt;source srcset="foto-grande.webp" media="(min-width: 800px)" type="image/webp"&gt;
+  &lt;img src="foto-pequena.jpg" alt="Descrição"&gt;
+&lt;/picture&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;video&gt;</code></strong>
+                <div><code>controls</code>, <code>autoplay</code>, <code>muted</code>, <code>loop</code>,
+                    <code>poster</code> e <code>preload</code> controlam reprodução.
+                    <pre>&lt;video controls width="640" poster="capa.jpg"&gt;
+  &lt;source src="video.mp4" type="video/mp4"&gt;
+&lt;/video&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;audio&gt;</code></strong>
+                <div>Reproduz áudio com controles ou automaticamente quando permitido pelo navegador.
+                    <pre>&lt;audio src="audio.mp3" controls&gt;&lt;/audio&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;iframe&gt;</code></strong>
+                <div>Exibe outra página incorporada. Use <code>title</code> e permissões apropriadas.
+                    <pre>&lt;iframe src="pagina.html" title="Página incorporada"&gt;&lt;/iframe&gt;</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="tabelas" data-pesquisavel>
+            <h2>4. Tabelas</h2>
+            <div class="linha"><strong><code>&lt;table&gt;</code></strong>
+                <div>Representa dados tabulares. Use <code>caption</code>, <code>thead</code>, <code>tbody</code>,
+                    <code>th</code> e <code>td</code>.
+                    <pre>&lt;table&gt;
+  &lt;caption&gt;Alunos&lt;/caption&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th scope="col"&gt;Nome&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Ana&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;
+&lt;/table&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>colspan / rowspan</code></strong>
+                <div>Mesclam células horizontal ou verticalmente.
+                    <pre>&lt;td colspan="2"&gt;Duas colunas&lt;/td&gt;
+&lt;td rowspan="2"&gt;Duas linhas&lt;/td&gt;</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="formularios" data-pesquisavel>
+            <h2>5. Formulários e campos</h2>
+            <div class="linha"><strong><code>&lt;form&gt;</code></strong>
+                <div><code>action</code> define o destino e <code>method</code> define GET ou POST.
+                    <pre>&lt;form action="/buscar" method="get"&gt;...&lt;/form&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;label&gt;</code></strong>
+                <div>Associa texto ao campo usando o atributo <code>for</code> com o mesmo <code>id</code> do campo.
+                    <pre>&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;input id="email" name="email" type="email" required&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;input&gt;</code></strong>
+                <div>Tipos comuns: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>,
+                    <code>tel</code>, <code>search</code>, <code>date</code>, <code>time</code>, <code>color</code>,
+                    <code>checkbox</code>, <code>radio</code>, <code>file</code>, <code>range</code> e
+                    <code>submit</code>.
+                    <pre>&lt;input type="checkbox" name="ativo" checked&gt;
+&lt;input type="radio" name="plano" value="pro"&gt;
+&lt;input type="number" min="1" max="10" step="1"&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;textarea&gt;</code></strong>
+                <div>Campo multilinha com <code>rows</code>, <code>cols</code>, <code>placeholder</code> e
+                    <code>maxlength</code>.
+                    <pre>&lt;textarea name="mensagem" rows="5" required&gt;&lt;/textarea&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;select&gt;</code></strong>
+                <div>Lista de opções. <code>multiple</code> permite várias escolhas.
+                    <pre>&lt;select name="cidade"&gt;
+  &lt;option value=""&gt;Selecione&lt;/option&gt;
+  &lt;option value="sp"&gt;São Paulo&lt;/option&gt;
+&lt;/select&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>&lt;button&gt;</code></strong>
+                <div><code>type</code> pode ser <code>submit</code>, <code>reset</code> ou <code>button</code>.
+                    <pre>&lt;button type="submit"&gt;Enviar&lt;/button&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong>Validação HTML</strong>
+                <div><code>required</code>, <code>minlength</code>, <code>maxlength</code>, <code>min</code>,
+                    <code>max</code>, <code>step</code>, <code>pattern</code> e <code>placeholder</code> ajudam na
+                    validação e orientação.
+                    <pre>&lt;input pattern="[0-9]{3}" title="Informe três números"&gt;</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="atributos" data-pesquisavel>
+            <h2>6. Atributos globais</h2>
+            <div class="grade">
+                <article class="card">
+                    <h3>Identificação</h3>
+                    <pre>id="principal"
+class="cartao ativo"
+title="Texto de ajuda"
+lang="pt-BR"</pre>
+                </article>
+                <article class="card">
+                    <h3>Conteúdo e dados</h3>
+                    <pre>contenteditable="true"
+hidden
+tabindex="0"
+data-id="123"</pre>
+                </article>
+                <article class="card">
+                    <h3>Direção e idioma</h3>
+                    <pre>dir="ltr"
+dir="rtl"
+spellcheck="true"
+translate="no"</pre>
+                </article>
+                <article class="card">
+                    <h3>Eventos e atributos gerais</h3>
+                    <pre>style="color: red"
+draggable="true"
+part="conteudo"
+exportparts="titulo: card-title"</pre>
+                </article>
+            </div>
+            <div class="linha"><strong><code>id</code></strong>
+                <div>Identificador único no documento. Usado por âncoras, labels, CSS e JavaScript.</div>
+            </div>
+            <div class="linha"><strong><code>class</code></strong>
+                <div>Lista de classes separadas por espaço. Permite aplicar estilos ou grupos JavaScript.</div>
+            </div>
+            <div class="linha"><strong><code>title</code></strong>
+                <div>Informação auxiliar exibida normalmente em uma tooltip.</div>
+            </div>
+            <div class="linha"><strong><code>hidden</code></strong>
+                <div>Remove o elemento da apresentação até que o atributo seja removido ou o CSS/JavaScript o altere.
+                </div>
+            </div>
+            <div class="linha"><strong><code>data-* </code></strong>
+                <div>Armazena dados personalizados acessíveis pelo DOM e JavaScript.
+                    <pre>&lt;button data-acao="copiar" data-id="42"&gt;Copiar&lt;/button&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>tabindex</code></strong>
+                <div>Controla a ordem ou inclui elementos na navegação por teclado. Preferencialmente use elementos
+                    nativos quando possível.</div>
+            </div>
+        </section>
+
+        <section id="acessibilidade" data-pesquisavel>
+            <h2>7. Acessibilidade</h2>
+            <div class="linha"><strong><code>aria-label</code></strong>
+                <div>Fornece um nome acessível quando não existe texto visível.
+                    <pre>&lt;button aria-label="Fechar menu"&gt;×&lt;/button&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>aria-labelledby</code></strong>
+                <div>Usa o texto de outro elemento como nome acessível.
+                    <pre>&lt;section aria-labelledby="titulo"&gt;
+  &lt;h2 id="titulo"&gt;Configurações&lt;/h2&gt;
+&lt;/section&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>aria-describedby</code></strong>
+                <div>Associa uma descrição explicativa a um elemento.</div>
+            </div>
+            <div class="linha"><strong><code>aria-expanded</code></strong>
+                <div>Indica se um conteúdo associado está aberto ou fechado.
+                    <pre>&lt;button aria-expanded="false" aria-controls="menu"&gt;Abrir&lt;/button&gt;</pre>
+                </div>
+            </div>
+            <div class="linha"><strong><code>aria-current</code></strong>
+                <div>Indica o item atual em uma coleção ou navegação.
+                    <pre>&lt;a href="/" aria-current="page"&gt;Página atual&lt;/a&gt;</pre>
+                </div>
+            </div>
+            <aside class="aviso">Prefira elementos semânticos e nativos. Só use ARIA quando o HTML padrão não representa
+                o comportamento.</aside>
+        </section>
+    </main>
+    <script>
+        const pesquisa = document.getElementById("pesquisa"); pesquisa.addEventListener("input", () => { const termo = pesquisa.value.trim().toLowerCase(); document.querySelectorAll("[data-pesquisavel]").forEach(section => section.classList.toggle("oculto", Boolean(termo) && !section.textContent.toLowerCase().includes(termo))); });
+    </script>
+</body>
+
+</html>

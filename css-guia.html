@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Completo de CSS</title>
+    <style>
+        :root {
+            --fundo: #030704;
+            --painel: #071009;
+            --borda: rgba(57, 255, 20, 0.28);
+            --texto: #e4ffe9;
+            --muted: #a7c7ad;
+            --verde: #39ff14;
+            --verde-claro: #a3ff91;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px;
+        }
+
+        body {
+            margin: 0;
+            color: var(--texto);
+            background:
+                radial-gradient(circle at 50% 0, rgba(57, 255, 20, 0.12), transparent 35rem),
+                var(--fundo);
+            font-family: "Segoe UI", Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        a {
+            color: var(--verde-claro);
+        }
+
+        code {
+            color: #c8ffce;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .voltar {
+            padding: 10px 14px;
+            border: 1px solid var(--borda);
+            border-radius: 10px;
+            background: var(--painel);
+            text-decoration: none;
+        }
+
+        h1,
+        h2,
+        h3 {
+            line-height: 1.2;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(2.2rem, 7vw, 4.5rem);
+        }
+
+        h2 {
+            margin-top: 48px;
+            color: #d7ffdc;
+        }
+
+        h3 {
+            color: var(--verde-claro);
+        }
+
+        .intro,
+        .aviso,
+        .bloco,
+        .card {
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+            background: rgba(7, 16, 9, 0.94);
+        }
+
+        .intro {
+            padding: 24px;
+        }
+
+        .aviso {
+            padding: 14px 18px;
+            color: var(--muted);
+        }
+
+        .busca {
+            position: sticky;
+            top: 12px;
+            z-index: 10;
+            display: flex;
+            gap: 10px;
+            margin: 24px 0;
+            padding: 10px;
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            background: rgba(3, 7, 4, 0.96);
+            backdrop-filter: blur(12px);
+        }
+
+        .busca input {
+            width: 100%;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: var(--texto);
+            font: inherit;
+            padding: 8px;
+        }
+
+        .indice {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 20px 0 34px;
+        }
+
+        .indice a {
+            padding: 10px 12px;
+            border: 1px solid var(--borda);
+            border-radius: 9px;
+            background: rgba(57, 255, 20, 0.055);
+            text-decoration: none;
+        }
+
+        .grade {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .card ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .card li {
+            margin: 5px 0;
+        }
+
+        .propriedade {
+            display: grid;
+            grid-template-columns: minmax(150px, 0.35fr) 1fr;
+            gap: 16px;
+            margin: 12px 0;
+            padding: 16px;
+            border-left: 3px solid var(--verde);
+            border-radius: 8px;
+            background: rgba(57, 255, 20, 0.04);
+        }
+
+        .propriedade strong {
+            color: var(--verde-claro);
+        }
+
+        pre {
+            overflow-x: auto;
+            margin: 14px 0 0;
+            padding: 14px;
+            border: 1px solid var(--borda);
+            border-radius: 8px;
+            background: #020503;
+            color: #c8ffce;
+        }
+
+        .demo {
+            margin-top: 12px;
+            padding: 16px;
+            border: 1px dashed var(--borda);
+            border-radius: 10px;
+        }
+
+        .demo-caixa {
+            max-width: 420px;
+            margin: 12px 0;
+            padding: 20px;
+            border: 2px solid var(--verde);
+            border-radius: 14px;
+            background: linear-gradient(145deg, #0a160c, #050805);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .oculto {
+            display: none !important;
+        }
+
+        @media (max-width: 700px) {
+            .topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .propriedade {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <div class="topo">
+            <div>
+                <h1>Guia de CSS</h1>
+                <p>Propriedades, valores, comportamento e exemplos.</p>
+            </div>
+            <a class="voltar" href="index.html">← Voltar ao guia principal</a>
+        </div>
+
+        <section class="intro">
+            <h2>Estrutura básica</h2>
+            <pre>.seletor {
+    propriedade: valor;
+}</pre>
+            <p>Uma <strong>propriedade</strong> define o que será alterado. Um <strong>valor</strong> define como será
+                alterado. A declaração inteira termina com ponto e vírgula.</p>
+        </section>
+
+        <label class="busca" for="pesquisa">
+            <span aria-hidden="true">⌕</span>
+            <input id="pesquisa" type="search" placeholder="Pesquisar propriedade: color, flex, grid, position..."
+                autocomplete="off">
+        </label>
+
+        <nav class="indice" aria-label="Índice do guia">
+            <a href="#basicos">Básicos</a>
+            <a href="#cores">Cores</a>
+            <a href="#box-model">Box model</a>
+            <a href="#texto">Texto e fontes</a>
+            <a href="#layout">Layout</a>
+            <a href="#visuais">Fundos e efeitos</a>
+            <a href="#animacao">Transição e animação</a>
+            <a href="#responsivo">Responsividade</a>
+            <a href="#mais-propriedades">Mais propriedades</a>
+        </nav>
+
+        <aside class="aviso">
+            Toda propriedade aceita os valores globais <code>initial</code>, <code>inherit</code>, <code>unset</code>,
+            <code>revert</code> e <code>revert-layer</code>. Nem toda combinação existe para toda propriedade.
+        </aside>
+
+        <section id="basicos" data-pesquisavel>
+            <h2>1. Seletores e conceitos básicos</h2>
+            <div class="propriedade">
+                <strong><code>all</code></strong>
+                <div>Reseta todas as propriedades herdáveis e não herdáveis para o valor informado.
+                    <pre>artigo { all: unset; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>display</code></strong>
+                <div><code>block</code> ocupa uma linha; <code>inline</code> segue o fluxo; <code>inline-block</code>
+                    combina os dois; <code>none</code> remove da renderização; <code>flex</code>, <code>grid</code>,
+                    <code>contents</code>.
+                    <pre>.menu { display: flex; }
+.aviso { display: none; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>box-sizing</code></strong>
+                <div><code>content-box</code> calcula padding e borda fora da largura. <code>border-box</code> inclui
+                    padding e borda na largura.
+                    <pre>* { box-sizing: border-box; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>overflow</code></strong>
+                <div><code>visible</code>, <code>hidden</code>, <code>clip</code>, <code>scroll</code> e
+                    <code>auto</code>. Use <code>overflow-x</code> e <code>overflow-y</code> separadamente.
+                    <pre>.caixa { overflow: hidden; }
+.tabela { overflow-x: auto; }</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="cores" data-pesquisavel>
+            <h2>2. Cores e tipagem de valores</h2>
+            <div class="grade">
+                <article class="card">
+                    <h3>Nomeada</h3>
+                    <pre>color: red;
+color: rebeccapurple;
+color: transparent;</pre>
+                </article>
+                <article class="card">
+                    <h3>Hexadecimal</h3>
+                    <pre>color: #39ff14;
+color: #39f;
+color: #39ff1480;</pre>
+                    <p>Os últimos dois dígitos representam alfa.</p>
+                </article>
+                <article class="card">
+                    <h3>RGB e HSL</h3>
+                    <pre>color: rgb(57 255 20);
+color: rgb(57 255 20 / 50%);
+color: hsl(112 100% 54%);</pre>
+                </article>
+                <article class="card">
+                    <h3>Espaços modernos</h3>
+                    <pre>color: oklch(70% 0.15 145);
+color: color-mix(in srgb, red 30%, blue);</pre>
+                </article>
+            </div>
+        </section>
+
+        <section id="box-model" data-pesquisavel>
+            <h2>3. Box model</h2>
+            <div class="propriedade">
+                <strong><code>width / height</code></strong>
+                <div><code>auto</code>, comprimentos, porcentagens, <code>min()</code>, <code>max()</code>,
+                    <code>clamp()</code>, <code>fit-content</code>.
+                    <pre>.container { width: min(100%, 1120px); }
+.titulo { font-size: clamp(2rem, 5vw, 4rem); }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>min-width / max-width</code></strong>
+                <div>Limitam o crescimento ou a redução da largura.
+                    <pre>.cartao { min-width: 280px; max-width: 600px; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>padding</code></strong>
+                <div>Define o espaçamento interno. Um valor aplica todos; dois usam vertical/horizontal; três usam
+                    superior/horizontal/inferior; quatro usam superior/direita/inferior/esquerda.
+                    <pre>padding: 20px;
+padding: 10px 20px;
+padding: 10px 20px 30px 40px;</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>margin</code></strong>
+                <div>Define o espaçamento externo. Aceita comprimentos, porcentagens e <code>auto</code>.
+                    <pre>.container { margin: 50px auto; }
+.cartao { margin-bottom: 20px; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>border</code></strong>
+                <div>Forma abreviada de largura, estilo e cor.
+                    <pre>border: 2px solid #39ff14;
+border-left: 4px dashed red;
+border: 0;</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>border-radius</code></strong>
+                <div>Arredonda um ou vários cantos usando comprimentos ou porcentagens.
+                    <pre>border-radius: 12px;
+border-radius: 50%;
+border-top-left-radius: 30px;</pre>
+                </div>
+            </div>
+            <div class="demo">
+                <strong>Exemplo visual</strong>
+                <div class="demo-caixa">Padding interno, borda verde e sombra externa.</div>
+            </div>
+        </section>
+
+        <section id="texto" data-pesquisavel>
+            <h2>4. Texto e fontes</h2>
+            <div class="grade">
+                <article class="card">
+                    <h3>Fonte</h3>
+                    <pre>font-family: "Segoe UI", Arial, sans-serif;
+font-size: 1.25rem;
+font-weight: 700;
+font-style: italic;
+line-height: 1.6;</pre>
+                </article>
+                <article class="card">
+                    <h3>Alinhamento</h3>
+                    <pre>text-align: left;
+text-align: center;
+text-align: right;
+text-align: justify;
+vertical-align: middle;</pre>
+                </article>
+                <article class="card">
+                    <h3>Transformação e decoração</h3>
+                    <pre>text-transform: uppercase;
+text-decoration: underline;
+text-decoration: none;
+text-indent: 2em;</pre>
+                </article>
+                <article class="card">
+                    <h3>Espaçamento e quebra</h3>
+                    <pre>letter-spacing: 0.08em;
+word-spacing: 0.25em;
+white-space: nowrap;
+overflow-wrap: anywhere;
+word-break: break-word;</pre>
+                </article>
+            </div>
+            <div class="propriedade">
+                <strong><code>text-shadow</code></strong>
+                <div><code>deslocamento-x deslocamento-y desfoque cor</code>.
+                    <pre>text-shadow: 0 0 16px rgba(57, 255, 20, 0.35);</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="layout" data-pesquisavel>
+            <h2>5. Layout: posicionamento, flexbox e grid</h2>
+            <div class="propriedade">
+                <strong><code>position</code></strong>
+                <div><code>static</code> segue o fluxo; <code>relative</code> se desloca sem sair dele;
+                    <code>absolute</code> usa o ancestral posicionado; <code>fixed</code> usa a janela;
+                    <code>sticky</code> fixa ao atingir o limite.
+                    <pre>.menu { position: sticky; top: 0; }
+.botao-flutuante { position: fixed; right: 24px; bottom: 24px; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>top / right / bottom / left / inset</code></strong>
+                <div>Controlam deslocamentos e posições. <code>inset: 0</code> aplica zero aos quatro lados.
+                    <pre>.overlay { position: absolute; inset: 0; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>z-index</code></strong>
+                <div>Controla a ordem vertical de elementos posicionados. Valores maiores aparecem acima.
+                    <pre>.menu { z-index: 10; }
+.fundo { z-index: -1; }</pre>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Flexbox</h3>
+                <pre>.linha {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.item {
+    flex: 1 1 220px;
+}</pre>
+                <p><code>justify-content</code> alinha no eixo principal. <code>align-items</code> alinha no eixo
+                    cruzado. <code>flex-grow flex-shrink flex-basis</code> formam <code>flex</code>.</p>
+            </div>
+            <div class="card">
+                <h3>Grid</h3>
+                <pre>.grade {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.titulo {
+    grid-column: 1 / -1;
+}</pre>
+                <p><code>1fr</code> representa uma fração do espaço disponível. <code>repeat()</code>,
+                    <code>minmax()</code> e <code>auto-fit</code> ajudam na responsividade.</p>
+            </div>
+        </section>
+
+        <section id="visuais" data-pesquisavel>
+            <h2>6. Fundos, sombras e efeitos</h2>
+            <div class="grade">
+                <article class="card">
+                    <h3>Background</h3>
+                    <pre>background-color: #071009;
+background-image: url("fundo.png");
+background-position: center;
+background-repeat: no-repeat;
+background-size: cover;</pre>
+                </article>
+                <article class="card">
+                    <h3>Gradiente</h3>
+                    <pre>background: linear-gradient(145deg, #071009, #020503);
+background: radial-gradient(circle, green, transparent);
+background: conic-gradient(red, yellow, blue);</pre>
+                </article>
+                <article class="card">
+                    <h3>Sombra</h3>
+                    <pre>box-shadow: 0 18px 45px rgba(0, 0, 0, 0.68);
+box-shadow: inset 0 0 12px green;
+text-shadow: 0 0 16px green;</pre>
+                </article>
+                <article class="card">
+                    <h3>Opacidade e filtro</h3>
+                    <pre>opacity: 0.5;
+visibility: hidden;
+filter: blur(4px);
+filter: brightness(1.2);
+backdrop-filter: blur(10px);</pre>
+                </article>
+            </div>
+            <div class="propriedade">
+                <strong><code>transform</code></strong>
+                <div><code>translate()</code>, <code>scale()</code>, <code>rotate()</code>, <code>skew()</code> e
+                    combinações.
+                    <pre>.card:hover {
+    transform: translateY(-4px) scale(1.02) rotate(1deg);
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>cursor</code></strong>
+                <div><code>pointer</code>, <code>text</code>, <code>wait</code>, <code>move</code>, <code>grab</code>,
+                    <code>not-allowed</code> e <code>none</code>.
+                    <pre>.botao { cursor: pointer; }
+.desabilitado { cursor: not-allowed; }</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="animacao" data-pesquisavel>
+            <h2>7. Transições e animações</h2>
+            <div class="propriedade">
+                <strong><code>transition</code></strong>
+                <div>Aplica uma mudança suave entre estados.
+                    <pre>.botao {
+    transition: color 180ms ease,
+                background 180ms ease,
+                transform 180ms ease;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>animation</code></strong>
+                <div>Executa os estados definidos por <code>@keyframes</code>.
+                    <pre>@keyframes aparecer {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.card { animation: aparecer 700ms ease-out both; }</pre>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Estados e pseudo-classes</h3>
+                <pre>a:hover { color: #39ff14; }
+button:active { transform: scale(0.98); }
+input:focus { outline: 3px solid #39ff14; }
+li:first-child { margin-top: 0; }
+li:nth-child(2) { color: yellow; }
+button:disabled { opacity: 0.5; }</pre>
+            </div>
+        </section>
+
+        <section id="responsivo" data-pesquisavel>
+            <h2>8. Responsividade e acessibilidade visual</h2>
+            <div class="propriedade">
+                <strong><code>@media</code></strong>
+                <div>Aplica estilos conforme o tamanho ou preferência do dispositivo.
+                    <pre>@media (max-width: 700px) {
+    .container { padding: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>@container</code></strong>
+                <div>Aplica estilos conforme o tamanho de um contêiner.
+                    <pre>.cartoes { container-type: inline-size; }
+
+@container (max-width: 600px) {
+    .cartao { width: 100%; }
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>:has()</code></strong>
+                <div>Seleciona um elemento com base em seus filhos.
+                    <pre>.formulario:has(input:invalid) {
+    border-color: red;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>outline</code></strong>
+                <div>É usada principalmente para indicar foco. Não ocupar espaço como borda.
+                    <pre>a:focus-visible {
+    outline: 3px solid #39ff14;
+    outline-offset: 3px;
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="mais-propriedades" data-pesquisavel>
+            <h2>9. Mais propriedades explicadas com exemplos</h2>
+            <p>As propriedades são as “instruções” do CSS: cada uma controla uma parte visual ou de comportamento do
+                elemento.</p>
+            <div class="propriedade">
+                <strong><code>font-weight</code></strong>
+                <div>Define a espessura das letras. <code>400</code> costuma ser normal e <code>700</code> costuma ser
+                    negrito. A fonte escolhida precisa ter os pesos disponíveis.
+                    <pre>.texto-normal { font-weight: 400; }
+.titulo { font-weight: 700; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>line-height</code></strong>
+                <div>Controla a distância vertical entre linhas. Um número sem unidade é multiplicado pelo tamanho da
+                    fonte; em parágrafos, normalmente melhora a leitura.
+                    <pre>p { font-size: 16px; line-height: 1.6; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>max-width</code></strong>
+                <div>Limita o quanto um elemento pode crescer. Muito útil para impedir que linhas de texto fiquem longas
+                    demais.
+                    <pre>.artigo {
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>gap</code></strong>
+                <div>Cria espaço entre itens de flexbox ou grid sem adicionar margem aos próprios itens.
+                    <pre>.cartoes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>object-fit</code></strong>
+                <div>Decide como a imagem ou vídeo se encaixa na caixa. <code>cover</code> preenche cortando o excesso;
+                    <code>contain</code> mostra tudo e pode deixar espaços vazios.
+                    <pre>.foto {
+    width: 240px;
+    height: 160px;
+    object-fit: cover;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>aspect-ratio</code></strong>
+                <div>Define a proporção entre largura e altura; o navegador calcula uma dimensão automaticamente quando
+                    a outra está definida.
+                    <pre>.video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>list-style</code></strong>
+                <div>Escolhe o marcador ou numeração de uma lista. <code>none</code> remove o marcador visual.
+                    <pre>ul { list-style: square; }
+ol { list-style: upper-roman; }
+nav ul { list-style: none; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>pointer-events</code></strong>
+                <div>Controla se o elemento pode receber clique ou outros eventos do ponteiro. Use com cuidado para não
+                    bloquear controles importantes.
+                    <pre>.decoracao {
+    pointer-events: none;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>scroll-behavior</code></strong>
+                <div>Define se a rolagem até uma âncora acontece imediatamente ou suavemente. Respeite a preferência de
+                    movimento reduzido do usuário.
+                    <pre>html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>content</code></strong>
+                <div>Insere conteúdo em pseudo-elementos <code>::before</code> e <code>::after</code>. Não use para
+                    esconder informação importante do leitor.
+                    <pre>.obrigatorio::after {
+    content: " (obrigatório)";
+    color: red;
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>cursor</code></strong>
+                <div>Indica visualmente o que acontece ao apontar para um elemento. <code>pointer</code> é comum em
+                    links e botões.
+                    <pre>button { cursor: pointer; }
+.bloqueado { cursor: not-allowed; }</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>Variáveis CSS</code></strong>
+                <div>Guarde valores reutilizados em propriedades com nomes iniciados por <code>--</code>, e recupere-os
+                    com <code>var()</code>.
+                    <pre>:root { --cor-principal: #39ff14; }
+button {
+    color: var(--cor-principal);
+    border-color: var(--cor-principal);
+}</pre>
+                </div>
+            </div>
+            <div class="propriedade">
+                <strong><code>Unidades</code></strong>
+                <div><code>px</code> é uma medida fixa comum; <code>rem</code> depende da fonte raiz; <code>%</code>
+                    depende do contexto; <code>vw</code>/<code>vh</code> dependem da tela; <code>fr</code> divide espaço
+                    no Grid.
+                    <pre>.texto { font-size: 1rem; }
+.painel { width: 80%; }
+.tela { min-height: 100vh; }
+.grade { grid-template-columns: 1fr 2fr; }</pre>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Seletores CSS básicos</h3>
+                <p>O seletor escolhe quais elementos recebem as propriedades.</p>
+                <pre>p { color: white; }             /* todos os parágrafos */
+.aviso { color: yellow; }       /* classe aviso */
+#principal { padding: 20px; }   /* id principal */
+nav a { text-decoration: none; }/* links dentro de nav */
+button:hover { color: green; }  /* botão apontado */
+input:focus { outline: 2px solid green; }</pre>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const pesquisa = document.getElementById("pesquisa");
+        const grupos = Array.from(document.querySelectorAll("[data-pesquisavel]"));
+
+        pesquisa.addEventListener("input", () => {
+            const termo = pesquisa.value.trim().toLowerCase();
+
+            grupos.forEach((grupo) => {
+                const corresponde = !termo || grupo.textContent.toLowerCase().includes(termo);
+                grupo.classList.toggle("oculto", !corresponde);
+            });
+        });
+    </script>
+</body>
+
+</html>

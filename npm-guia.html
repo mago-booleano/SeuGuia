@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Guia Completo de npm</title>
+        <style>
+                :root {
+                        --bg: #030704;
+                        --panel: #071009;
+                        --border: rgba(57, 255, 20, .28);
+                        --text: #e4ffe9;
+                        --muted: #a7c7ad;
+                        --green: #39ff14;
+                }
+
+                * {
+                        box-sizing: border-box;
+                }
+
+                html {
+                        scroll-behavior: smooth;
+                        scroll-padding-top: 20px;
+                }
+
+                body {
+                        margin: 0;
+                        background: radial-gradient(circle at 50% 0, rgba(57, 255, 20, .12), transparent 35rem), var(--bg);
+                        color: var(--text);
+                        font-family: "Segoe UI", Arial, sans-serif;
+                        line-height: 1.65;
+                }
+
+                .container {
+                        max-width: 1180px;
+                        margin: auto;
+                        padding: 24px;
+                }
+
+                .topo {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 16px;
+                }
+
+                h1 {
+                        margin: 0;
+                        font-size: clamp(2.2rem, 7vw, 4.5rem);
+                        line-height: 1.1;
+                }
+
+                h2 {
+                        margin-top: 48px;
+                }
+
+                h3 {
+                        color: #a3ff91;
+                }
+
+                a {
+                        color: #a3ff91;
+                }
+
+                code {
+                        color: #c8ffce;
+                }
+
+                pre {
+                        overflow-x: auto;
+                        padding: 14px;
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        background: #020503;
+                        color: #c8ffce;
+                }
+
+                .voltar {
+                        padding: 10px 14px;
+                        border: 1px solid var(--border);
+                        border-radius: 10px;
+                        background: var(--panel);
+                        text-decoration: none;
+                }
+
+                .intro,
+                .aviso,
+                .card {
+                        border: 1px solid var(--border);
+                        border-radius: 14px;
+                        background: rgba(7, 16, 9, .94);
+                }
+
+                .intro {
+                        margin-top: 24px;
+                        padding: 22px;
+                }
+
+                .aviso {
+                        padding: 14px 18px;
+                        color: var(--muted);
+                }
+
+                .busca {
+                        position: sticky;
+                        top: 12px;
+                        z-index: 10;
+                        display: flex;
+                        margin: 24px 0;
+                        padding: 10px;
+                        border: 1px solid var(--border);
+                        border-radius: 12px;
+                        background: rgba(3, 7, 4, .96);
+                }
+
+                .busca input {
+                        width: 100%;
+                        border: 0;
+                        outline: 0;
+                        background: transparent;
+                        color: var(--text);
+                        font: inherit;
+                        padding: 8px;
+                }
+
+                .indice {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                        gap: 10px;
+                        margin-bottom: 24px;
+                }
+
+                .indice a {
+                        padding: 10px 12px;
+                        border: 1px solid var(--border);
+                        border-radius: 9px;
+                        background: rgba(57, 255, 20, .05);
+                        text-decoration: none;
+                }
+
+                .grade {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                        gap: 16px;
+                }
+
+                .card {
+                        padding: 18px;
+                }
+
+                .card h3 {
+                        margin-top: 0;
+                }
+
+                .linha {
+                        display: grid;
+                        grid-template-columns: minmax(150px, .35fr) 1fr;
+                        gap: 16px;
+                        margin: 12px 0;
+                        padding: 16px;
+                        border-left: 3px solid var(--green);
+                        border-radius: 8px;
+                        background: rgba(57, 255, 20, .04);
+                }
+
+                .linha strong {
+                        color: #a3ff91;
+                }
+
+                .oculto {
+                        display: none !important;
+                }
+
+                @media(max-width:700px) {
+                        .topo {
+                                align-items: flex-start;
+                                flex-direction: column
+                        }
+
+                        .linha {
+                                grid-template-columns: 1fr
+                        }
+                }
+        </style>
+</head>
+
+<body>
+        <main class="container">
+                <div class="topo">
+                        <div>
+                                <h1>Guia de npm</h1>
+                                <p>Instalação, pacotes, scripts e manutenção.</p>
+                        </div><a class="voltar" href="index.html">← Voltar ao guia principal</a>
+                </div>
+                <section class="intro">
+                        <h2>O que é npm?</h2>
+                        <p><strong>npm</strong> é o gerenciador de pacotes do Node.js. Ele instala bibliotecas, registra
+                                scripts e resolve dependências.</p>
+                        <pre>npm --version
+node --version
+npm help</pre>
+                </section>
+                <label class="busca"><span aria-hidden="true">⌕</span><input id="pesquisa" type="search"
+                                placeholder="Pesquisar: install, scripts, package.json, npx..."></label>
+                <nav class="indice">
+                        <a href="#instalacao">Instalação</a><a href="#versoes">Versões</a><a
+                                href="#projetos">Projetos</a>
+                        <a href="#pacotes">Pacotes</a><a href="#npx">npx</a><a href="#scripts">Scripts</a><a
+                                href="#extras">Mais comandos</a><a href="#auditoria">Auditoria</a>
+                </nav>
+
+                <section id="instalacao" data-pesquisavel>
+                        <h2>1. Instalação</h2>
+                        <div class="linha"><strong><code>node -v</code></strong>
+                                <div>Mostra a versão instalada do Node.js.
+                                        <pre>node --version</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm -v</code></strong>
+                                <div>Mostra a versão do npm.
+                                        <pre>npm --version</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Atualizar o npm</strong>
+                                <div>Atualiza o npm globalmente. No Windows, execute o terminal como administrador
+                                        quando necessário.
+                                        <pre>npm install --global npm@latest</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>PowerShell</strong>
+                                <div>Se scripts estiverem bloqueados, apenas habilite scripts locais quando você confia
+                                        no ambiente.
+                                        <pre>Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+npm run dev</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="versoes" data-pesquisavel>
+                        <h2>2. Versões e modos de instalação</h2>
+                        <div class="grade">
+                                <article class="card">
+                                        <h3>Versões exatas</h3>
+                                        <pre>"react": "19.1.0"</pre>
+                                        <p>Instala exatamente a versão informada.</p>
+                                </article>
+                                <article class="card">
+                                        <h3>Patch automático</h3>
+                                        <pre>"react": "~19.1.0"</pre>
+                                        <p>Adequado para alterações de patch da mesma linha.</p>
+                                </article>
+                                <article class="card">
+                                        <h3>Minor e patch</h3>
+                                        <pre>"react": "^19.1.0"</pre>
+                                        <p>Permite atualizações compatíveis dentro da versão principal.</p>
+                                </article>
+                                <article class="card">
+                                        <h3>Qualquer versão</h3>
+                                        <pre>"react": "*"</pre>
+                                        <p>Permite a versão mais nova compatível encontrada pelo npm.</p>
+                                </article>
+                        </div>
+                </section>
+
+                <section id="projetos" data-pesquisavel>
+                        <h2>3. Criar e configurar projetos</h2>
+                        <div class="linha"><strong><code>npm init</code></strong>
+                                <div>Cria o <code>package.json</code> por perguntas interativas.
+                                        <pre>npm init</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm init -y</code></strong>
+                                <div>Cria o arquivo usando respostas padrão.
+                                        <pre>npm init -y</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm install</code></strong>
+                                <div>Instala todas as dependências registradas no projeto.
+                                        <pre>npm install</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>package.json</code></strong>
+                                <div>Arquivo principal do projeto.
+                                        <pre>{
+  "name": "meu-projeto",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="pacotes" data-pesquisavel>
+                        <h2>4. Pacotes e dependências</h2>
+                        <div class="linha"><strong><code>npm install pacote</code></strong>
+                                <div>Instala em <code>dependencies</code>, usado pela aplicação em produção.
+                                        <pre>npm install express</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm install -D pacote</code></strong>
+                                <div>Instala em <code>devDependencies</code>, usado apenas no desenvolvimento.
+                                        <pre>npm install --save-dev vite</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm uninstall pacote</code></strong>
+                                <div>Remove o pacote e atualiza os arquivos de dependência.
+                                        <pre>npm uninstall express</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm list</code></strong>
+                                <div>Lista pacotes instalados e suas dependências.
+                                        <pre>npm list
+npm list --depth=0</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm view</code></strong>
+                                <div>Consulta informações de um pacote sem instalá-lo.
+                                        <pre>npm view vite version
+npm view react description</pre>
+                                </div>
+                        </div>
+                        <aside class="aviso"><code>package-lock.json</code> fixa o grafo exato de dependências. Não
+                                apague ou edite manualmente. <code>node_modules</code> pode ser reconstruído por
+                                <code>npm install</code>.</aside>
+                </section>
+
+                <section id="npx" data-pesquisavel>
+                        <h2>5. npx</h2>
+                        <p><code>npx</code> é um atalho moderno para <code>npm exec</code>. Ele procura o comando em
+                                <code>node_modules/.bin</code>, nos scripts locais e no cache; se não estiver instalado,
+                                pode baixar e executar o pacote temporariamente.</p>
+
+                        <aside class="aviso">Instalar ferramentas globalmente não é obrigatório. Para projetos, prefira
+                                deixar ferramentas importantes em <code>devDependencies</code> e executá-las por
+                                <code>npm exec</code> ou <code>npx</code>.</aside>
+
+                        <div class="linha"><strong>Sintaxe básica</strong>
+                                <div>Executa o binário publicado pelo pacote.
+                                        <pre>npx nome-do-pacote
+npx nome-do-pacote argumento1 argumento2
+npm exec -- nome-do-pacote argumento</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --yes pacote</code></strong>
+                                <div>Confirma automaticamente a instalação do pacote. No npm moderno, é útil em scripts
+                                        e instalações não interativas.
+                                        <pre>npx --yes create-vite@latest meu-app
+npx -y prettier --write index.html</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --package</code></strong>
+                                <div>Define um pacote diferente do nome do executável que será executado. Use
+                                        <code>--</code> para separar opções do npm dos argumentos do programa.
+                                        <pre>npx --package typescript tsc --init
+npx --package=cowsay cowsay "Olá npm"
+npx --package typescript --package ts-node ts-node arquivo.ts</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx pacote@versao</code></strong>
+                                <div>Executa uma versão específica ou a versão mais recente do pacote.
+                                        <pre>npx prettier@3 --write index.html
+npx vite@latest
+npx create-react-app@latest meu-app
+npx create-next-app@latest meu-app
+        npx --package typescript@5 tsc --version</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx -p</code></strong>
+                                <div>Forma abreviada de <code>--package</code>. A sintaxe completa pode ser mais clara
+                                        em arquivos automatizados.
+                                        <pre>npx -p typescript tsc --version
+npx -p eslint eslint src</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --call</code></strong>
+                                <div>Executa um comando composto ou uma sequência dentro do ambiente temporário criado
+                                        pelo npm.
+                                        <pre>npx --package typescript --call "tsc --noEmit"
+npx --package rimraf --call "rimraf dist"</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --workspace</code></strong>
+                                <div>Executa um binário em um workspace específico de um monorepo.
+                                        <pre>npx --workspace=web vite --host
+npx --workspace=api prisma generate</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --prefix</code></strong>
+                                <div>Altera o diretório usado pelo npm para localizar o projeto e suas dependências.
+                                        <pre>npx --prefix ./frontend vite --host
+npx --prefix ./frontend prettier --write src</pre>
+                                </div>
+                        </div>
+
+                        <h3>Criadores de projetos</h3>
+                        <div class="linha"><strong>Vite</strong>
+                                <div>Cria projetos de frontend com ou sem framework.
+                                        <pre>npx create-vite@latest
+npx create-vite@latest meu-app --template react
+npx create-vite@latest meu-app --template vue
+npx create-vite@latest meu-app --template vanilla</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>React</strong>
+                                <div>Cria uma aplicação baseada no create-react-app legado ou utiliza outras ferramentas
+                                        modernas de React.
+                                        <pre>npx create-react-app meu-app
+npx create-react-app meu-app --template typescript</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Next.js</strong>
+                                <div>Inicializa uma aplicação Next.js interativa ou com opções fixadas.
+                                        <pre>npx create-next-app@latest meu-app
+npx create-next-app@latest meu-app --typescript
+npx create-next-app@latest meu-app --eslint --app</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>TypeScript e Node.js</strong>
+                                <div>Inicializa configurações para executores e servidores TypeScript.
+                                        <pre>npx tsc --init
+npx tsx server.ts
+npx ts-node server.ts
+npx ts-node-dev --respawn server.ts
+npx nodemon server.js</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Servidor Express</strong>
+                                <div>Gera uma estrutura inicial de Express. <code>--view</code> escolhe uma engine de
+                                        templates.
+                                        <pre>npx express-generator meu-servidor
+npx express-generator meu-servidor --view=ejs
+npx express-generator meu-servidor --no-view</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Outros scaffolds</strong>
+                                <div>Baixa ou gera projetos sem adicionar scaffolding ao package.json atual.
+                                        <pre>npx degit usuario/repositorio meu-projeto
+npx create-remix@latest
+npx nuxi@latest init meu-app
+npx @angular/cli@latest new meu-app</pre>
+                                </div>
+                        </div>
+
+                        <h3>Formatar, validar e testar</h3>
+                        <div class="linha"><strong>Prettier</strong>
+                                <div>Formata arquivos ou verifica se estão formatados sem modificar o projeto.
+                                        <pre>npx prettier --write .
+npx prettier --write index.html src
+npx prettier --check .
+npx prettier --list-different "src/**/*.{js,ts}"</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>ESLint</strong>
+                                <div>Cria configuração ou analisa o código-fonte.
+                                        <pre>npx eslint --init
+npx eslint .
+npx eslint src --fix
+npx eslint src --max-warnings=0</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Testes</strong>
+                                <div>Executa Jest, Vitest ou Browserslist sem salvar o runner como dependência
+                                        permanente.
+                                        <pre>npx jest
+npx jest --watch
+npx jest --coverage
+npx vitest
+npx vitest --run
+npx vitest --coverage
+npx browserslist</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>TypeScript</strong>
+                                <div>Compila ou verifica tipos sem gerar arquivos JavaScript.
+                                        <pre>npx tsc
+npx tsc --noEmit
+npx tsc --watch
+npx tsc --project tsconfig.json
+npx tsc --showConfig</pre>
+                                </div>
+                        </div>
+
+                        <h3>Servidores locais e rede</h3>
+                        <div class="linha"><strong>Vite</strong>
+                                <div>Inicia o servidor de desenvolvimento, configurando host e porta.
+                                        <pre>npx vite
+npx vite --host
+npx vite --host 0.0.0.0
+npx vite --port 3000
+npx vite --open
+npx vite --host --port 4173</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Servidores estáticos</strong>
+                                <div>Publica temporariamente uma pasta pelo navegador local.
+                                        <pre>npx serve .
+npx serve -l 5000 .
+npx http-server .
+npx http-server -p 8080 -c-1
+npx live-server</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Aplicações completas</strong>
+                                <div>Execute o servidor de desenvolvimento definido pela ferramenta. Nestes exemplos,
+                                        <code>--package</code> baixa a CLI e executa seu programa de linha de comando.
+                                        <pre>npx --package @angular/cli ng serve
+        npx --package @vue/cli vue-cli-service serve
+npx next dev
+npx nuxt dev</pre>
+                                </div>
+                        </div>
+
+                        <h3>Automação, segurança e análise</h3>
+                        <div class="linha"><strong>Atualizações e auditoria</strong>
+                                <div>Consulta e atualiza versões de pacotes sem editar manualmente todo o package.json.
+                                        <pre>npx npm-check-updates
+npx npm-check-updates -u
+npm audit
+npx license-checker
+npx license-checker --summary</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Segurança e dependências</strong>
+                                <div>Analisa vulnerabilidades, dependências ou arquivos conhecidos como inseguros.
+                                        <pre>npx snyk test
+npx audit-ci
+npx depcheck
+npx madge --circular src
+npx madge --image graph.svg src</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Desempenho e acessibilidade</strong>
+                                <div>Executa verificadores de desempenho ou compatibilidade no navegador.
+                                        <pre>npx lighthouse https://exemplo.com
+npx lighthouse http://localhost:3000 --view
+npx pa11y http://localhost:3000
+npx unlighthouse --site http://localhost:3000</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Playwright e navegadores</strong>
+                                <div>Instala navegadores e inicia scripts de automação.
+                                        <pre>npx playwright install
+npx playwright install chromium
+npx playwright install --with-deps
+npx playwright test
+npx playwright test --ui
+npx playwright codegen http://localhost:3000</pre>
+                                </div>
+                        </div>
+
+                        <h3>Comandos úteis de sistema</h3>
+                        <div class="linha"><strong>Remover diretórios</strong>
+                                <div>Remove uma pasta de forma compatível com vários sistemas ou shells.
+                                        <pre>npx rimraf dist
+npx rimraf dist coverage
+npx rimraf node_modules/.cache</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Variáveis de ambiente</strong>
+                                <div>Define temporariamente variáveis conforme o sistema operacional.
+                                        <pre>npx cross-env NODE_ENV=production node server.js
+npx cross-env PORT=3000 npm run start
+npx env-cmd -f .env node server.js</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Arquivos e comandos do sistema</strong>
+                                <div>Executa ferramentas pequenas sem instalá-las permanentemente.
+                                        <pre>npx open-cli https://example.com
+npx nanoid
+npx cowsay "Meu projeto funciona"
+npx sort-package-json
+npm pkg get scripts
+npm pkg set name="novo-nome"</pre>
+                                </div>
+                        </div>
+
+                        <h3>Comandos e flags importantes</h3>
+                        <div class="linha"><strong><code>npx --help</code></strong>
+                                <div>Mostra ajuda geral do npm exec e npx.
+                                        <pre>npx --help
+npm exec --help
+npx pacote --help</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx --no-install</code></strong>
+                                <div>Em versões antigas do npm, impedia a instalação automática. Use versões novas como
+                                        preferência pela verificação local e <code>npx --yes</code>; consulte
+                                        <code>npx --help</code> para confirmar o suporte da sua versão.
+                                        <pre>npx --no-install prettier --check .</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npx -c</code></strong>
+                                <div>Executa um comando completo dentro do shell de pacote em versões/fluxos
+                                        compatíveis.
+                                        <pre>npx -p cowsay -c "cowsay 'Executado pelo npx'"</pre>
+                                </div>
+                        </div>
+                        <aside class="aviso">Procure não executar pacotes desconhecidos com <code>npx</code>. Verifique
+                                o nome exato no npm, use uma versão fixa quando possível e revise scripts de build antes
+                                de executá-los.</aside>
+                </section>
+
+                <section id="scripts" data-pesquisavel>
+                        <h2>6. Scripts</h2>
+                        <pre>{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest"
+  }
+}</pre>
+                        <div class="linha"><strong><code>npm run nome</code></strong>
+                                <div>Executa um script personalizado.
+                                        <pre>npm run dev
+npm run build
+npm run test</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong>Nomes especiais</strong>
+                                <div><code>start</code>, <code>stop</code>, <code>test</code> e <code>restart</code>
+                                        podem ser executados sem <code>run</code>.
+                                        <pre>npm start
+npm test</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="extras" data-pesquisavel>
+                        <h2>7. Mais comandos npm explicados</h2>
+                        <div class="linha"><strong><code>npm ci</code></strong>
+                                <div>Instala exatamente as dependências do <code>package-lock.json</code>. É mais
+                                        indicado para automações e integrações contínuas. Apaga o
+                                        <code>node_modules</code> atual antes de instalar.
+                                        <pre>npm ci</pre>
+                                        <p>Use quando o lockfile está atualizado e você quer reproduzir a instalação.
+                                                Para desenvolvimento comum, <code>npm install</code> costuma ser mais
+                                                conveniente.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm exec</code></strong>
+                                <div>Executa uma ferramenta de pacote. É a forma atual do que normalmente se faz com
+                                        <code>npx</code>.
+                                        <pre>npm exec -- prettier --check .
+npm exec -- vite --host</pre>
+                                        <p>O <code>--</code> separa as opções do npm dos argumentos do programa
+                                                executado.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm pkg</code></strong>
+                                <div>Lê ou altera campos do <code>package.json</code> sem abrir o arquivo manualmente.
+                                        <pre>npm pkg get scripts
+npm pkg get name
+npm pkg set scripts.lint="eslint ."
+npm pkg delete scripts.old</pre>
+                                        <p>Confira a alteração depois com <code>npm pkg get</code> ou lendo o arquivo.
+                                        </p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm explain</code></strong>
+                                <div>Explica por que um pacote está instalado, mostrando qual dependência o trouxe.
+                                        <pre>npm explain vite
+npm explain lodash</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm ls</code></strong>
+                                <div>É o mesmo comando que <code>npm list</code>. Mostra dependências locais;
+                                        <code>--depth=0</code> limita a lista aos pacotes principais.
+                                        <pre>npm ls
+npm ls --depth=0
+npm ls typescript</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm dedupe</code></strong>
+                                <div>Tenta reduzir cópias repetidas de uma mesma dependência na árvore instalada.
+                                        <pre>npm dedupe
+npm dedupe --dry-run</pre>
+                                        <p>Ele reorganiza instalações compatíveis; não é necessário rodar de rotina em
+                                                todo projeto.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm prune</code></strong>
+                                <div>Remove pacotes instalados que não estão declarados no <code>package.json</code>.
+                                        <pre>npm prune
+npm prune --omit=dev</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm root</code></strong>
+                                <div>Mostra o caminho da pasta onde o npm instala dependências.
+                                        <pre>npm root
+npm root --global</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm config</code></strong>
+                                <div>Consulta e ajusta preferências do npm, como o registro usado para baixar pacotes.
+                                        <pre>npm config get registry
+npm config list
+npm config set fund false</pre>
+                                        <p>Configurações podem ser locais ao projeto ou globais. Evite gravar senhas ou
+                                                tokens em arquivos compartilhados.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm cache</code></strong>
+                                <div>Verifica o cache de downloads. Em geral, o npm gerencia esse cache sozinho.
+                                        <pre>npm cache verify</pre>
+                                        <p>Não limpe o cache como primeira tentativa para qualquer erro; comece lendo a
+                                                mensagem do npm.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm version</code></strong>
+                                <div>Mostra ou atualiza a versão do projeto no <code>package.json</code>. As formas
+                                        <code>patch</code>, <code>minor</code> e <code>major</code> aumentam partes
+                                        diferentes da versão.
+                                        <pre>npm version
+npm version patch
+npm version minor
+npm version major</pre>
+                                        <p>Isso pode criar um commit e uma tag, dependendo da configuração do
+                                                repositório.</p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm publish</code></strong>
+                                <div>Publica o pacote no registro npm. Antes, confira o nome, a versão, os arquivos
+                                        incluídos e se não há segredos.
+                                        <pre>npm pack --dry-run
+npm publish --access public</pre>
+                                        <p><code>npm pack --dry-run</code> ajuda a revisar o conteúdo sem publicar nada.
+                                        </p>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm pack</code></strong>
+                                <div>Cria um arquivo compactado com os arquivos que seriam distribuídos pelo pacote.
+                                        <pre>npm pack --dry-run
+npm pack</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm uninstall</code> global</strong>
+                                <div>Remove um pacote que foi instalado globalmente. Em geral, prefira dependências
+                                        locais por projeto.
+                                        <pre>npm uninstall --global nome-do-pacote</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm help</code></strong>
+                                <div>Abre a ajuda geral ou a documentação de um comando.
+                                        <pre>npm help
+npm help install
+npm help scripts</pre>
+                                </div>
+                        </div>
+                </section>
+
+                <section id="auditoria" data-pesquisavel>
+                        <h2>8. Auditoria e manutenção</h2>
+                        <div class="linha"><strong><code>npm outdated</code></strong>
+                                <div>Lista dependências que possuem versões novas.
+                                        <pre>npm outdated</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm update</code></strong>
+                                <div>Atualiza dentro das regras do package.json e package-lock.json.
+                                        <pre>npm update</pre>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm audit</code></strong>
+                                <div>Verifica vulnerabilidades conhecidas.
+                                        <pre>npm audit
+npm audit fix
+npm audit fix --force</pre><small>Use <code>--force</code> apenas depois de revisar alterações incompatíveis.</small>
+                                </div>
+                        </div>
+                        <div class="linha"><strong><code>npm cache</code></strong>
+                                <div>Consulta ou limpa o cache local.
+                                        <pre>npm cache verify
+npm cache clean --force</pre>
+                                </div>
+                        </div>
+                </section>
+        </main>
+        <script>
+                const pesquisa = document.getElementById("pesquisa");
+                document.querySelectorAll("[data-pesquisavel]");
+                pesquisa.addEventListener("input", () => { const termo = pesquisa.value.trim().toLowerCase(); document.querySelectorAll("[data-pesquisavel]").forEach(section => section.classList.toggle("oculto", Boolean(termo) && !section.textContent.toLowerCase().includes(termo))); });
+        </script>
+</body>
+
+</html>
